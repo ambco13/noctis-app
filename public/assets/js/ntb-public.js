@@ -1147,6 +1147,15 @@
 		}
 	}
 
+	// Un champ non focus doit toujours afficher son DÉBUT (avec l'ellipsis
+	// CSS à la fin) plutôt que de rester scrollé sur la position du curseur
+	// après une saisie — sinon "Nom Prénom" ou l'email affichent leur fin.
+	document.addEventListener( 'blur', function ( e ) {
+		if ( e.target && e.target.matches && e.target.matches( '.ntb-step3-form input[type="text"], .ntb-step3-form input[type="tel"], .ntb-step3-form input[type="email"]' ) ) {
+			e.target.scrollLeft = 0;
+		}
+	}, true );
+
 	document.addEventListener( 'DOMContentLoaded', function () {
 		initStep1();
 		initFlow();

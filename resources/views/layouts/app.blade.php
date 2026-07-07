@@ -28,6 +28,13 @@
             color: var(--ntb-muted); text-decoration: none; transition: color 180ms;
         }
         .ntb-topnav-links a:hover { color: var(--ntb-accent-hi); }
+
+        /* Marge latérale globale du site : 24px en mobile, 48px à partir du desktop. */
+        body > main { padding: 0 24px; box-sizing: border-box; }
+        @media (min-width: 1025px) {
+            .ntb-topnav { padding-left: 48px; padding-right: 48px; }
+            body > main { padding-left: 48px; padding-right: 48px; }
+        }
     </style>
 </head>
 <body>

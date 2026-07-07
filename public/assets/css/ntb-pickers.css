@@ -38,12 +38,12 @@ html[data-ntb-theme="light"] {
 
 html[data-ntb-theme="light"] .flatpickr-calendar {
 	box-shadow:
-		0 24px 64px oklch(0.55 0.010 240 / .12),
-		0 4px  16px oklch(0.55 0.010 240 / .08);
+		0 10px 28px oklch(0.55 0.010 240 / .08),
+		0 2px  8px  oklch(0.55 0.010 240 / .05);
 }
 
 html[data-ntb-theme="light"] .nc-time-picker {
-	box-shadow: 0 20px 56px oklch(0.55 0.010 240 / .12);
+	box-shadow: 0 8px 24px oklch(0.55 0.010 240 / .08);
 }
 
 html[data-ntb-theme="light"] .flatpickr-day.disabled,
@@ -92,8 +92,8 @@ span.flatpickr-weekday {
 	border: 1px solid var(--ntb-line);
 	border-radius: var(--ntb-r-sm);
 	box-shadow:
-		0 24px 64px oklch(0.12 0.010 240 / .70),
-		0 4px 16px  oklch(0.12 0.010 240 / .40),
+		0 10px 28px oklch(0.12 0.010 240 / .35),
+		0 2px  8px  oklch(0.12 0.010 240 / .20),
 		inset 0 1px 0 oklch(1 0 0 / .05);
 	font-family: var(--ntb-sans);
 	color: var(--ntb-text);
@@ -244,7 +244,7 @@ input.flatpickr-input.alt-input { cursor: pointer; caret-color: transparent; }
 	background: var(--ntb-surf);
 	border: 1px solid var(--ntb-line);
 	border-radius: var(--ntb-r-sm);
-	box-shadow: 0 20px 56px oklch(0.12 0.010 240 / .68), inset 0 1px 0 oklch(1 0 0 / .05);
+	box-shadow: 0 8px 24px oklch(0.12 0.010 240 / .35), inset 0 1px 0 oklch(1 0 0 / .05);
 	overflow: hidden;
 	--_item: 36px;
 }

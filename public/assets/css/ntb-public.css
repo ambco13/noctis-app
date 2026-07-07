@@ -804,6 +804,13 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 @media (max-width: 1024px) {
 	.ntb-step3-form { backdrop-filter: none; }
 }
+@media (max-width: 640px) {
+	/* "Vos coordonnées et le paiement" : une seule colonne pleine largeur.
+	   En grille à 2 colonnes fixes, Nom complet/Téléphone se comprimaient
+	   côte à côte au lieu de passer à la ligne. */
+	.ntb-step3-form { grid-template-columns: 1fr; width: 100%; }
+	.ntb-step3-form .ntb-field:nth-child(n+3) { grid-column: auto; }
+}
 
 .ntb-pay-choice { display: flex; justify-content: center; background: var(--ntb-bg2); border: 1px solid var(--ntb-line); border-radius: 999px; padding: 4px; gap: 3px; margin-top: 6px; flex-wrap: wrap; grid-column: 1 / -1; width: fit-content; margin-left: auto; margin-right: auto; }
 .ntb-pay-tab { border: none; background: none; color: var(--ntb-muted); font-size: var(--ntb-text-sm); font-weight: 600; padding: 9px 18px; border-radius: 999px; cursor: pointer; transition: color var(--ntb-dur), background var(--ntb-dur); }

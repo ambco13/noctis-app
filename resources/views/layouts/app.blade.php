@@ -12,8 +12,34 @@
     <link rel="stylesheet" href="{{ asset('assets/css/ntb-pickers.css') }}">
     @stack('styles')
     {!! \App\Support\Design::styleBlock() !!}
+    <style>
+        .ntb-topnav {
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 16px; padding: 14px 24px; box-sizing: border-box;
+            background: var(--ntb-surf); border-bottom: 1px solid var(--ntb-line);
+        }
+        .ntb-topnav-brand {
+            font-family: var(--ntb-serif); font-size: 19px; letter-spacing: .01em;
+            color: var(--ntb-text); text-decoration: none;
+        }
+        .ntb-topnav-links { display: flex; align-items: center; gap: 20px; }
+        .ntb-topnav-links a {
+            font-family: var(--ntb-sans); font-size: 14px; font-weight: 600;
+            color: var(--ntb-muted); text-decoration: none; transition: color 180ms;
+        }
+        .ntb-topnav-links a:hover { color: var(--ntb-accent-hi); }
+    </style>
 </head>
 <body>
+    <header class="ntb-topnav">
+        <a class="ntb-topnav-brand" href="{{ route('booking.form') }}">{{ config('app.name') }}</a>
+        <nav class="ntb-topnav-links">
+            <a href="{{ route('booking.form') }}">{{ __('Réserver') }}</a>
+            <a href="{{ route('account') }}">
+                {{ auth()->check() ? auth()->user()->name : __('Mon compte') }}
+            </a>
+        </nav>
+    </header>
     <main>
         @yield('content')
     </main>

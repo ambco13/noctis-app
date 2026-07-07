@@ -33,6 +33,13 @@
             max-width: 45vw; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
         }
         .ntb-topnav-links a:hover { color: var(--ntb-accent-hi); }
+        .ntb-topnav-account {
+            max-width: none !important; flex: 0 0 auto;
+            display: flex; align-items: center; justify-content: center;
+            width: 34px; height: 34px; border-radius: 50%;
+            background: var(--ntb-surf2); color: var(--ntb-muted);
+        }
+        .ntb-topnav-account:hover { color: var(--ntb-accent-hi); background: var(--ntb-accent-soft); }
 
         /* Filet de sécurité : un contenu imprévu (texte long, image...) ne doit
            jamais créer de scroll horizontal sur la page. */
@@ -51,8 +58,13 @@
         <a class="ntb-topnav-brand" href="{{ route('booking.form') }}">{{ config('app.name') }}</a>
         <nav class="ntb-topnav-links">
             <a href="{{ route('booking.form') }}">{{ __('Réserver') }}</a>
-            <a href="{{ route('account') }}">
-                {{ auth()->check() ? auth()->user()->name : __('Mon compte') }}
+            <a href="{{ route('account') }}" class="ntb-topnav-account"
+                title="{{ auth()->check() ? auth()->user()->email : __('Mon compte') }}"
+                aria-label="{{ __('Mon compte') }}">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="12" cy="8" r="4"/>
+                    <path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8"/>
+                </svg>
             </a>
         </nav>
     </header>

@@ -881,7 +881,13 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 .ntb-recap-title { font-family: var(--ntb-serif); font-weight: 400; font-size: 20px; margin: 0 0 14px; }
 .ntb-recap-lines { margin: 0; display: flex; flex-direction: column; gap: 11px; }
 .ntb-recap-lines > div { display: flex; justify-content: space-between; gap: 14px; font-size: 14px; }
-.ntb-recap-lines dt { color: var(--ntb-faint); margin: 0; } .ntb-recap-lines dd { margin: 0; font-weight: 600; text-align: right; }
+.ntb-recap-lines dt { color: var(--ntb-faint); margin: 0; flex: 0 0 auto; } .ntb-recap-lines dd { margin: 0; font-weight: 600; text-align: right; min-width: 0; overflow-wrap: break-word; }
+@media (max-width: 420px) {
+	/* Adresses longues (Départ/Arrivée) : la valeur passe sous le libellé
+	   plutôt que de se comprimer à côté sur les très petits écrans. */
+	.ntb-recap-lines > div { flex-direction: column; gap: 2px; }
+	.ntb-recap-lines dd { text-align: left; }
+}
 .ntb-recap-total { display: flex; justify-content: space-between; align-items: baseline; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--ntb-line-soft); }
 .ntb-recap-amount { font-size: var(--ntb-text-2xl); font-weight: 700; }
 

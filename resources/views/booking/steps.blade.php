@@ -5,8 +5,8 @@
 @section('content')
 @php
     $hasStep1 = ! empty($step1['pickup_address']) && ! empty($step1['dropoff_address']);
-    $hasStripe = (bool) config('services.stripe.key');
-    $hasPaypal = (bool) config('services.paypal.client_id');
+    $hasStripe = \App\Support\Secrets::get('stripe_key') !== '';
+    $hasPaypal = \App\Support\Secrets::get('paypal_client_id') !== '';
 @endphp
 <div class="ntb-scope"
     data-ntb-steps

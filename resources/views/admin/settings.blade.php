@@ -5,9 +5,34 @@
 @section('content')
 <h1 class="ntb-page-title">{{ __('Réglages') }}</h1>
 
+@php
+    $tabs = [
+        'general' => __('Général'),
+        'tarifs' => __('Tarifs'),
+        'api' => __('API & Intégrations'),
+        'notifications' => __('Notifications'),
+        'style' => __('Style'),
+    ];
+    if (! array_key_exists($tab, $tabs)) { $tab = 'general'; }
+@endphp
+
+<style>
+    .nadm-tabs { display: flex; gap: 4px; margin-bottom: 18px; border-bottom: 2px solid #e5e7eb; }
+    .nadm-tabs a { padding: 9px 16px; font-size: 14px; color: #6b7280; text-decoration: none; border-radius: 8px 8px 0 0; }
+    .nadm-tabs a.active { background: #fff; color: #111827; font-weight: 600; border: 2px solid #e5e7eb; border-bottom: 2px solid #fff; margin-bottom: -2px; }
+</style>
+
+<div class="nadm-tabs">
+    @foreach ($tabs as $key => $label)
+        <a href="{{ route('admin.settings', ['tab' => $key]) }}" class="{{ $tab === $key ? 'active' : '' }}">{{ $label }}</a>
+    @endforeach
+</div>
+
+{{-- ══════════ GÉNÉRAL ══════════ --}}
+@if ($tab === 'general')
 <form method="post" action="{{ route('admin.settings.update') }}" class="nadm-form">
     @csrf
-
+    <input type="hidden" name="_tab" value="general">
     <h2 style="margin-top:0;">{{ __('Général') }}</h2>
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
         <div><label>{{ __('Devise (ISO)') }}</label><input type="text" name="currency" value="{{ $values['currency'] }}"></div>
@@ -16,11 +41,18 @@
         <div><label>{{ __('Format date') }}</label><input type="text" name="date_format" value="{{ $values['date_format'] }}"></div>
         <div><label>{{ __('Format heure') }}</label><input type="text" name="time_format" value="{{ $values['time_format'] }}"></div>
     </div>
-    <p style="font-size:12px;color:#6b7280;">
-        {{ __('Les clés API (Google, Stripe, PayPal, Twilio) se configurent dans le fichier .env, jamais ici.') }}
-    </p>
+    <div style="margin-top:20px;"><button class="nadm-btn" type="submit">{{ __('Enregistrer') }}</button></div>
+</form>
+@endif
 
-    <h2>{{ __('Majorations') }}</h2>
+{{-- ══════════ TARIFS ══════════ --}}
+@if ($tab === 'tarifs')
+<form method="post" action="{{ route('admin.settings.update') }}" class="nadm-form">
+    @csrf
+    <input type="hidden" name="_tab" value="tarifs">
+    <h2 style="margin-top:0;">{{ __('Majorations') }}</h2>
+    <p style="font-size:12px;color:#6b7280;">{{ __('Les tarifs de base (prise en charge, €/km, €/min, minimum) se règlent par véhicule dans l\'onglet Véhicules.') }}</p>
+
     <label style="display:flex;gap:8px;align-items:center;">
         <input type="checkbox" name="surcharge_night_enabled" value="1" @checked($values['surcharge_night_enabled'])>
         {{ __('Tarif nuit') }}
@@ -30,7 +62,7 @@
         <div><label>{{ __('Fin') }}</label><input type="time" name="surcharge_night_end" value="{{ $values['surcharge_night_end'] ?: '06:00' }}"></div>
         <div><label>%</label><input type="number" step="0.1" min="0" name="surcharge_night_pct" value="{{ $values['surcharge_night_pct'] ?: 25 }}"></div>
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px;">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px;">
         <label style="display:flex;gap:8px;align-items:center;">
             <input type="checkbox" name="surcharge_weekend_enabled" value="1" @checked($values['surcharge_weekend_enabled'])>
             {{ __('Week-end (%)') }}
@@ -42,8 +74,64 @@
             <input type="number" step="0.1" min="0" name="surcharge_holiday_pct" value="{{ $values['surcharge_holiday_pct'] ?: 30 }}" style="max-width:110px;">
         </label>
     </div>
+    <div style="margin-top:20px;"><button class="nadm-btn" type="submit">{{ __('Enregistrer') }}</button></div>
+</form>
+@endif
 
-    <h2>{{ __('Notifications') }}</h2>
+{{-- ══════════ API & INTÉGRATIONS ══════════ --}}
+@if ($tab === 'api')
+<form method="post" action="{{ route('admin.settings.update') }}" class="nadm-form" autocomplete="off">
+    @csrf
+    <input type="hidden" name="_tab" value="api">
+    <h2 style="margin-top:0;">{{ __('API & Intégrations') }}</h2>
+    <p style="font-size:12px;color:#6b7280;">
+        {{ __('Les clés sont chiffrées en base (jamais affichées en clair). Champ vide = clé inchangée ; saisir « - » pour effacer la valeur admin et revenir au .env.') }}
+    </p>
+
+    @php
+        $groups = [
+            __('Google Maps') => ['google_maps_key' => __('Clé API Google')],
+            __('Stripe') => [
+                'stripe_key' => __('Clé publiable (pk_…)'),
+                'stripe_secret' => __('Clé secrète (sk_…)'),
+                'stripe_webhook_secret' => __('Secret webhook (whsec_…)'),
+            ],
+            __('PayPal') => [
+                'paypal_client_id' => __('Client ID'),
+                'paypal_secret' => __('Secret'),
+            ],
+            __('Twilio (SMS)') => [
+                'twilio_sid' => __('Account SID'),
+                'twilio_token' => __('Auth Token'),
+                'twilio_from' => __('Numéro expéditeur'),
+            ],
+        ];
+    @endphp
+
+    @foreach ($groups as $groupLabel => $fields)
+        <h3 style="margin-bottom:4px;">{{ $groupLabel }}</h3>
+        @foreach ($fields as $key => $label)
+            <label>{{ $label }}
+                @if ($secrets[$key] !== '')
+                    <span style="font-weight:400;color:#059669;font-size:12px;"> — {{ $secrets[$key] }}</span>
+                @else
+                    <span style="font-weight:400;color:#9ca3af;font-size:12px;"> — {{ __('non configurée') }}</span>
+                @endif
+            </label>
+            <input type="password" name="secret_{{ $key }}" value="" placeholder="{{ __('Nouvelle valeur…') }}" autocomplete="new-password">
+        @endforeach
+    @endforeach
+
+    <div style="margin-top:20px;"><button class="nadm-btn" type="submit">{{ __('Enregistrer les clés') }}</button></div>
+</form>
+@endif
+
+{{-- ══════════ NOTIFICATIONS ══════════ --}}
+@if ($tab === 'notifications')
+<form method="post" action="{{ route('admin.settings.update') }}" class="nadm-form">
+    @csrf
+    <input type="hidden" name="_tab" value="notifications">
+    <h2 style="margin-top:0;">{{ __('Notifications') }}</h2>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
         <label style="display:flex;gap:8px;align-items:center;"><input type="checkbox" name="notif_email_customer" value="1" @checked($values['notif_email_customer'])> {{ __('Email client') }}</label>
         <label style="display:flex;gap:8px;align-items:center;"><input type="checkbox" name="notif_email_admin" value="1" @checked($values['notif_email_admin'])> {{ __('Email admin') }}</label>
@@ -72,8 +160,73 @@
     <label>{{ __('SMS admin') }}</label>
     <textarea name="tpl_sms_admin" rows="2">{{ $values['tpl_sms_admin'] }}</textarea>
 
-    <div style="margin-top:20px;">
-        <button class="nadm-btn" type="submit">{{ __('Enregistrer les réglages') }}</button>
+    <div style="margin-top:20px;"><button class="nadm-btn" type="submit">{{ __('Enregistrer') }}</button></div>
+</form>
+@endif
+
+{{-- ══════════ STYLE ══════════ --}}
+@if ($tab === 'style')
+<form method="post" action="{{ route('admin.settings.update') }}" class="nadm-form">
+    @csrf
+    <input type="hidden" name="_tab" value="style">
+    <h2 style="margin-top:0;">{{ __('Style du tunnel & de l\'espace client') }}</h2>
+    <p style="font-size:12px;color:#6b7280;">
+        {{ __('Les valeurs acceptent tout format CSS (hex, oklch, color-mix…). Les surfaces, lignes et textes sont dérivés automatiquement du fond si vous ne les surchargez pas.') }}
+    </p>
+
+    <h3>{{ __('Couleurs') }}</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div><label>{{ __('Fond') }} <code>--ntb-bg</code></label>
+            <input type="text" name="design[--ntb-bg]" value="{{ $design['--ntb-bg'] }}"></div>
+        <div><label>{{ __('Accent') }} <code>--ntb-accent</code></label>
+            <input type="text" name="design[--ntb-accent]" value="{{ $design['--ntb-accent'] }}"></div>
+        <div><label>{{ __('Texte') }} <code>--ntb-text</code></label>
+            <input type="text" name="design[--ntb-text]" value="{{ $design['--ntb-text'] }}"></div>
+        <div><label>{{ __('Danger') }} <code>--ntb-danger</code></label>
+            <input type="text" name="design[--ntb-danger]" value="{{ $design['--ntb-danger'] }}"></div>
+        <div><label>{{ __('Texte sur accent') }} <code>--ntb-on-accent</code></label>
+            <input type="text" name="design[--ntb-on-accent]" value="{{ $design['--ntb-on-accent'] }}"></div>
+        <div><label>{{ __('Bordure des champs') }} <code>--ntb-field-line</code></label>
+            <input type="text" name="design[--ntb-field-line]" value="{{ $design['--ntb-field-line'] }}"></div>
+    </div>
+
+    <h3>{{ __('Typographie') }}</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div><label>{{ __('Serif (titres)') }}</label><input type="text" name="design[--ntb-serif]" value="{{ $design['--ntb-serif'] }}"></div>
+        <div><label>{{ __('Sans (texte)') }}</label><input type="text" name="design[--ntb-sans]" value="{{ $design['--ntb-sans'] }}"></div>
+    </div>
+
+    <h3>{{ __('Géométrie') }}</h3>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;">
+        <div><label>{{ __('Rayon') }} <code>--ntb-r</code></label><input type="text" name="design[--ntb-r]" value="{{ $design['--ntb-r'] }}"></div>
+        <div><label>{{ __('Rayon petit') }}</label><input type="text" name="design[--ntb-r-sm]" value="{{ $design['--ntb-r-sm'] }}"></div>
+        <div><label>{{ __('Rayon grand') }}</label><input type="text" name="design[--ntb-r-lg]" value="{{ $design['--ntb-r-lg'] }}"></div>
+        <div><label>{{ __('Rayon boutons (px)') }}</label><input type="number" min="0" max="999" name="design[ntb_btn_radius]" value="{{ $design['ntb_btn_radius'] }}"></div>
+    </div>
+
+    <h3>{{ __('Effet verre') }}</h3>
+    <div style="display:flex;gap:18px;align-items:center;">
+        <label style="display:flex;gap:8px;align-items:center;">
+            <input type="hidden" name="design[ntb_glass_enabled]" value="0">
+            <input type="checkbox" onchange="this.previousElementSibling.value = this.checked ? '1' : '0'" @checked($design['ntb_glass_enabled'] !== '0')>
+            {{ __('Activé') }}
+        </label>
+        <label>{{ __('Opacité (%)') }}
+            <input type="number" min="0" max="100" name="design[ntb_glass_opacity]" value="{{ $design['ntb_glass_opacity'] }}" style="max-width:90px;">
+        </label>
+    </div>
+
+    <h3>{{ __('CSS personnalisé') }}</h3>
+    <textarea name="custom_css" rows="8" style="font-family:ui-monospace,monospace;font-size:12px;" placeholder=".ntb-scope .ntb-btn { … }">{{ $customCss }}</textarea>
+
+    <div style="margin-top:20px;display:flex;gap:10px;">
+        <button class="nadm-btn" type="submit">{{ __('Enregistrer le style') }}</button>
+        <button class="nadm-btn nadm-btn--danger" type="submit" name="_action" value="reset"
+                onclick="return confirm(@json(__('Réinitialiser tout le style (tokens + CSS personnalisé) aux valeurs par défaut ?')));">
+            {{ __('Réinitialiser') }}
+        </button>
+        <a class="nadm-btn nadm-btn--light" href="{{ route('booking.form') }}" target="_blank">{{ __('Voir le site') }}</a>
     </div>
 </form>
+@endif
 @endsection

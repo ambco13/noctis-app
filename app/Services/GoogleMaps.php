@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Exceptions\BookingException;
+use App\Support\Secrets;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 
@@ -24,7 +25,7 @@ class GoogleMaps
 
     private static function apiKey(): string
     {
-        return trim((string) config('services.google_maps.key'));
+        return Secrets::get('google_maps_key');
     }
 
     /**

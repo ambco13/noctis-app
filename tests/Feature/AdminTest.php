@@ -114,6 +114,7 @@ class AdminTest extends TestCase
     public function test_reglages_enregistres(): void
     {
         $this->actingAs($this->admin())->post('/admin/reglages', [
+            '_tab' => 'tarifs',
             'currency' => 'EUR', 'currency_symbol' => '€',
             'date_format' => 'd/m/Y', 'time_format' => 'H:i', 'default_country_code' => '+33',
             'surcharge_weekend_enabled' => '1', 'surcharge_weekend_pct' => '22.5',
@@ -125,6 +126,6 @@ class AdminTest extends TestCase
         Settings::flush();
         $this->assertSame('1', Settings::get('surcharge_weekend_enabled'));
         $this->assertSame('22.5', Settings::get('surcharge_weekend_pct'));
-        $this->assertSame('0', Settings::get('notif_email_customer')); // Checkbox absente.
+        $this->assertNull(Settings::get('notif_email_customer')); // Checkbox d'un autre onglet : intacte.
     }
 }

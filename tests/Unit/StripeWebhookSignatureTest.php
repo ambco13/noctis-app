@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 use App\Services\Stripe;
+use App\Support\Settings;
 use Tests\TestCase;
 
 /**
@@ -19,6 +20,7 @@ final class StripeWebhookSignatureTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+        Settings::fake(); // Pas de DB dans ce test : Secrets retombe sur config().
         config(['services.stripe.webhook_secret' => self::SECRET]);
     }
 

@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Exceptions\BookingException;
+use App\Support\Secrets;
 use Illuminate\Support\Facades\Http;
 
 /**
@@ -25,8 +26,8 @@ class PayPal
      */
     private static function accessToken(): string
     {
-        $client = trim((string) config('services.paypal.client_id'));
-        $secret = trim((string) config('services.paypal.secret'));
+        $client = Secrets::get('paypal_client_id');
+        $secret = Secrets::get('paypal_secret');
 
         if ($client === '' || $secret === '') {
             throw new BookingException(__('Identifiants PayPal manquants.'));

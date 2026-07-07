@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="{{ asset('assets/css/ntb-public.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/ntb-pickers.css') }}">
     @stack('styles')
+    {!! \App\Support\Design::styleBlock() !!}
 </head>
 <body>
     <main>
@@ -26,10 +27,10 @@
             currency: @json(\App\Support\Settings::currency()),
             bookingUrl: @json(route('booking.steps')),
             homeUrl: @json(url('/')),
-            hasStripe: @json((bool) config('services.stripe.key')),
-            stripeKey: @json((string) config('services.stripe.key')),
-            hasPaypal: @json((bool) config('services.paypal.client_id')),
-            paypalLoaded: @json((bool) config('services.paypal.client_id')),
+            hasStripe: @json(\App\Support\Secrets::get('stripe_key') !== ''),
+            stripeKey: @json(\App\Support\Secrets::get('stripe_key')),
+            hasPaypal: @json(\App\Support\Secrets::get('paypal_client_id') !== ''),
+            paypalLoaded: @json(\App\Support\Secrets::get('paypal_client_id') !== ''),
             asideDetachBody: false,
             currentUser: @json(auth()->check() ? ['name' => auth()->user()->name, 'email' => auth()->user()->email] : null),
             i18n: {
@@ -55,7 +56,7 @@
             }
         };
     </script>
-    @if (config('services.stripe.key'))
+    @if (\App\Support\Secrets::get('stripe_key') !== '')
         <script src="https://js.stripe.com/v3/"></script>
     @endif
     <script src="{{ asset('vendor/flatpickr/flatpickr.min.js') }}"></script>

@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Mail\BookingNotification;
 use App\Models\Booking;
+use App\Support\Secrets;
 use App\Support\Settings;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -104,9 +105,9 @@ class Notifications
      */
     public static function sendSms(string $to, string $body): bool
     {
-        $sid = trim((string) config('services.twilio.sid'));
-        $token = trim((string) config('services.twilio.token'));
-        $from = trim((string) config('services.twilio.from'));
+        $sid = Secrets::get('twilio_sid');
+        $token = Secrets::get('twilio_token');
+        $from = Secrets::get('twilio_from');
 
         if ($sid === '' || $token === '' || $from === '') {
             Log::warning('SMS non envoyé : identifiants Twilio incomplets.');

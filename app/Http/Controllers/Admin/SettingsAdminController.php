@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Support\Design;
+use App\Support\Secrets;
 use App\Support\Settings;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -10,7 +12,7 @@ use Illuminate\View\View;
 
 class SettingsAdminController extends Controller
 {
-    /** Clés éditables et leur règle de validation. Les secrets API restent en .env. */
+    /** Clés éditables et leur règle de validation. */
     private const FIELDS = [
         'currency' => ['string', 'max:8'],
         'currency_symbol' => ['string', 'max:8'],
@@ -42,33 +44,84 @@ class SettingsAdminController extends Controller
         'surcharge_holiday_pct' => ['nullable', 'numeric', 'min:0', 'max:500'],
     ];
 
-    private const CHECKBOXES = [
-        'notif_email_customer', 'notif_email_admin', 'notif_sms_customer', 'notif_sms_admin',
-        'surcharge_night_enabled', 'surcharge_weekend_enabled', 'surcharge_holiday_enabled',
+    /** Cases a cocher par onglet : absentes du POST = decochees, mais
+     * uniquement pour l'onglet soumis (chaque onglet a son formulaire). */
+    private const TAB_CHECKBOXES = [
+        'tarifs' => ['surcharge_night_enabled', 'surcharge_weekend_enabled', 'surcharge_holiday_enabled'],
+        'notifications' => ['notif_email_customer', 'notif_email_admin', 'notif_sms_customer', 'notif_sms_admin'],
     ];
 
-    public function edit(): View
+    public function edit(Request $request): View
     {
         $values = [];
         foreach (array_keys(self::FIELDS) as $key) {
             $values[$key] = Settings::get($key, '');
         }
 
-        return view('admin.settings', ['values' => $values]);
+        $secrets = [];
+        foreach (array_keys(Secrets::KEYS) as $key) {
+            $secrets[$key] = Secrets::masked($key);
+        }
+
+        return view('admin.settings', [
+            'values' => $values,
+            'secrets' => $secrets,
+            'design' => Design::tokens(),
+            'designDefaults' => Design::defaults(),
+            'customCss' => Design::customCss(),
+            'tab' => (string) $request->query('tab', 'general'),
+        ]);
     }
 
     public function update(Request $request): RedirectResponse
     {
-        $validated = $request->validate(self::FIELDS);
+        $tab = (string) $request->input('_tab', 'general');
 
+        // Onglet Style : tokens design + CSS personnalisé (ou réinitialisation).
+        if ($tab === 'style') {
+            if ($request->input('_action') === 'reset') {
+                Design::reset();
+
+                return redirect()->route('admin.settings', ['tab' => 'style'])
+                    ->with('ok', __('Style réinitialisé aux valeurs par défaut.'));
+            }
+
+            Design::save((array) $request->input('design', []));
+            Design::saveCustomCss((string) $request->input('custom_css', ''));
+
+            return redirect()->route('admin.settings', ['tab' => 'style'])
+                ->with('ok', __('Style enregistré.'));
+        }
+
+        // Onglet API : clés chiffrées ; champ vide = inchangé, « - » = effacer.
+        if ($tab === 'api') {
+            foreach (array_keys(Secrets::KEYS) as $key) {
+                $input = trim((string) $request->input('secret_'.$key, ''));
+                if ($input === '') {
+                    continue;
+                }
+                Secrets::set($key, $input === '-' ? '' : $input);
+            }
+
+            return redirect()->route('admin.settings', ['tab' => 'api'])
+                ->with('ok', __('Clés API enregistrées (chiffrées).'));
+        }
+
+        // Autres onglets : réglages simples.
+        $validated = $request->validate(self::FIELDS);
+        $checkboxes = self::TAB_CHECKBOXES[$tab] ?? [];
+        $allCheckboxes = array_merge(...array_values(self::TAB_CHECKBOXES));
+
+        foreach ($checkboxes as $key) {
+            Settings::set($key, $request->has($key) ? '1' : '0');
+        }
         foreach (array_keys(self::FIELDS) as $key) {
-            if (in_array($key, self::CHECKBOXES, true)) {
-                Settings::set($key, $request->has($key) ? '1' : '0');
-            } elseif (array_key_exists($key, $validated)) {
+            if (! in_array($key, $allCheckboxes, true) && array_key_exists($key, $validated)) {
                 Settings::set($key, (string) ($validated[$key] ?? ''));
             }
         }
 
-        return back()->with('ok', __('Réglages enregistrés.'));
+        return redirect()->route('admin.settings', ['tab' => $tab])
+            ->with('ok', __('Réglages enregistrés.'));
     }
 }

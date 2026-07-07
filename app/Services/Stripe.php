@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Exceptions\BookingException;
+use App\Support\Secrets;
 use Illuminate\Support\Facades\Http;
 
 /**
@@ -22,7 +23,7 @@ class Stripe
      */
     private static function request(string $method, string $path, array $body = []): array
     {
-        $secret = trim((string) config('services.stripe.secret'));
+        $secret = Secrets::get('stripe_secret');
         if ($secret === '') {
             throw new BookingException(__('Clé secrète Stripe manquante.'));
         }
@@ -103,7 +104,7 @@ class Stripe
      */
     public static function verifyWebhook(string $payload, string $sigHeader): bool
     {
-        $secret = trim((string) config('services.stripe.webhook_secret'));
+        $secret = Secrets::get('stripe_webhook_secret');
         if ($secret === '' || $sigHeader === '') {
             return false;
         }

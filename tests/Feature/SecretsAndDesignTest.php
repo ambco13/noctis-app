@@ -65,8 +65,8 @@ class SecretsAndDesignTest extends TestCase
 
         $this->actingAs($this->admin())->post('/admin/reglages', [
             '_tab' => 'api',
-            'secret_google_maps_key' => 'nouvelle-cle-google',
-            'secret_stripe_secret' => '', // vide = inchangé.
+            'apikey_google_maps_key' => 'nouvelle-cle-google',
+            'apikey_stripe_secret' => '', // vide = inchangé.
         ])->assertRedirect();
 
         Settings::flush();

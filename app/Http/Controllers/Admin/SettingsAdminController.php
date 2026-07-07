@@ -105,7 +105,7 @@ class SettingsAdminController extends Controller
             Settings::set('test_mode', $request->has('test_mode') ? '1' : '0');
 
             foreach (array_keys(Secrets::KEYS) as $key) {
-                $input = trim((string) $request->input('secret_'.$key, ''));
+                $input = trim((string) $request->input('apikey_'.$key, ''));
                 if ($input === '') {
                     continue;
                 }

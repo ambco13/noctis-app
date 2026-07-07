@@ -17,17 +17,26 @@
             display: flex; align-items: center; justify-content: space-between;
             gap: 16px; padding: 14px 24px; box-sizing: border-box;
             background: var(--ntb-surf); border-bottom: 1px solid var(--ntb-line);
+            max-width: 100vw;
         }
         .ntb-topnav-brand {
             font-family: var(--ntb-serif); font-size: 19px; letter-spacing: .01em;
             color: var(--ntb-text); text-decoration: none;
+            flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
         }
-        .ntb-topnav-links { display: flex; align-items: center; gap: 20px; }
+        .ntb-topnav-links { display: flex; align-items: center; gap: 20px; min-width: 0; flex: 0 1 auto; }
         .ntb-topnav-links a {
             font-family: var(--ntb-sans); font-size: 14px; font-weight: 600;
             color: var(--ntb-muted); text-decoration: none; transition: color 180ms;
+            /* Un email n'a pas d'espace où retourner à la ligne : on tronque
+               plutôt que de laisser le texte pousser la barre hors écran. */
+            max-width: 45vw; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
         }
         .ntb-topnav-links a:hover { color: var(--ntb-accent-hi); }
+
+        /* Filet de sécurité : un contenu imprévu (texte long, image...) ne doit
+           jamais créer de scroll horizontal sur la page. */
+        html, body { max-width: 100%; overflow-x: hidden; }
 
         /* Marge latérale globale du site : 24px en mobile, 48px à partir du desktop. */
         body > main { padding: 0 24px; box-sizing: border-box; }

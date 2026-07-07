@@ -1,58 +1,137 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# NOCTIS Taxi — Application de réservation VTC
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Application web autonome de réservation de taxi / VTC : estimation de prix
+(Google Routes API), paiement en ligne (Stripe & PayPal), notifications
+(e-mail & SMS Twilio), espace client (magic link + mot de passe) et
+back-office complet. Refonte standalone du plugin WordPress
+`noctis-taxi-booking-v2`, à parité fonctionnelle, sans WordPress.
 
-## About Laravel
+- **Stack :** Laravel 13 · PHP 8.4 · MySQL/MariaDB
+- **Langue :** Français
+- **Devise par défaut :** Euro (€)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 1. Pages
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+| URL | Rôle |
+|-----|------|
+| `/reservation` | Étape 1 : formulaire d'estimation (départ, arrivée, date, heure) |
+| `/ma-reservation` | Étapes 2-4 : choix du véhicule, coordonnées, paiement, confirmation |
+| `/mon-compte` | Espace client : connexion (mot de passe ou magic link), réservations, profil, RGPD |
+| `/admin` | Back-office : dashboard, réservations, clients, véhicules, réglages |
 
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+## 2. Installation
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+git clone <repo> noctis-app && cd noctis-app
+composer install
+cp .env.example .env
+php artisan key:generate
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+Configurer la base dans `.env` (`DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`),
+puis :
 
-## Contributing
+```bash
+php artisan migrate --seed     # tables + 2 véhicules d'exemple + réglages
+php artisan storage:link       # images des véhicules
+php artisan noctis:make-admin votre@email.fr   # compte back-office
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Lancement en développement :
 
-## Code of Conduct
+```bash
+php artisan serve              # http://127.0.0.1:8000
+php artisan queue:work         # OBLIGATOIRE pour l'envoi des notifications
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## 3. Clés API
 
-## Security Vulnerabilities
+Deux façons de configurer, par ordre de priorité :
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+1. **Back-office** — *Réglages → API & Intégrations* : clés chiffrées en base
+   (via `APP_KEY`), boutons « Tester » par service, mode test/live.
+2. **`.env`** — utilisé en secours quand aucune valeur admin n'existe :
 
-## License
+| Variable | Service |
+|----------|---------|
+| `GOOGLE_MAPS_API_KEY` | Google Routes + Places (calcul de trajet, autocomplétion) |
+| `STRIPE_KEY` / `STRIPE_SECRET` | Stripe **test** (pk_test…, sk_test…) |
+| `STRIPE_KEY_LIVE` / `STRIPE_SECRET_LIVE` | Stripe **live** |
+| `STRIPE_WEBHOOK_SECRET` | Signature du webhook (whsec…) |
+| `PAYPAL_CLIENT_ID` / `PAYPAL_SECRET` | PayPal **sandbox** |
+| `PAYPAL_CLIENT_ID_LIVE` / `PAYPAL_SECRET_LIVE` | PayPal **live** |
+| `TWILIO_SID` / `TWILIO_TOKEN` / `TWILIO_FROM` | SMS |
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Le réglage **Mode test** (Réglages → API) choisit la paire test ou live pour
+Stripe et PayPal.
+
+**Webhook Stripe** : déclarer `https://votre-domaine/api/v1/webhook/stripe`
+dans le dashboard Stripe (événements `payment_intent.succeeded` et
+`payment_intent.payment_failed`) et reporter le secret `whsec_…`.
+
+## 4. Architecture
+
+```
+app/
+├── Http/Controllers/
+│   ├── Api/            # Tunnel : quotes, booking, paiements, auth client, profil
+│   ├── Admin/          # Back-office : dashboard, réservations, véhicules, réglages
+│   ├── BookingPageController.php   # Pages du tunnel (étape 1 → étapes 2-4)
+│   └── AccountPageController.php   # Espace client
+├── Services/           # Cœur métier porté du plugin
+│   ├── Pricing.php         # base + km + min, plancher, majorations nuit/WE/fériés
+│   ├── GoogleMaps.php      # Routes API + Places (proxy serveur, cache 12 h)
+│   ├── BookingService.php  # création pending, confirmation idempotente
+│   ├── Stripe.php          # PaymentIntent, webhook (HMAC + anti-rejeu)
+│   ├── PayPal.php          # Orders API v2 (create/capture)
+│   ├── MagicLink.php       # tokens hashés, consommation atomique
+│   ├── CustomerService.php # comptes, historique emails, RGPD
+│   └── Notifications.php   # e-mails HTML + SMS, templates à variables
+├── Support/
+│   ├── Settings.php    # réglages (table settings, cache requête)
+│   ├── Secrets.php     # clés API chiffrées (admin > .env), mode test/live
+│   └── Design.php      # panneau Style : tokens --ntb-*, CSS généré
+public/assets/          # CSS/JS portés du plugin (ntb-public.js, etc.)
+public/vendor/          # Flatpickr, Leaflet (embarqués, pas de CDN)
+```
+
+Principes de sécurité hérités du plugin et conservés :
+
+- **Prix recalculé côté serveur** — jamais de confiance au montant du client.
+- **Paiement vérifié serveur** : l'intent/ordre doit être celui lié à la
+  réservation (`transaction_id`), et son statut vérifié auprès de la passerelle.
+- **Webhook Stripe** : signature HMAC + fenêtre anti-rejeu 300 s + idempotence
+  at-most-once (table `stripe_events`, marquage avant traitement).
+- **Auth client** : réponses anti-énumération identiques, rate limiting par
+  e-mail **et** par IP, magic links à usage unique (hash SHA-256, TTL 24 h,
+  consommation en transaction verrouillée).
+- **RGPD** : export JSON, suppression anonymisante (bloquée si réservations
+  futures confirmées).
+- Les clés API ne transitent jamais vers le navigateur ; Google/Stripe/PayPal
+  sont appelés uniquement côté serveur (le front ne reçoit que la clé
+  publiable Stripe).
+
+## 5. Tests
+
+```bash
+php artisan test           # 94 tests (pricing, webhooks, paiements, auth, admin…)
+./vendor/bin/pint --dirty  # formatage
+```
+
+Les tests tournent sur SQLite en mémoire (aucun impact sur la base).
+
+## 6. Mise en production — liste de contrôle
+
+- [ ] `APP_ENV=production`, `APP_DEBUG=false`, `APP_URL=https://…`
+- [ ] HTTPS obligatoire + cookies de session sécurisés
+      (`SESSION_SECURE_COOKIE=true`)
+- [ ] `php artisan config:cache && php artisan route:cache && php artisan view:cache`
+- [ ] Worker de file d'attente supervisé (`php artisan queue:work` via
+      systemd/Supervisor) — sans lui, aucune notification ne part
+- [ ] `MAIL_MAILER` configuré (SMTP réel — en dev les mails vont dans le log)
+- [ ] Mode test désactivé (Réglages → API) + clés live renseignées + webhook
+      Stripe déclaré sur le domaine de production
+- [ ] Sauvegardes de la base ; les clés admin sont chiffrées avec `APP_KEY` :
+      sauvegarder le `.env` séparément, sinon elles sont irrécupérables

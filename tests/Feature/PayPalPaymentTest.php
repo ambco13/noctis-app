@@ -109,6 +109,17 @@ class PayPalPaymentTest extends TestCase
         $this->assertSame('pending', $booking->fresh()->status);
     }
 
+    public function test_creation_ordre_refusee_si_deja_payee_ou_autre_passerelle(): void
+    {
+        // Réservation déjà payée → refus (protège le transaction_id).
+        $paid = $this->booking(['payment_status' => 'paid', 'booking_ref' => 'NTB-PAID0001']);
+        $this->postJson('/api/v1/paypal/order', ['booking_id' => $paid->id])->assertStatus(422);
+
+        // Réservation engagée sur Stripe → refus.
+        $stripe = $this->booking(['payment_method' => 'stripe', 'booking_ref' => 'NTB-STRIPE01']);
+        $this->postJson('/api/v1/paypal/order', ['booking_id' => $stripe->id])->assertStatus(422);
+    }
+
     public function test_capture_non_completee_ne_confirme_pas(): void
     {
         $booking = $this->booking(['transaction_id' => 'ORDER123']);

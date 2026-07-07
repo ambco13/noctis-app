@@ -64,6 +64,13 @@ class PaymentController extends Controller
             return $this->error(__('Réservation introuvable.'));
         }
 
+        // Durcissement : booking_id est séquentiel, on refuse d'écraser le
+        // transaction_id d'une réservation payée ou engagée sur Stripe
+        // (sinon un tiers pourrait invalider un paiement en cours).
+        if ($booking->payment_status === 'paid' || $booking->payment_method !== 'paypal') {
+            return $this->error(__('Paiement invalide.'));
+        }
+
         $order = PayPal::createOrder($booking->price, $booking->currency, $booking->booking_ref);
 
         // Lie l'ordre PayPal à cette réservation pour vérification lors de la capture.

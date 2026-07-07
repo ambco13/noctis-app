@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\BookingController;
+use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\PlacesController;
 use App\Http\Controllers\Api\QuoteController;
 use App\Http\Controllers\BookingPageController;
@@ -18,4 +19,7 @@ Route::prefix('api/v1')->group(function () {
     Route::get('autocomplete', [PlacesController::class, 'autocomplete'])->middleware('throttle:30,1');
     Route::post('quotes', [QuoteController::class, 'quotes'])->middleware('throttle:20,1');
     Route::post('booking', [BookingController::class, 'store'])->middleware('throttle:10,1');
+    Route::post('confirm/stripe', [PaymentController::class, 'confirmStripe'])->middleware('throttle:10,1');
+    // Webhook appelé par Stripe (signature vérifiée dans le contrôleur, CSRF exclu dans bootstrap/app.php).
+    Route::post('webhook/stripe', [PaymentController::class, 'webhookStripe']);
 });

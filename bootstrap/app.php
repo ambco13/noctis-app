@@ -13,7 +13,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        // Webhook signé par Stripe : la vérification HMAC remplace le CSRF.
+        $middleware->validateCsrfTokens(except: [
+            'api/v1/webhook/stripe',
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Services\BookingService;
+use App\Services\Stripe;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -34,13 +35,25 @@ class BookingController extends Controller
 
         $booking = BookingService::createPending($validated);
 
-        return response()->json([
+        $payload = [
             'success' => true,
             'booking_id' => $booking->id,
             'booking_ref' => $booking->booking_ref,
             'amount' => $booking->price,
             'currency' => $booking->currency,
             'summary' => BookingService::publicSummary($booking),
-        ]);
+        ];
+
+        // Prépare la passerelle choisie : PaymentIntent créé côté serveur,
+        // lié à la réservation via transaction_id pour la vérification finale.
+        if (($validated['payment_method'] ?? '') === 'stripe') {
+            $intent = Stripe::createPaymentIntent($booking->price, $booking->currency, $booking->booking_ref);
+            $booking->update(['transaction_id' => $intent['id']]);
+            $payload['stripe_client_secret'] = $intent['client_secret'];
+            $payload['stripe_publishable'] = (string) config('services.stripe.key');
+            $payload['stripe_intent_status'] = $intent['status'];
+        }
+
+        return response()->json($payload);
     }
 }

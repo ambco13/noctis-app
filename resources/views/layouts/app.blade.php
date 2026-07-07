@@ -55,6 +55,9 @@
             }
         };
     </script>
+    @if (config('services.stripe.key'))
+        <script src="https://js.stripe.com/v3/"></script>
+    @endif
     <script src="{{ asset('vendor/flatpickr/flatpickr.min.js') }}"></script>
     <script src="{{ asset('vendor/flatpickr/fr.js') }}"></script>
     <script src="{{ asset('vendor/leaflet/leaflet.min.js') }}"></script>

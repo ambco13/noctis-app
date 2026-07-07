@@ -29,6 +29,15 @@ class BookingService
     /** Clé de session mémorisant la réservation en attente (anti-doublon). */
     private const SESSION_PENDING = 'pending_booking_id';
 
+    /**
+     * Vide toute la session du tunnel (trajet étape 1 + réservation en attente),
+     * appelé après une confirmation de paiement réussie.
+     */
+    public static function clearFlowSession(): void
+    {
+        session()->forget([self::SESSION_PENDING, 'booking_step1']);
+    }
+
     public static function generateRef(): string
     {
         do {

@@ -51,6 +51,28 @@
     </a>
 </div>
 
+<div class="ntb-section-label">{{ __('30 derniers jours') }}</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:22px;">
+    @include('admin._bar_chart', ['title' => __('Revenus confirmés'), 'series' => $chart_revenue, 'money' => true])
+    @include('admin._bar_chart', ['title' => __('Nouvelles réservations'), 'series' => $chart_bookings, 'money' => false])
+</div>
+<script>
+    // Tooltip partagé des graphiques : suit la cible pleine hauteur survolée.
+    document.querySelectorAll('.nadm-chart-hit').forEach(function (hit) {
+        var wrap = hit.closest('div[style*="position:relative"]');
+        var tip = wrap ? wrap.querySelector('.nadm-chart-tip') : null;
+        if (! tip) return;
+        hit.addEventListener('mousemove', function (e) {
+            tip.hidden = false;
+            tip.textContent = hit.dataset.label + ' — ' + hit.dataset.value;
+            var box = wrap.getBoundingClientRect();
+            tip.style.left = Math.min(e.clientX - box.left + 12, box.width - tip.offsetWidth - 4) + 'px';
+            tip.style.top = (e.clientY - box.top - 30) + 'px';
+        });
+        hit.addEventListener('mouseleave', function () { tip.hidden = true; });
+    });
+</script>
+
 <div class="ntb-section-label">{{ __('Dernières réservations') }}</div>
 <table class="nadm-table">
     <thead>

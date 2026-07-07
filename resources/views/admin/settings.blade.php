@@ -277,23 +277,55 @@
     </div>
 
     <h3>{{ __('Géométrie') }}</h3>
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;">
-        <div><label>{{ __('Rayon') }} <code>--ntb-r</code></label><input type="text" name="design[--ntb-r]" value="{{ $design['--ntb-r'] }}"></div>
-        <div><label>{{ __('Rayon petit') }}</label><input type="text" name="design[--ntb-r-sm]" value="{{ $design['--ntb-r-sm'] }}"></div>
-        <div><label>{{ __('Rayon grand') }}</label><input type="text" name="design[--ntb-r-lg]" value="{{ $design['--ntb-r-lg'] }}"></div>
-        <div><label>{{ __('Rayon boutons (px)') }}</label><input type="number" min="0" max="999" name="design[ntb_btn_radius]" value="{{ $design['ntb_btn_radius'] }}"></div>
+    @php $cardRadius = (int) $design['--ntb-r']; @endphp
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+        <div>
+            <label>{{ __('Arrondi des cartes') }} — <output id="out-card-radius">{{ $cardRadius }}px</output></label>
+            <input type="range" min="0" max="40" value="{{ $cardRadius }}" style="width:100%;"
+                   oninput="document.getElementById('out-card-radius').value = this.value + 'px';
+                            ['r','r-sm','r-lg'].forEach(s => document.getElementById('design-' + s).value = this.value + 'px');">
+            <input type="hidden" id="design-r" name="design[--ntb-r]" value="{{ $design['--ntb-r'] }}">
+            <input type="hidden" id="design-r-sm" name="design[--ntb-r-sm]" value="{{ $design['--ntb-r-sm'] }}">
+            <input type="hidden" id="design-r-lg" name="design[--ntb-r-lg]" value="{{ $design['--ntb-r-lg'] }}">
+        </div>
+        <div>
+            <label>{{ __('Arrondi des boutons') }} — <output id="out-btn-radius">{{ $design['ntb_btn_radius'] }}px</output></label>
+            <input type="range" min="0" max="999" value="{{ $design['ntb_btn_radius'] }}" name="design[ntb_btn_radius]" style="width:100%;"
+                   oninput="document.getElementById('out-btn-radius').value = this.value + 'px';">
+            <p style="font-size:12px;color:#6b7280;margin:2px 0 0;">{{ __('0 = carré, 999 = pilule.') }}</p>
+        </div>
     </div>
 
+    <label style="margin-top:14px;">{{ __('Vitesse des animations') }}</label>
+    <select name="design[--ntb-dur]" style="max-width:260px;">
+        <option value="120ms" @selected($design['--ntb-dur'] === '120ms')>{{ __('Rapide') }}</option>
+        <option value="220ms" @selected($design['--ntb-dur'] === '220ms')>{{ __('Standard (défaut)') }}</option>
+        <option value="350ms" @selected($design['--ntb-dur'] === '350ms')>{{ __('Lent') }}</option>
+    </select>
+
     <h3>{{ __('Effet verre') }}</h3>
-    <div style="display:flex;gap:18px;align-items:center;">
-        <label style="display:flex;gap:8px;align-items:center;">
-            <input type="hidden" name="design[ntb_glass_enabled]" value="0">
-            <input type="checkbox" onchange="this.previousElementSibling.value = this.checked ? '1' : '0'" @checked($design['ntb_glass_enabled'] !== '0')>
-            {{ __('Activé') }}
-        </label>
-        <label>{{ __('Opacité (%)') }}
-            <input type="number" min="0" max="100" name="design[ntb_glass_opacity]" value="{{ $design['ntb_glass_opacity'] }}" style="max-width:90px;">
-        </label>
+    @php $blurPx = (int) preg_replace('/\D/', '', $design['--ntb-glass-blur']); @endphp
+    <label style="display:flex;gap:10px;align-items:center;">
+        <input type="hidden" name="design[ntb_glass_enabled]" value="{{ $design['ntb_glass_enabled'] !== '0' ? '1' : '0' }}">
+        <input type="checkbox" class="nadm-sw" onchange="this.previousElementSibling.value = this.checked ? '1' : '0'" @checked($design['ntb_glass_enabled'] !== '0')>
+        {{ __('Activer l\'effet verre (glassmorphisme)') }}
+    </label>
+    <p style="font-size:12px;color:#6b7280;margin:4px 0 12px;">
+        {{ __('Fond semi-transparent + flou du panneau de réservation. Réduire l\'opacité renforce l\'effet verre.') }}
+    </p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+        <div>
+            <label>{{ __('Opacité du fond') }} — <output id="out-glass-op">{{ $design['ntb_glass_opacity'] }}%</output></label>
+            <input type="range" min="0" max="100" value="{{ $design['ntb_glass_opacity'] }}" name="design[ntb_glass_opacity]" style="width:100%;"
+                   oninput="document.getElementById('out-glass-op').value = this.value + '%';">
+        </div>
+        <div>
+            <label>{{ __('Intensité du flou') }} — <output id="out-glass-blur">{{ $blurPx }}px</output></label>
+            <input type="range" min="0" max="20" value="{{ $blurPx }}" style="width:100%;"
+                   oninput="document.getElementById('out-glass-blur').value = this.value + 'px';
+                            document.getElementById('design-glass-blur').value = 'blur(' + this.value + 'px)';">
+            <input type="hidden" id="design-glass-blur" name="design[--ntb-glass-blur]" value="{{ $design['--ntb-glass-blur'] }}">
+        </div>
     </div>
 
     <h3>{{ __('CSS personnalisé') }}</h3>

@@ -58,7 +58,11 @@ class AdminTest extends TestCase
             ->assertOk()
             ->assertSee('Tableau de bord')
             ->assertSee('NTB-ADMIN001')
-            ->assertSee('35,00');
+            ->assertSee('35,00')
+            // Graphiques 30 jours : la réservation payée du jour apparaît.
+            ->assertSee('Revenus confirmés')
+            ->assertSee('Nouvelles réservations')
+            ->assertSee('nadm-chart-hit', false);
     }
 
     public function test_liste_et_filtre_reservations(): void

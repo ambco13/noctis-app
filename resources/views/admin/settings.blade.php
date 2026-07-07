@@ -160,7 +160,7 @@
                     <span style="font-weight:400;color:#9ca3af;font-size:12px;"> — {{ __('non configurée') }}</span>
                 @endif
             </label>
-            <input type="password" name="secret_{{ $key }}" value="" placeholder="{{ __('Nouvelle valeur…') }}" autocomplete="new-password">
+            <input type="text" name="secret_{{ $key }}" value="" placeholder="{{ __('Nouvelle valeur…') }}" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" data-1p-ignore data-bwignore>
         @endforeach
         @if ($group['hint'] !== '')
             <p style="font-size:12px;color:#6b7280;margin:6px 0 0;">{!! nl2br(e($group['hint'])) !!}

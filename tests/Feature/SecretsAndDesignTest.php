@@ -118,6 +118,26 @@ class SecretsAndDesignTest extends TestCase
             ->assertJsonPath('ok', true);
     }
 
+    public function test_endpoint_test_service_utilise_la_valeur_saisie_non_enregistree(): void
+    {
+        // Aucune clé admin ni .env enregistrée, mais une valeur est fournie (champ tapé, pas encore sauvegardé).
+        config(['services.stripe.secret' => '']);
+        Http::fake([
+            'api.stripe.com/*' => Http::response(['available' => []]),
+        ]);
+
+        $this->actingAs($this->admin())
+            ->postJson('/admin/reglages/test', [
+                'service' => 'stripe',
+                'values' => ['stripe_secret' => 'sk_test_pas_encore_enregistree'],
+            ])
+            ->assertOk()
+            ->assertJsonPath('ok', true);
+
+        // Rien n'a été persisté par le simple fait de tester.
+        $this->assertSame('', Secrets::get('stripe_secret'));
+    }
+
     public function test_chaque_onglet_reglages_se_rend_sans_erreur(): void
     {
         $admin = $this->admin();

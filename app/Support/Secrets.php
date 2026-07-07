@@ -65,11 +65,34 @@ class Secrets
         return self::get(self::isTestMode() ? 'paypal_secret' : 'paypal_secret_live');
     }
 
+    /** Surcharges temporaires (test de clé avant enregistrement). */
+    private static array $overrides = [];
+
     /**
-     * Valeur effective : admin (déchiffrée) en priorité, sinon .env.
+     * Exécute $fn avec des valeurs de clés temporairement surchargées, sans
+     * toucher au stockage — utilisé pour tester une clé avant de l'enregistrer.
+     */
+    public static function withOverrides(array $overrides, callable $fn): mixed
+    {
+        $previous = self::$overrides;
+        self::$overrides = array_filter($overrides, fn ($v) => $v !== '');
+
+        try {
+            return $fn();
+        } finally {
+            self::$overrides = $previous;
+        }
+    }
+
+    /**
+     * Valeur effective : surcharge de test, puis admin (déchiffrée), sinon .env.
      */
     public static function get(string $key): string
     {
+        if (array_key_exists($key, self::$overrides)) {
+            return self::$overrides[$key];
+        }
+
         $stored = (string) Settings::get('secret_'.$key, '');
 
         if ($stored !== '') {

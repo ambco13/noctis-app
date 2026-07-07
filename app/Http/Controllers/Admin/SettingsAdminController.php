@@ -142,15 +142,24 @@ class SettingsAdminController extends Controller
     {
         $validated = $request->validate([
             'service' => ['required', 'in:google,stripe,paypal,twilio'],
+            'values' => ['nullable', 'array'],
+            'values.*' => ['nullable', 'string', 'max:500'],
         ]);
 
+        // Teste avec les valeurs saisies à l'écran (pas encore enregistrées)
+        // quand elles sont renseignées, sinon avec les clés déjà enregistrées.
+        $overrides = array_intersect_key(
+            array_map('trim', (array) ($validated['values'] ?? [])),
+            Secrets::KEYS
+        );
+
         try {
-            $message = match ($validated['service']) {
+            $message = Secrets::withOverrides($overrides, fn () => match ($validated['service']) {
                 'google' => $this->testGoogle(),
                 'stripe' => $this->testStripe(),
                 'paypal' => $this->testPaypal(),
                 'twilio' => $this->testTwilio(),
-            };
+            });
 
             return response()->json(['ok' => true, 'message' => $message]);
         } catch (\Throwable $e) {

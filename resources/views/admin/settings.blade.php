@@ -151,6 +151,7 @@
     @endphp
 
     @foreach ($groups as $groupLabel => $group)
+        <div class="nadm-test-group" data-test-group="{{ $group['test'] }}">
         <h3 style="margin-bottom:4px;">{{ $groupLabel }}</h3>
         @foreach ($group['fields'] as $key => $label)
             <label>{{ $label }}
@@ -160,7 +161,7 @@
                     <span style="font-weight:400;color:#9ca3af;font-size:12px;"> — {{ __('non configurée') }}</span>
                 @endif
             </label>
-            <input type="text" name="apikey_{{ $key }}" value="" placeholder="{{ __('Nouvelle valeur…') }}" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" data-1p-ignore data-bwignore readonly onfocus="this.removeAttribute('readonly')">
+            <input type="text" name="apikey_{{ $key }}" data-field-key="{{ $key }}" value="" placeholder="{{ __('Nouvelle valeur…') }}" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" data-1p-ignore data-bwignore readonly onfocus="this.removeAttribute('readonly')">
         @endforeach
         @if ($group['hint'] !== '')
             <p style="font-size:12px;color:#6b7280;margin:6px 0 0;">{!! nl2br(e($group['hint'])) !!}
@@ -169,9 +170,10 @@
                 @endif
             </p>
         @endif
-        <div>
+        <div style="margin-top:6px;">
             <button type="button" class="nadm-test-btn" data-test-service="{{ $group['test'] }}">{{ __('Tester') }}</button>
             <span class="nadm-test-result" data-test-result="{{ $group['test'] }}"></span>
+        </div>
         </div>
     @endforeach
 
@@ -179,12 +181,19 @@
 </form>
 
 <script>
-    // Boutons « Tester la connexion » : teste avec les clés ENREGISTRÉES
-    // (pensez à enregistrer avant de tester une nouvelle clé).
+    // Boutons « Tester la connexion » : teste en priorité la valeur tapée à
+    // l'écran (pas encore enregistrée), sinon la clé déjà enregistrée.
     document.querySelectorAll('[data-test-service]').forEach(function (btn) {
         btn.addEventListener('click', function () {
             var service = btn.getAttribute('data-test-service');
             var out = document.querySelector('[data-test-result="' + service + '"]');
+            var group = document.querySelector('[data-test-group="' + service + '"]');
+            var values = {};
+            group.querySelectorAll('[data-field-key]').forEach(function (input) {
+                if (input.value.trim() !== '') {
+                    values[input.getAttribute('data-field-key')] = input.value.trim();
+                }
+            });
             out.textContent = '…';
             out.style.color = '#6b7280';
             fetch(@json(route('admin.settings.test')), {
@@ -193,7 +202,7 @@
                     'Content-Type': 'application/json',
                     'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').content
                 },
-                body: JSON.stringify({ service: service })
+                body: JSON.stringify({ service: service, values: values })
             }).then(function (r) { return r.json(); }).then(function (res) {
                 out.textContent = res.message;
                 out.style.color = res.ok ? '#059669' : '#b91c1c';

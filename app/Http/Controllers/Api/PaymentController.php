@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use App\Services\BookingService;
+use App\Services\PayPal;
 use App\Services\Stripe;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -41,6 +42,63 @@ class PaymentController extends Controller
         }
 
         $booking = BookingService::confirmPaid($booking->id, $validated['payment_intent_id']);
+        BookingService::clearFlowSession();
+
+        return response()->json([
+            'success' => true,
+            'summary' => BookingService::publicSummary($booking),
+        ]);
+    }
+
+    /**
+     * Crée un ordre PayPal pour une réservation existante et le lie à celle-ci.
+     */
+    public function paypalCreateOrder(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'booking_id' => ['required', 'integer'],
+        ]);
+
+        $booking = Booking::find($validated['booking_id']);
+        if (! $booking) {
+            return $this->error(__('Réservation introuvable.'));
+        }
+
+        $order = PayPal::createOrder($booking->price, $booking->currency, $booking->booking_ref);
+
+        // Lie l'ordre PayPal à cette réservation pour vérification lors de la capture.
+        $booking->update(['transaction_id' => $order['id']]);
+
+        return response()->json(['success' => true, 'order_id' => $order['id']]);
+    }
+
+    /**
+     * Capture un ordre PayPal approuvé et confirme la réservation.
+     */
+    public function paypalCapture(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'booking_id' => ['required', 'integer'],
+            'order_id' => ['required', 'string', 'max:255'],
+        ]);
+
+        $booking = Booking::find($validated['booking_id']);
+        if (! $booking) {
+            return $this->error(__('Réservation introuvable.'));
+        }
+
+        // Vérifie que l'ordre PayPal a bien été créé pour cette réservation.
+        if (empty($booking->transaction_id) || $booking->transaction_id !== $validated['order_id']) {
+            return $this->error(__('Paiement invalide.'));
+        }
+
+        $capture = PayPal::captureOrder($validated['order_id']);
+        if (! $capture['paid']) {
+            return $this->error(__('Paiement PayPal non finalisé.'));
+        }
+
+        $txn = $capture['capture_id'] !== '' ? $capture['capture_id'] : $validated['order_id'];
+        $booking = BookingService::confirmPaid($booking->id, $txn);
         BookingService::clearFlowSession();
 
         return response()->json([

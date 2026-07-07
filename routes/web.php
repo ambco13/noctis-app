@@ -20,6 +20,8 @@ Route::prefix('api/v1')->group(function () {
     Route::post('quotes', [QuoteController::class, 'quotes'])->middleware('throttle:20,1');
     Route::post('booking', [BookingController::class, 'store'])->middleware('throttle:10,1');
     Route::post('confirm/stripe', [PaymentController::class, 'confirmStripe'])->middleware('throttle:10,1');
+    Route::post('paypal/order', [PaymentController::class, 'paypalCreateOrder'])->middleware('throttle:10,1');
+    Route::post('paypal/capture', [PaymentController::class, 'paypalCapture'])->middleware('throttle:10,1');
     // Webhook appelé par Stripe (signature vérifiée dans le contrôleur, CSRF exclu dans bootstrap/app.php).
     Route::post('webhook/stripe', [PaymentController::class, 'webhookStripe']);
 });

@@ -23,7 +23,7 @@ class Stripe
      */
     private static function request(string $method, string $path, array $body = []): array
     {
-        $secret = Secrets::get('stripe_secret');
+        $secret = Secrets::stripeSecret();
         if ($secret === '') {
             throw new BookingException(__('Clé secrète Stripe manquante.'));
         }

@@ -8,6 +8,7 @@ use App\Support\Secrets;
 use App\Support\Settings;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
 class SecretsAndDesignTest extends TestCase
@@ -81,6 +82,49 @@ class SecretsAndDesignTest extends TestCase
         $masked = Secrets::masked('stripe_secret');
         $this->assertStringContainsString('9876', $masked);
         $this->assertStringNotContainsString('sk_test_tres_longue', $masked);
+    }
+
+    public function test_mode_test_live_bascule_les_cles_stripe(): void
+    {
+        config(['services.stripe.key' => 'pk_test_env']);
+        Secrets::set('stripe_key_live', 'pk_live_admin');
+        Settings::flush();
+
+        // Mode test (défaut) → clé de test.
+        $this->assertSame('pk_test_env', Secrets::stripeKey());
+
+        // Mode live → clé live.
+        Settings::set('test_mode', '0');
+        Settings::flush();
+        $this->assertSame('pk_live_admin', Secrets::stripeKey());
+    }
+
+    public function test_endpoint_test_service_protege_et_fonctionnel(): void
+    {
+        // Non-admin → 403.
+        $this->actingAs(User::factory()->create())
+            ->postJson('/admin/reglages/test', ['service' => 'stripe'])
+            ->assertForbidden();
+
+        // Admin + clé valide (mock HTTP) → ok.
+        config(['services.stripe.secret' => 'sk_test_x']);
+        Http::fake([
+            'api.stripe.com/*' => Http::response(['available' => []]),
+        ]);
+
+        $this->actingAs($this->admin())
+            ->postJson('/admin/reglages/test', ['service' => 'stripe'])
+            ->assertOk()
+            ->assertJsonPath('ok', true);
+    }
+
+    public function test_chaque_onglet_reglages_se_rend_sans_erreur(): void
+    {
+        $admin = $this->admin();
+
+        foreach (['general', 'tarifs', 'api', 'notifications', 'style'] as $tab) {
+            $this->actingAs($admin)->get('/admin/reglages?tab='.$tab)->assertOk();
+        }
     }
 
     /* ── Design ──────────────────────────────────────────────── */

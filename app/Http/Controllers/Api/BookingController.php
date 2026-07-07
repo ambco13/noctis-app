@@ -51,7 +51,7 @@ class BookingController extends Controller
             $intent = Stripe::createPaymentIntent($booking->price, $booking->currency, $booking->booking_ref);
             $booking->update(['transaction_id' => $intent['id']]);
             $payload['stripe_client_secret'] = $intent['client_secret'];
-            $payload['stripe_publishable'] = Secrets::get('stripe_key');
+            $payload['stripe_publishable'] = Secrets::stripeKey();
             $payload['stripe_intent_status'] = $intent['status'];
         }
 

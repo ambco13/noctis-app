@@ -34,6 +34,12 @@
     @csrf
     <input type="hidden" name="_tab" value="general">
     <h2 style="margin-top:0;">{{ __('Général') }}</h2>
+    <p style="font-size:12px;color:#6b7280;">
+        {{ __('Pages du tunnel (fixes, plus besoin de shortcodes) :') }}
+        <span class="nadm-code">{{ route('booking.form') }}</span> {{ __('(formulaire)') }} ·
+        <span class="nadm-code">{{ route('booking.steps') }}</span> {{ __('(étapes 2-4)') }} ·
+        <span class="nadm-code">{{ route('account') }}</span> {{ __('(espace client)') }}
+    </p>
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
         <div><label>{{ __('Devise (ISO)') }}</label><input type="text" name="currency" value="{{ $values['currency'] }}"></div>
         <div><label>{{ __('Symbole') }}</label><input type="text" name="currency_symbol" value="{{ $values['currency_symbol'] }}"></div>
@@ -41,6 +47,13 @@
         <div><label>{{ __('Format date') }}</label><input type="text" name="date_format" value="{{ $values['date_format'] }}"></div>
         <div><label>{{ __('Format heure') }}</label><input type="text" name="time_format" value="{{ $values['time_format'] }}"></div>
     </div>
+    <label style="display:flex;gap:10px;align-items:center;margin-top:18px;">
+        <input type="checkbox" class="nadm-sw" name="aside_detach_body" value="1" @checked($values['aside_detach_body'])>
+        {{ __('Panneau latéral ancré au body') }}
+    </label>
+    <p style="font-size:12px;color:#6b7280;margin:4px 0 0;">
+        {{ __("Déplace le panneau carte/véhicule hors du conteneur de réservation et l'ancre directement au body. Garantit une position fixe au défilement quelle que soit la structure de la page.") }}
+    </p>
     <div style="margin-top:20px;"><button class="nadm-btn" type="submit">{{ __('Enregistrer') }}</button></div>
 </form>
 @endif
@@ -54,7 +67,7 @@
     <p style="font-size:12px;color:#6b7280;">{{ __('Les tarifs de base (prise en charge, €/km, €/min, minimum) se règlent par véhicule dans l\'onglet Véhicules.') }}</p>
 
     <label style="display:flex;gap:8px;align-items:center;">
-        <input type="checkbox" name="surcharge_night_enabled" value="1" @checked($values['surcharge_night_enabled'])>
+        <input type="checkbox" class="nadm-sw" name="surcharge_night_enabled" value="1" @checked($values['surcharge_night_enabled'])>
         {{ __('Tarif nuit') }}
     </label>
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
@@ -64,12 +77,12 @@
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px;">
         <label style="display:flex;gap:8px;align-items:center;">
-            <input type="checkbox" name="surcharge_weekend_enabled" value="1" @checked($values['surcharge_weekend_enabled'])>
+            <input type="checkbox" class="nadm-sw" name="surcharge_weekend_enabled" value="1" @checked($values['surcharge_weekend_enabled'])>
             {{ __('Week-end (%)') }}
             <input type="number" step="0.1" min="0" name="surcharge_weekend_pct" value="{{ $values['surcharge_weekend_pct'] ?: 20 }}" style="max-width:110px;">
         </label>
         <label style="display:flex;gap:8px;align-items:center;">
-            <input type="checkbox" name="surcharge_holiday_enabled" value="1" @checked($values['surcharge_holiday_enabled'])>
+            <input type="checkbox" class="nadm-sw" name="surcharge_holiday_enabled" value="1" @checked($values['surcharge_holiday_enabled'])>
             {{ __('Jours fériés (%)') }}
             <input type="number" step="0.1" min="0" name="surcharge_holiday_pct" value="{{ $values['surcharge_holiday_pct'] ?: 30 }}" style="max-width:110px;">
         </label>
@@ -80,37 +93,66 @@
 
 {{-- ══════════ API & INTÉGRATIONS ══════════ --}}
 @if ($tab === 'api')
+@php $testMode = (string) \App\Support\Settings::get('test_mode', '1') === '1'; @endphp
 <form method="post" action="{{ route('admin.settings.update') }}" class="nadm-form" autocomplete="off">
     @csrf
     <input type="hidden" name="_tab" value="api">
-    <h2 style="margin-top:0;">{{ __('API & Intégrations') }}</h2>
+
+    <div class="nadm-notice">
+        <label style="display:flex;gap:10px;align-items:center;font-weight:600;">
+            <input type="checkbox" class="nadm-sw" name="test_mode" value="1" @checked($testMode)>
+            {{ __('Mode test (sandbox)') }}
+        </label>
+        {{ __('Quand activé, Stripe et PayPal utilisent les clés de test. Désactivez pour passer en production.') }}
+    </div>
+
     <p style="font-size:12px;color:#6b7280;">
         {{ __('Les clés sont chiffrées en base (jamais affichées en clair). Champ vide = clé inchangée ; saisir « - » pour effacer la valeur admin et revenir au .env.') }}
     </p>
 
     @php
         $groups = [
-            __('Google Maps') => ['google_maps_key' => __('Clé API Google')],
+            __('Google Maps Platform') => [
+                'fields' => ['google_maps_key' => __('Clé API')],
+                'test' => 'google',
+                'hint' => __("Active les API Routes et Places. La clé reste côté serveur et n'est jamais exposée au navigateur."),
+            ],
             __('Stripe') => [
-                'stripe_key' => __('Clé publiable (pk_…)'),
-                'stripe_secret' => __('Clé secrète (sk_…)'),
-                'stripe_webhook_secret' => __('Secret webhook (whsec_…)'),
+                'fields' => [
+                    'stripe_key' => __('Clé publiable (test)'),
+                    'stripe_secret' => __('Clé secrète (test)'),
+                    'stripe_key_live' => __('Clé publiable (live)'),
+                    'stripe_secret_live' => __('Clé secrète (live)'),
+                    'stripe_webhook_secret' => __('Secret du webhook'),
+                ],
+                'test' => 'stripe',
+                'hint' => __('URL du webhook à déclarer chez Stripe :'),
             ],
             __('PayPal') => [
-                'paypal_client_id' => __('Client ID'),
-                'paypal_secret' => __('Secret'),
+                'fields' => [
+                    'paypal_client_id' => __('Client ID (sandbox)'),
+                    'paypal_secret' => __('Secret (sandbox)'),
+                    'paypal_client_id_live' => __('Client ID (live)'),
+                    'paypal_secret_live' => __('Secret (live)'),
+                ],
+                'test' => 'paypal',
+                'hint' => '',
             ],
             __('Twilio (SMS)') => [
-                'twilio_sid' => __('Account SID'),
-                'twilio_token' => __('Auth Token'),
-                'twilio_from' => __('Numéro expéditeur'),
+                'fields' => [
+                    'twilio_sid' => __('Account SID'),
+                    'twilio_token' => __('Auth Token'),
+                    'twilio_from' => __('Numéro d\'envoi (format international)'),
+                ],
+                'test' => 'twilio',
+                'hint' => '',
             ],
         ];
     @endphp
 
-    @foreach ($groups as $groupLabel => $fields)
+    @foreach ($groups as $groupLabel => $group)
         <h3 style="margin-bottom:4px;">{{ $groupLabel }}</h3>
-        @foreach ($fields as $key => $label)
+        @foreach ($group['fields'] as $key => $label)
             <label>{{ $label }}
                 @if ($secrets[$key] !== '')
                     <span style="font-weight:400;color:#059669;font-size:12px;"> — {{ $secrets[$key] }}</span>
@@ -120,10 +162,48 @@
             </label>
             <input type="password" name="secret_{{ $key }}" value="" placeholder="{{ __('Nouvelle valeur…') }}" autocomplete="new-password">
         @endforeach
+        @if ($group['hint'] !== '')
+            <p style="font-size:12px;color:#6b7280;margin:6px 0 0;">{!! nl2br(e($group['hint'])) !!}
+                @if (str_contains($group['hint'], 'webhook'))
+                    <span class="nadm-code">{{ url('/api/v1/webhook/stripe') }}</span>
+                @endif
+            </p>
+        @endif
+        <div>
+            <button type="button" class="nadm-test-btn" data-test-service="{{ $group['test'] }}">{{ __('Tester') }}</button>
+            <span class="nadm-test-result" data-test-result="{{ $group['test'] }}"></span>
+        </div>
     @endforeach
 
     <div style="margin-top:20px;"><button class="nadm-btn" type="submit">{{ __('Enregistrer les clés') }}</button></div>
 </form>
+
+<script>
+    // Boutons « Tester la connexion » : teste avec les clés ENREGISTRÉES
+    // (pensez à enregistrer avant de tester une nouvelle clé).
+    document.querySelectorAll('[data-test-service]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            var service = btn.getAttribute('data-test-service');
+            var out = document.querySelector('[data-test-result="' + service + '"]');
+            out.textContent = '…';
+            out.style.color = '#6b7280';
+            fetch(@json(route('admin.settings.test')), {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').content
+                },
+                body: JSON.stringify({ service: service })
+            }).then(function (r) { return r.json(); }).then(function (res) {
+                out.textContent = res.message;
+                out.style.color = res.ok ? '#059669' : '#b91c1c';
+            }).catch(function () {
+                out.textContent = @json(__('Erreur réseau.'));
+                out.style.color = '#b91c1c';
+            });
+        });
+    });
+</script>
 @endif
 
 {{-- ══════════ NOTIFICATIONS ══════════ --}}
@@ -133,10 +213,10 @@
     <input type="hidden" name="_tab" value="notifications">
     <h2 style="margin-top:0;">{{ __('Notifications') }}</h2>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
-        <label style="display:flex;gap:8px;align-items:center;"><input type="checkbox" name="notif_email_customer" value="1" @checked($values['notif_email_customer'])> {{ __('Email client') }}</label>
-        <label style="display:flex;gap:8px;align-items:center;"><input type="checkbox" name="notif_email_admin" value="1" @checked($values['notif_email_admin'])> {{ __('Email admin') }}</label>
-        <label style="display:flex;gap:8px;align-items:center;"><input type="checkbox" name="notif_sms_customer" value="1" @checked($values['notif_sms_customer'])> {{ __('SMS client') }}</label>
-        <label style="display:flex;gap:8px;align-items:center;"><input type="checkbox" name="notif_sms_admin" value="1" @checked($values['notif_sms_admin'])> {{ __('SMS admin') }}</label>
+        <label style="display:flex;gap:8px;align-items:center;"><input type="checkbox" class="nadm-sw" name="notif_email_customer" value="1" @checked($values['notif_email_customer'])> {{ __('Email client') }}</label>
+        <label style="display:flex;gap:8px;align-items:center;"><input type="checkbox" class="nadm-sw" name="notif_email_admin" value="1" @checked($values['notif_email_admin'])> {{ __('Email admin') }}</label>
+        <label style="display:flex;gap:8px;align-items:center;"><input type="checkbox" class="nadm-sw" name="notif_sms_customer" value="1" @checked($values['notif_sms_customer'])> {{ __('SMS client') }}</label>
+        <label style="display:flex;gap:8px;align-items:center;"><input type="checkbox" class="nadm-sw" name="notif_sms_admin" value="1" @checked($values['notif_sms_admin'])> {{ __('SMS admin') }}</label>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
         <div><label>{{ __('Email admin à notifier') }}</label><input type="email" name="admin_notify_email" value="{{ $values['admin_notify_email'] }}"></div>

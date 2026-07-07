@@ -21,13 +21,16 @@ return [
     'stripe' => [
         'key' => env('STRIPE_KEY'),
         'secret' => env('STRIPE_SECRET'),
+        'key_live' => env('STRIPE_KEY_LIVE'),
+        'secret_live' => env('STRIPE_SECRET_LIVE'),
         'webhook_secret' => env('STRIPE_WEBHOOK_SECRET'),
     ],
 
     'paypal' => [
         'client_id' => env('PAYPAL_CLIENT_ID'),
         'secret' => env('PAYPAL_SECRET'),
-        'sandbox' => env('PAYPAL_SANDBOX', true),
+        'client_id_live' => env('PAYPAL_CLIENT_ID_LIVE'),
+        'secret_live' => env('PAYPAL_SECRET_LIVE'),
     ],
 
     'twilio' => [

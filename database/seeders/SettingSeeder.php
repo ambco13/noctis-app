@@ -17,6 +17,8 @@ class SettingSeeder extends Seeder
     {
         $defaults = [
             // Général.
+            'test_mode' => '1',
+            'aside_detach_body' => '1',
             'currency' => 'EUR',
             'currency_symbol' => '€',
             'date_format' => 'd/m/Y',

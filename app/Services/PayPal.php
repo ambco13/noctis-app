@@ -14,7 +14,8 @@ class PayPal
 {
     public static function apiBase(): string
     {
-        return config('services.paypal.sandbox')
+        // Le mode test global (réglage admin) pilote sandbox vs live.
+        return Secrets::isTestMode()
             ? 'https://api-m.sandbox.paypal.com'
             : 'https://api-m.paypal.com';
     }
@@ -26,8 +27,8 @@ class PayPal
      */
     private static function accessToken(): string
     {
-        $client = Secrets::get('paypal_client_id');
-        $secret = Secrets::get('paypal_secret');
+        $client = Secrets::paypalClientId();
+        $secret = Secrets::paypalSecret();
 
         if ($client === '' || $secret === '') {
             throw new BookingException(__('Identifiants PayPal manquants.'));

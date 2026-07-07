@@ -27,11 +27,11 @@
             currency: @json(\App\Support\Settings::currency()),
             bookingUrl: @json(route('booking.steps')),
             homeUrl: @json(url('/')),
-            hasStripe: @json(\App\Support\Secrets::get('stripe_key') !== ''),
-            stripeKey: @json(\App\Support\Secrets::get('stripe_key')),
-            hasPaypal: @json(\App\Support\Secrets::get('paypal_client_id') !== ''),
-            paypalLoaded: @json(\App\Support\Secrets::get('paypal_client_id') !== ''),
-            asideDetachBody: false,
+            hasStripe: @json(\App\Support\Secrets::stripeKey() !== ''),
+            stripeKey: @json(\App\Support\Secrets::stripeKey()),
+            hasPaypal: @json(\App\Support\Secrets::paypalClientId() !== ''),
+            paypalLoaded: @json(\App\Support\Secrets::paypalClientId() !== ''),
+            asideDetachBody: @json((string) \App\Support\Settings::get('aside_detach_body', '0') === '1'),
             currentUser: @json(auth()->check() ? ['name' => auth()->user()->name, 'email' => auth()->user()->email] : null),
             i18n: {
                 computing: @json(__('Calcul de votre trajet…')),
@@ -56,7 +56,7 @@
             }
         };
     </script>
-    @if (\App\Support\Secrets::get('stripe_key') !== '')
+    @if (\App\Support\Secrets::stripeKey() !== '')
         <script src="https://js.stripe.com/v3/"></script>
     @endif
     <script src="{{ asset('vendor/flatpickr/flatpickr.min.js') }}"></script>

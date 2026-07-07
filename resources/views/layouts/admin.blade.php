@@ -41,6 +41,14 @@
         .nadm-badge--cancelled { background: #f3f4f6; color: #6b7280; }
         .nadm-badge--failed { background: #fee2e2; color: #991b1b; }
         .nadm-inline { display: inline; }
+        .nadm-sw { appearance: none; -webkit-appearance: none; width: 38px; height: 22px; border-radius: 99px; background: #d1d5db; position: relative; cursor: pointer; transition: background .15s; vertical-align: middle; flex-shrink: 0; }
+        .nadm-sw:checked { background: #2563eb; }
+        .nadm-sw::after { content: ''; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; border-radius: 50%; background: #fff; transition: left .15s; }
+        .nadm-sw:checked::after { left: 18px; }
+        .nadm-test-btn { background: #fff; border: 1px solid #2563eb; color: #2563eb; padding: 5px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; margin-top: 6px; }
+        .nadm-test-result { font-size: 12px; margin-left: 8px; }
+        .nadm-notice { background: #fefce8; border: 1px solid #fde047; color: #713f12; padding: 10px 14px; border-radius: 8px; margin-bottom: 16px; font-size: 13px; }
+        .nadm-code { background: #f3f4f6; border: 1px solid #e5e7eb; border-radius: 5px; padding: 2px 7px; font-family: ui-monospace, monospace; font-size: 12px; user-select: all; }
     </style>
 </head>
 <body>

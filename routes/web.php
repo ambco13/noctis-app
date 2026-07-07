@@ -41,6 +41,7 @@ Route::prefix('admin')->middleware(['auth', EnsureAdmin::class])->group(function
     Route::delete('/vehicules/{vehicle}', [VehicleAdminController::class, 'destroy'])->name('admin.vehicles.destroy');
     Route::get('/reglages', [SettingsAdminController::class, 'edit'])->name('admin.settings');
     Route::post('/reglages', [SettingsAdminController::class, 'update'])->name('admin.settings.update');
+    Route::post('/reglages/test', [SettingsAdminController::class, 'testService'])->name('admin.settings.test');
 });
 
 // API interne du tunnel (même origine, protégée par CSRF sur les POST).

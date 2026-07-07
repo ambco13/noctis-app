@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AccountPageController;
 use App\Http\Controllers\Api\BookingController;
 use App\Http\Controllers\Api\CustomerAuthController;
 use App\Http\Controllers\Api\CustomerProfileController;
@@ -15,6 +16,9 @@ Route::redirect('/', '/reservation');
 Route::get('/reservation', [BookingPageController::class, 'showForm'])->name('booking.form');
 Route::post('/reservation', [BookingPageController::class, 'submitStep1'])->name('booking.step1');
 Route::get('/ma-reservation', [BookingPageController::class, 'showSteps'])->name('booking.steps');
+
+// Espace client.
+Route::get('/mon-compte', [AccountPageController::class, 'show'])->name('account');
 
 // API interne du tunnel (même origine, protégée par CSRF sur les POST).
 Route::prefix('api/v1')->group(function () {

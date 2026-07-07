@@ -211,8 +211,9 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 	box-shadow: none !important;
 }
 /* Valeur/placeholder trop longue pour la largeur du champ : coupe nette
-   avec des points de suspension plutôt qu'un débordement brut. */
-.ntb-field-input input { text-overflow: ellipsis; }
+   avec des points de suspension plutôt qu'un débordement brut.
+   (text-overflow n'a aucun effet sans overflow:hidden + white-space:nowrap.) */
+.ntb-field-input input { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 .ntb-field-input input::placeholder, .ntb-field-input textarea::placeholder { color: var(--ntb-faint); }
 .ntb-field-input input:focus, .ntb-field-input textarea:focus { outline: none !important; background: transparent !important; box-shadow: none !important; }
 .ntb-field-input input:-webkit-autofill,

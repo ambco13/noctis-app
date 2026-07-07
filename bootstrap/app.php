@@ -1,5 +1,6 @@
 <?php
 
+use App\Exceptions\BookingException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -18,4 +19,11 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->shouldRenderJsonWhen(
             fn (Request $request) => $request->is('api/*'),
         );
+
+        // Erreurs métier (véhicule introuvable, trajet non calculable…) → 422 avec message utilisateur.
+        $exceptions->render(function (BookingException $e, Request $request) {
+            if ($request->is('api/*')) {
+                return response()->json(['message' => $e->getMessage()], 422);
+            }
+        });
     })->create();

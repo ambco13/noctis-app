@@ -218,7 +218,10 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 .ntb-field-input input:focus, .ntb-field-input textarea:focus { outline: none !important; background: transparent !important; box-shadow: none !important; }
 .ntb-field-input input:-webkit-autofill,
 .ntb-field-input input:-webkit-autofill:focus {
-	-webkit-box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0) inset !important;
+	/* Un box-shadow transparent ne masque pas le fond d'autofill de Chrome :
+	   il faut repeindre avec la vraie couleur de fond du champ (celle du
+	   parent), sinon Chrome laisse voir sa teinte jaune/bleue par défaut. */
+	-webkit-box-shadow: 0 0 0 1000px var(--ntb-surf) inset !important;
 	-webkit-text-fill-color: var(--ntb-text) !important;
 	-webkit-transition: background-color 5000s ease-in-out 0s;
 	transition: background-color 5000s ease-in-out 0s;

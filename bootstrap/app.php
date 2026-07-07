@@ -17,6 +17,9 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->validateCsrfTokens(except: [
             'api/v1/webhook/stripe',
         ]);
+
+        // Pas de route "login" classique : les invités passent par /mon-compte.
+        $middleware->redirectGuestsTo(fn () => route('account'));
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(

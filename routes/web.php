@@ -1,6 +1,11 @@
 <?php
 
 use App\Http\Controllers\AccountPageController;
+use App\Http\Controllers\Admin\BookingAdminController;
+use App\Http\Controllers\Admin\CustomerAdminController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\SettingsAdminController;
+use App\Http\Controllers\Admin\VehicleAdminController;
 use App\Http\Controllers\Api\BookingController;
 use App\Http\Controllers\Api\CustomerAuthController;
 use App\Http\Controllers\Api\CustomerProfileController;
@@ -8,6 +13,7 @@ use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\PlacesController;
 use App\Http\Controllers\Api\QuoteController;
 use App\Http\Controllers\BookingPageController;
+use App\Http\Middleware\EnsureAdmin;
 use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', '/reservation');
@@ -19,6 +25,23 @@ Route::get('/ma-reservation', [BookingPageController::class, 'showSteps'])->name
 
 // Espace client.
 Route::get('/mon-compte', [AccountPageController::class, 'show'])->name('account');
+
+// Back-office (auth + is_admin).
+Route::prefix('admin')->middleware(['auth', EnsureAdmin::class])->group(function () {
+    Route::get('/', [DashboardController::class, 'index'])->name('admin.dashboard');
+    Route::get('/reservations', [BookingAdminController::class, 'index'])->name('admin.bookings');
+    Route::get('/reservations/{booking}', [BookingAdminController::class, 'show'])->name('admin.bookings.show');
+    Route::post('/reservations/{booking}/statut', [BookingAdminController::class, 'updateStatus'])->name('admin.bookings.status');
+    Route::delete('/reservations/{booking}', [BookingAdminController::class, 'destroy'])->name('admin.bookings.destroy');
+    Route::get('/clients', [CustomerAdminController::class, 'index'])->name('admin.customers');
+    Route::get('/vehicules', [VehicleAdminController::class, 'index'])->name('admin.vehicles');
+    Route::get('/vehicules/{vehicle}', [VehicleAdminController::class, 'edit'])->name('admin.vehicles.edit');
+    Route::post('/vehicules', [VehicleAdminController::class, 'store'])->name('admin.vehicles.store');
+    Route::put('/vehicules/{vehicle}', [VehicleAdminController::class, 'update'])->name('admin.vehicles.update');
+    Route::delete('/vehicules/{vehicle}', [VehicleAdminController::class, 'destroy'])->name('admin.vehicles.destroy');
+    Route::get('/reglages', [SettingsAdminController::class, 'edit'])->name('admin.settings');
+    Route::post('/reglages', [SettingsAdminController::class, 'update'])->name('admin.settings.update');
+});
 
 // API interne du tunnel (même origine, protégée par CSRF sur les POST).
 Route::prefix('api/v1')->group(function () {

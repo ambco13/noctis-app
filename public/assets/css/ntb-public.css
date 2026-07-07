@@ -799,7 +799,9 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 .ntb-step3-grid.ntb-pay-open { align-items: start; }
 @media (max-width: 1024px) { .ntb-step3-grid { grid-template-columns: 1fr; } }
 .ntb-step3-form {
-	display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;
+	/* minmax(0, 1fr) et pas juste 1fr : même piège que la grille parente,
+	   une colonne interne ne rétrécit pas sous son contenu par défaut. */
+	display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px;
 	--ntb-input-h: 44px;
 	background: var(--ntb-surf-glass); backdrop-filter: var(--ntb-glass-blur, blur(8px));
 	border: 1px solid var(--ntb-line); border-radius: var(--ntb-r-sm);

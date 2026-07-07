@@ -206,10 +206,13 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 .ntb-field-input:focus-within { box-shadow: none !important; outline: none !important; }
 .ntb-field-icon { color: var(--ntb-faint); display: flex; flex: 0 0 auto; }
 .ntb-field-input input, .ntb-field-input textarea {
-	flex: 1; min-width: 0; background: none !important; border: none !important; color: var(--ntb-text) !important;
+	flex: 1; min-width: 0; max-width: 100%; background: none !important; border: none !important; color: var(--ntb-text) !important;
 	font-size: var(--ntb-text-lg); font-family: inherit; padding: 8px 0 !important;
 	box-shadow: none !important;
 }
+/* Valeur/placeholder trop longue pour la largeur du champ : coupe nette
+   avec des points de suspension plutôt qu'un débordement brut. */
+.ntb-field-input input { text-overflow: ellipsis; }
 .ntb-field-input input::placeholder, .ntb-field-input textarea::placeholder { color: var(--ntb-faint); }
 .ntb-field-input input:focus, .ntb-field-input textarea:focus { outline: none !important; background: transparent !important; box-shadow: none !important; }
 .ntb-field-input input:-webkit-autofill,

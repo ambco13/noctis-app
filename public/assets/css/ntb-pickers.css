@@ -1,0 +1,286 @@
+/**
+ * NOCTIS Taxi Booking V2 — styles flatpickr + pickers date/heure.
+ */
+
+/* ── Variables root — miroir de .ntb-scope pour les éléments hors scope ── */
+:root {
+	--ntb-surf:        oklch(0.235 0.012 240);
+	--ntb-surf2:       oklch(0.285 0.013 240);
+	--ntb-line:        oklch(0.345 0.013 240);
+	--ntb-text:        oklch(0.965 0.004 240);
+	--ntb-muted:       oklch(0.74  0.012 240);
+	--ntb-faint:       oklch(0.56  0.012 240);
+	--ntb-accent:      oklch(0.64  0.115 236);
+	--ntb-accent-hi:   oklch(0.72  0.115 236);
+	--ntb-accent-soft: oklch(0.64  0.115 236 / .16);
+	--ntb-serif: 'Marcellus', serif;
+	--ntb-sans:  'Albert Sans', system-ui, sans-serif;
+	--ntb-mono:  'Spline Sans Mono', ui-monospace, monospace;
+	--ntb-dur:   220ms;
+	--ntb-ease:  cubic-bezier(.22,.61,.36,1);
+	--ntb-r:    9px;
+	--ntb-r-sm: 9px;
+	--ntb-r-lg: 9px;
+}
+
+/* ── Mode clair — override des variables :root pour flatpickr (hors .ntb-scope) ── */
+html[data-ntb-theme="light"] {
+	--ntb-surf:        oklch(1.0 0 0);
+	--ntb-surf2:       oklch(0.97 0.004 240);
+	--ntb-line:        oklch(0.86 0.008 240);
+	--ntb-text:        oklch(0.15 0.010 240);
+	--ntb-muted:       oklch(0.48 0.012 240);
+	--ntb-faint:       oklch(0.62 0.010 240);
+	--ntb-accent:      oklch(0.50 0.115 236);
+	--ntb-accent-hi:   oklch(0.42  0.115 236);
+	--ntb-accent-soft: oklch(0.50  0.115 236 / .12);
+}
+
+html[data-ntb-theme="light"] .flatpickr-calendar {
+	box-shadow:
+		0 24px 64px oklch(0.55 0.010 240 / .12),
+		0 4px  16px oklch(0.55 0.010 240 / .08);
+}
+
+html[data-ntb-theme="light"] .nc-time-picker {
+	box-shadow: 0 20px 56px oklch(0.55 0.010 240 / .12);
+}
+
+html[data-ntb-theme="light"] .flatpickr-day.disabled,
+html[data-ntb-theme="light"] .flatpickr-day.disabled:hover { color: oklch(0.78 0.008 240); }
+
+html[data-ntb-theme="light"] .flatpickr-day.prevMonthDay,
+html[data-ntb-theme="light"] .flatpickr-day.nextMonthDay  { color: oklch(0.70 0.010 240); }
+
+/* ============================================================
+   FLATPICKR — dark theme + grille fluide
+   ============================================================ */
+
+.flatpickr-rContainer,
+.flatpickr-days,
+.flatpickr-weekdaycontainer { width: 100% !important; }
+.dayContainer {
+	width:     100% !important;
+	min-width: 100% !important;
+	max-width: 100% !important;
+	padding: 4px 0 0;
+	max-height: 220px;
+	overflow: hidden;
+}
+span.flatpickr-weekday {
+	font-size:      11px !important;
+	letter-spacing: 0   !important;
+}
+.flatpickr-day {
+	flex-basis:    calc(100% / 7) !important;
+	max-width:     calc(100% / 7) !important;
+	height:        36px !important;
+	line-height:   36px !important;
+	font-size:     13px !important;
+	border-radius: var(--ntb-r-sm)  !important;
+}
+@media (max-width: 540px) {
+	.flatpickr-calendar      { padding: 10px 6px; }
+	.dayContainer            { max-height: 208px !important; }
+	span.flatpickr-weekday   { font-size: 9px !important; }
+	.flatpickr-day           { height: 34px !important; line-height: 34px !important; font-size: 12px !important; border-radius: var(--ntb-r-sm) !important; }
+}
+
+/* Calendrier */
+.flatpickr-calendar {
+	background: var(--ntb-surf);
+	border: 1px solid var(--ntb-line);
+	border-radius: var(--ntb-r-sm);
+	box-shadow:
+		0 24px 64px oklch(0.12 0.010 240 / .70),
+		0 4px 16px  oklch(0.12 0.010 240 / .40),
+		inset 0 1px 0 oklch(1 0 0 / .05);
+	font-family: var(--ntb-sans);
+	color: var(--ntb-text);
+	padding: 10px;
+}
+.flatpickr-calendar::before,
+.flatpickr-calendar::after { display: none; }
+
+/* Barre mois */
+.flatpickr-months {
+	padding-bottom: 8px;
+	margin-bottom: 4px;
+	border-bottom: 1px solid var(--ntb-line);
+	align-items: center;
+}
+.flatpickr-month { background: transparent; height: 34px; }
+.flatpickr-current-month {
+	font-family: var(--ntb-serif);
+	font-size: 15px;
+	color: var(--ntb-text);
+	padding-top: 0 !important;
+	display: flex !important;
+	align-items: center;
+	justify-content: center;
+	gap: 3px;
+	overflow: hidden;
+}
+.flatpickr-current-month .cur-month { font-family: var(--ntb-serif); font-weight: 400; color: var(--ntb-text); }
+.flatpickr-current-month input.cur-year { color: var(--ntb-text); font-family: var(--ntb-sans); font-size: 15px; font-weight: 500; }
+
+.flatpickr-prev-month, .flatpickr-next-month { color: var(--ntb-muted); padding: 8px 10px; line-height: 1; transition: color var(--ntb-dur) var(--ntb-ease); }
+.flatpickr-prev-month:hover, .flatpickr-next-month:hover { color: var(--ntb-accent) !important; }
+.flatpickr-prev-month svg, .flatpickr-next-month svg { fill: none !important; stroke: currentColor; }
+
+/* En-têtes semaine */
+.flatpickr-weekdays { background: transparent; }
+span.flatpickr-weekday { background: transparent; color: var(--ntb-faint); font-family: var(--ntb-sans); font-size: 10.5px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; }
+
+/* Cellules jours */
+.flatpickr-day { color: var(--ntb-text); border-radius: var(--ntb-r-sm); font-size: 13px; border: 1px solid transparent; height: 36px; line-height: 36px; }
+.flatpickr-day:hover, .flatpickr-day:focus { background: var(--ntb-surf2); border-color: var(--ntb-line); color: var(--ntb-text); }
+.flatpickr-day.today { background: var(--ntb-accent-soft); border-color: var(--ntb-accent-hi) !important; color: var(--ntb-accent-hi); font-weight: 600; }
+.flatpickr-day.today:hover { background: oklch(0.64 0.115 236 / .25); border-color: var(--ntb-accent) !important; color: #fff; }
+.flatpickr-day.selected, .flatpickr-day.selected:hover { background: var(--ntb-accent) !important; border-color: var(--ntb-accent) !important; color: #fff !important; font-weight: 600; box-shadow: 0 2px 10px var(--ntb-accent-soft); }
+.flatpickr-day.disabled, .flatpickr-day.disabled:hover { color: oklch(0.36 0.010 240); background: transparent; border-color: transparent; }
+.flatpickr-day.prevMonthDay, .flatpickr-day.nextMonthDay { color: oklch(0.42 0.010 240); }
+
+/* Spinners inputs numériques */
+.numInputWrapper:hover { background: var(--ntb-surf2); border-radius: var(--ntb-r-sm); }
+.numInputWrapper span  { border-color: var(--ntb-line); }
+.numInputWrapper span:hover { background: var(--ntb-surf2); }
+.numInputWrapper span svg { fill: var(--ntb-muted); }
+
+/* Alt-input */
+input.flatpickr-input.alt-input { cursor: pointer; caret-color: transparent; }
+
+/* ── Boutons mois / année cliquables (overlays) ─────────────── */
+.nc-cal-month-btn,
+.nc-cal-year-btn {
+	cursor: pointer;
+	display: inline-block !important;
+	padding: 1px 4px;
+	border-radius: var(--ntb-r-sm);
+	transition: color var(--ntb-dur), background var(--ntb-dur);
+	font-family: var(--ntb-serif);
+	font-size: 14px;
+	white-space: nowrap;
+	color: var(--ntb-text) !important;
+	position: relative !important;
+	opacity: 1 !important;
+	width: auto !important;
+	height: auto !important;
+	right: auto !important;
+	line-height: normal !important;
+	border: none !important;
+}
+.nc-cal-month-btn:hover, .nc-cal-year-btn:hover { color: var(--ntb-accent) !important; background: var(--ntb-accent-soft); }
+
+/* Overlay de base */
+.nc-cal-overlay {
+	position: absolute;
+	left: 0; right: 0; bottom: 0;
+	background: var(--ntb-surf);
+	z-index: 20;
+	border-radius: 0 0 var(--ntb-r-sm) var(--ntb-r-sm);
+	display: none;
+}
+
+/* Grille de mois */
+.nc-cal-month-overlay.nc-open { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; padding: 10px 8px 12px; }
+.nc-cal-mitem { background: none; border: none; color: var(--ntb-muted); font-family: var(--ntb-sans); font-size: 12.5px; padding: 10px 4px; border-radius: var(--ntb-r-sm); cursor: pointer; text-align: center; transition: background var(--ntb-dur), color var(--ntb-dur); }
+.nc-cal-mitem:hover { background: var(--ntb-surf2); color: var(--ntb-text); }
+.nc-cal-mitem.nc-on { background: var(--ntb-accent-soft); color: var(--ntb-accent-hi); font-weight: 600; }
+
+/* Rouleau années */
+.nc-cal-year-overlay.nc-open { display: flex; align-items: center; justify-content: center; padding: 12px 0; }
+.nc-cal-ylist-wrap { position: relative; width: 120px; }
+.nc-cal-ylist-wrap::before {
+	content: '';
+	position: absolute;
+	top: 50%; left: 0; right: 0;
+	height: 44px;
+	transform: translateY(-50%);
+	background: var(--ntb-accent-soft);
+	border-radius: var(--ntb-r-sm);
+	pointer-events: none;
+	z-index: 0;
+}
+.nc-cal-ylist-wrap::after {
+	content: '';
+	position: absolute;
+	inset: 0;
+	background: linear-gradient(to bottom, var(--ntb-surf) 0%, transparent 28%, transparent 72%, var(--ntb-surf) 100%);
+	pointer-events: none;
+	z-index: 2;
+}
+.nc-cal-ylist { width: 120px; height: calc(3 * 44px); overflow-y: scroll; scroll-snap-type: y mandatory; scrollbar-width: none; padding: 44px 0; position: relative; z-index: 1; }
+.nc-cal-ylist::-webkit-scrollbar { display: none; }
+.nc-cal-yitem { height: 44px; line-height: 44px; text-align: center; font-family: var(--ntb-mono); font-size: 20px; font-weight: 300; color: var(--ntb-muted); cursor: pointer; scroll-snap-align: center; transition: color 120ms, font-size 120ms; position: relative; z-index: 2; user-select: none; }
+.nc-cal-yitem:hover { color: var(--ntb-text); }
+.nc-cal-yitem.nc-on { color: var(--ntb-accent-hi); font-weight: 700; font-size: 24px; }
+
+/* ============================================================
+   PICKER HEURE — rouleau deux colonnes
+   ============================================================ */
+
+.nc-time-display {
+	background: transparent;
+	border: none;
+	outline: none;
+	color: var(--ntb-text);
+	font-family: var(--ntb-mono);
+	font-size: 15px;
+	width: 100%;
+	cursor: text;
+}
+.nc-time-display::placeholder { color: var(--ntb-faint); }
+
+/* Popup deux colonnes */
+.nc-time-picker {
+	display: none;
+	position: absolute;
+	top: calc(100% + 6px);
+	left: 0;
+	right: 0;
+	width: 100%;
+	z-index: 9999;
+	background: var(--ntb-surf);
+	border: 1px solid var(--ntb-line);
+	border-radius: var(--ntb-r-sm);
+	box-shadow: 0 20px 56px oklch(0.12 0.010 240 / .68), inset 0 1px 0 oklch(1 0 0 / .05);
+	overflow: hidden;
+	--_item: 36px;
+}
+.nc-time-picker.nc-open { display: flex; align-items: stretch; }
+
+/* Bande centrale de sélection */
+.nc-time-picker::before {
+	content: '';
+	position: absolute;
+	top: 50%; left: 8px; right: 8px;
+	height: var(--_item);
+	transform: translateY(-50%);
+	background: var(--ntb-accent-soft);
+	border-radius: var(--ntb-r-sm);
+	pointer-events: none;
+	z-index: 0;
+}
+
+/* Fondu haut/bas */
+.nc-time-picker::after {
+	content: '';
+	position: absolute;
+	inset: 0;
+	background: linear-gradient(to bottom, var(--ntb-surf) 0%, transparent 28%, transparent 72%, var(--ntb-surf) 100%);
+	pointer-events: none;
+	z-index: 3;
+	border-radius: var(--ntb-r-sm);
+}
+
+/* Colonnes */
+.nc-time-col { flex: 1; min-width: 0; height: calc(var(--_item) * 3); overflow-y: scroll; scroll-snap-type: y mandatory; scrollbar-width: none; position: relative; z-index: 1; padding: var(--_item) 0; }
+.nc-time-col::-webkit-scrollbar { display: none; }
+
+/* Séparateur : */
+.nc-time-sep { display: flex; align-items: center; justify-content: center; width: 20px; flex-shrink: 0; font-family: var(--ntb-mono); font-size: 16px; color: var(--ntb-accent); position: relative; z-index: 2; }
+
+/* Items */
+.nc-ti { height: var(--_item); line-height: var(--_item); padding: 0; scroll-snap-align: center; font-family: var(--ntb-mono); font-size: 14px; color: var(--ntb-muted); cursor: pointer; text-align: center; transition: color 150ms; position: relative; z-index: 2; user-select: none; }
+.nc-ti.nc-ti-on { color: var(--ntb-accent-hi); font-weight: 600; font-size: 15px; }

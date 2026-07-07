@@ -1,0 +1,1023 @@
+/* ============================================================================
+   DASHBOARD — Espace client
+   Utilise les tokens --ntb-* du design system (mêmes couleurs, arrondis et
+   mode sombre/clair que le flux de réservation).
+   ============================================================================ */
+
+/* ── Tokens : hérités du design system --ntb-* (définis dans ntb-public.css
+   sur .ntb-scope / .ntb-dashboard, surchargés par Réglages → Style).
+   Seul --ntb-ok est propre au dashboard (statuts confirmés). ── */
+.ntb-dashboard {
+  --ntb-ok: oklch(0.72 0.13 150);
+  font-family: var(--ntb-sans);
+  color: var(--ntb-text);
+  background: var(--ntb-bg);
+  -webkit-font-smoothing: antialiased;
+}
+/* ── Conteneur principal ─────────────────────────────────────── */
+.ntb-dashboard {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 0 10px;
+  overflow-x: hidden;
+}
+
+/* ── Topbar sticky ───────────────────────────────────────────── */
+.ntb-topbar {
+  background: var(--ntb-surf);
+  border-bottom: 0.5px solid var(--ntb-line);
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 52px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  box-sizing: border-box;
+}
+
+.ntb-topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.ntb-tab-divider {
+  width: 1px;
+  height: 18px;
+  background: var(--ntb-line);
+  margin: 0 2px;
+  flex-shrink: 0;
+}
+
+.ntb-topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ntb-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--ntb-accent-soft);
+  color: var(--ntb-accent-hi);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 600;
+  flex-shrink: 0;
+  border: 0.5px solid var(--ntb-accent-line);
+}
+
+.ntb-logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  border-radius: var(--ntb-r-sm);
+  font-size: 13px;
+  font-family: var(--ntb-sans);
+  font-weight: 400;
+  color: var(--ntb-muted);
+  cursor: pointer;
+  border: 0.5px solid transparent;
+  background: transparent;
+  text-decoration: none !important;
+  transition: border-color var(--ntb-dur) var(--ntb-ease),
+              background    var(--ntb-dur) var(--ntb-ease),
+              color         var(--ntb-dur) var(--ntb-ease);
+}
+
+.ntb-logout-btn:hover {
+  border-color: var(--ntb-line);
+  background: var(--ntb-bg2);
+  color: var(--ntb-danger);
+  text-decoration: none !important;
+}
+
+/* ── Zone de contenu sous le topbar ─────────────────────────── */
+.ntb-content {
+  padding: 2.5rem 24px 0;
+}
+
+/* ── Champ mot de passe avec bouton "voir" ─────────────────── */
+.ntb-pw-wrap {
+  position: relative;
+}
+.ntb-pw-wrap input[type="password"],
+.ntb-pw-wrap input[type="text"] {
+  width: 100%;
+  padding-right: 44px;
+  box-sizing: border-box;
+}
+.ntb-pw-toggle {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  color: var(--ntb-muted);
+  line-height: 1;
+  font-size: 18px;
+}
+.ntb-pw-toggle:hover { color: var(--ntb-text); }
+
+/* ── Formulaire d'authentification ───────────────────────────── */
+.ntb-auth-section {
+  background: var(--ntb-surf);
+  border: 0.5px solid var(--ntb-line);
+  border-radius: 16px;
+  padding: 40px;
+  max-width: 480px;
+  margin: 48px auto;
+}
+
+.ntb-auth-section h2 {
+  font-family: var(--ntb-serif);
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--ntb-text);
+  margin: 0 0 24px;
+}
+
+.ntb-auth-help {
+  margin-top: 16px;
+  font-size: 13px;
+  color: var(--ntb-muted);
+  line-height: 1.6;
+}
+
+/* ── Liens d'onglets (dans la topbar) ────────────────────────── */
+.ntb-tab-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: var(--ntb-r-sm);
+  cursor: pointer;
+  font-size: 13.5px;
+  font-family: var(--ntb-sans);
+  font-weight: 400;
+  color: var(--ntb-muted);
+  text-decoration: none !important;
+  border: 0.5px solid transparent;
+  background: transparent;
+  transition: background var(--ntb-dur) var(--ntb-ease),
+              color     var(--ntb-dur) var(--ntb-ease),
+              border-color var(--ntb-dur) var(--ntb-ease);
+  white-space: nowrap;
+  line-height: 1;
+}
+
+.ntb-tab-link:hover {
+  color: var(--ntb-text);
+  background: var(--ntb-bg2);
+  text-decoration: none !important;
+}
+
+.ntb-tab-link.active {
+  background: var(--ntb-accent-soft);
+  color: var(--ntb-accent-hi);
+  font-weight: 500;
+  border-color: var(--ntb-accent-line);
+}
+
+/* ── Section réservations ────────────────────────────────────── */
+.ntb-bookings-section {
+  margin-bottom: 32px;
+}
+
+/* Titre "Mes réservations" — même police/couleur que "Mon profil"
+   (.ntb-section-title), la taille reste celle du thème. */
+.ntb-bookings-tab h2 {
+  font-family: var(--ntb-sans);
+  font-weight: 500;
+  color: var(--ntb-text);
+  margin: 0 0 1.75rem;
+}
+
+.ntb-bookings-section h3 {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 500;
+  font-family: var(--ntb-sans);
+  color: var(--ntb-text);
+  margin: 0 0 12px;
+}
+
+.ntb-bookings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ── Carte de réservation ────────────────────────────────────── */
+.ntb-booking-card {
+  background: var(--ntb-surf);
+  border: 1px solid var(--ntb-line);
+  border-radius: 14px;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: border-color .15s, box-shadow .15s;
+}
+
+.ntb-booking-card:hover {
+  border-color: var(--ntb-accent);
+  box-shadow: 0 2px 12px oklch(0.50 0.115 236 / .08);
+}
+
+.ntb-booking-card.ntb-booking-past { opacity: 0.7; }
+.ntb-booking-card.ntb-booking-cancelled { opacity: 0.5; }
+
+/* Ligne 1 : ref + badge + prix */
+.ntb-booking-row1 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.ntb-booking-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.ntb-booking-ref {
+  font-family: monospace;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ntb-accent);
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+.ntb-booking-price {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ntb-text);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Ligne 2 : route + date + véhicule */
+.ntb-booking-row2 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.ntb-booking-route {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  min-width: 0;
+  flex: 1;
+}
+
+.ntb-route-from,
+.ntb-route-to {
+  color: var(--ntb-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+}
+
+.ntb-route-arrow {
+  color: var(--ntb-accent);
+  flex-shrink: 0;
+  font-size: 14px;
+}
+
+.ntb-booking-details {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-shrink: 0;
+}
+
+.ntb-booking-date,
+.ntb-booking-vehicle {
+  font-size: 12px;
+  color: var(--ntb-muted);
+  white-space: nowrap;
+}
+
+/* ── Badges de statut ────────────────────────────────────────── */
+.ntb-status {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.ntb-status-pending {
+  background: oklch(0.82 0.15 80 / .14);
+  color: oklch(0.82 0.15 80);
+}
+
+.ntb-status-confirmed,
+.ntb-status-paid {
+  background: var(--ntb-accent-soft);
+  color: var(--ntb-accent-hi);
+}
+
+.ntb-status-completed {
+  background: oklch(0.72 0.13 150 / .14);
+  color: oklch(0.72 0.13 150);
+}
+
+.ntb-status-cancelled {
+  background: oklch(0.68 0.16 25 / .14);
+  color: oklch(0.68 0.16 25);
+}
+
+/* ── État vide ───────────────────────────────────────────────── */
+.ntb-empty {
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--ntb-faint);
+  font-size: 13px;
+  font-style: normal;
+}
+
+/* ── Onglet profil — même rendu que le h2 "Mes réservations"
+   (taille héritée du thème, pas de font-size imposée) ── */
+.ntb-section-title {
+  font-weight: 500;
+  color: var(--ntb-text);
+  margin: 0 0 1.75rem;
+  font-family: var(--ntb-sans);
+}
+
+.ntb-profile-form {
+  max-width: 100%;
+}
+
+.ntb-form-group {
+  margin-bottom: 20px;
+}
+
+.ntb-form-group label,
+.ntb-profile-form label {
+  display: block;
+  margin-bottom: 7px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ntb-muted);
+}
+
+.ntb-form-group input,
+.ntb-profile-form input[type="email"],
+.ntb-profile-form input[type="text"],
+.ntb-profile-form input[type="tel"] {
+  width: 100%;
+  padding: 10px 14px;
+  background: var(--ntb-surf);
+  border: 0.5px solid var(--ntb-line);
+  border-radius: var(--ntb-r-sm);
+  font-size: 14px;
+  font-family: var(--ntb-sans);
+  color: var(--ntb-text);
+  transition: border-color var(--ntb-dur) var(--ntb-ease);
+  appearance: none;
+}
+
+.ntb-form-group input:focus,
+.ntb-profile-form input:focus {
+  outline: none;
+  border-color: var(--ntb-accent-line);
+  box-shadow: 0 0 0 3px var(--ntb-accent-soft);
+}
+
+.ntb-profile-form input:disabled,
+.ntb-form-group input:disabled {
+  background: var(--ntb-bg2);
+  color: var(--ntb-faint);
+  cursor: not-allowed;
+  border-color: var(--ntb-line);
+}
+
+.ntb-profile-form small,
+.ntb-form-group small {
+  display: block;
+  margin-top: 5px;
+  font-size: 12px;
+  color: var(--ntb-faint);
+}
+
+.ntb-form-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 28px;
+  flex-wrap: wrap;
+}
+
+.ntb-form-actions--sep {
+  padding-top: 1.5rem;
+  border-top: 0.5px solid var(--ntb-line);
+}
+
+/* ── Onglet cartes ───────────────────────────────────────────── */
+.ntb-cards-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.ntb-card-item {
+  background: var(--ntb-surf2);
+  border: 0.5px solid var(--ntb-line);
+  border-radius: 14px;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-height: 160px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Filigrane discret */
+.ntb-card-item::before {
+  content: '';
+  position: absolute;
+  top: -30px;
+  right: -30px;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: var(--ntb-accent-soft);
+  pointer-events: none;
+}
+
+.ntb-card-visual {
+  flex: 1;
+}
+
+.ntb-card-brand {
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ntb-muted);
+  margin-bottom: 20px;
+}
+
+.ntb-card-number {
+  font-size: 16px;
+  letter-spacing: 0.14em;
+  color: var(--ntb-text);
+  font-family: var(--ntb-mono);
+  margin-bottom: 8px;
+}
+
+.ntb-card-expiry {
+  font-size: 12px;
+  color: var(--ntb-muted);
+  font-family: var(--ntb-mono);
+}
+
+.ntb-card-actions {
+  display: flex;
+  gap: 8px;
+  position: relative;
+  z-index: 1;
+}
+
+.ntb-cards-actions {
+  margin-top: 8px;
+}
+
+/* ── Badge défaut ────────────────────────────────────────────── */
+.ntb-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.ntb-badge-default {
+  background: var(--ntb-accent-soft);
+  color: var(--ntb-accent-hi);
+}
+
+.ntb-badge-expired {
+  background: oklch(0.92 0.05 25);
+  color: oklch(0.45 0.16 25);
+  margin-left: 8px;
+}
+
+/* ── Ghost danger (Supprimer mon compte) ─────────────────────── */
+.ntb-btn-ghost-danger {
+  background: transparent;
+  border-color: transparent;
+  color: var(--ntb-faint);
+  margin-left: auto;
+}
+
+.ntb-btn-ghost-danger:hover:not(:disabled) {
+  background: oklch(0.68 0.16 25 / .08);
+  border-color: oklch(0.68 0.16 25 / .35);
+  color: var(--ntb-danger);
+}
+
+/* Récap email + lien "Modifier" dans le flow progressif. */
+.ntb-auth-email-recap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: var(--ntb-surf2);
+  border: 1px solid var(--ntb-line);
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+.ntb-auth-change {
+  margin-left: auto;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--ntb-accent);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.ntb-auth-change:hover { text-decoration: underline; }
+
+/* Tabs Connexion / Créer un compte. */
+.ntb-auth-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 24px;
+  border-bottom: 2px solid var(--ntb-line);
+}
+.ntb-auth-tab {
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  padding: 10px 18px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ntb-muted);
+  cursor: pointer;
+  transition: color .15s, border-color .15s;
+}
+.ntb-auth-tab.active,
+.ntb-auth-tab:hover {
+  color: var(--ntb-accent);
+  border-bottom-color: var(--ntb-accent);
+}
+
+/* Séparateur "ou" entre connexion mot de passe et lien magique. */
+.ntb-auth-sep {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: var(--ntb-muted);
+  margin: 22px 0;
+  font-size: 13px;
+}
+.ntb-auth-sep::before,
+.ntb-auth-sep::after {
+  content: "";
+  flex: 1;
+  border-bottom: 1px solid var(--ntb-faint, rgba(0,0,0,.12));
+}
+.ntb-auth-sep span {
+  padding: 0 12px;
+}
+
+/* Statut mot de passe existant. */
+.ntb-pw-status {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.ntb-pw-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: oklch(0.72 0.13 150 / .14);
+  color: oklch(0.40 0.13 150);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 20px;
+}
+
+.ntb-btn-link {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+  font-family: var(--ntb-sans);
+  color: var(--ntb-accent);
+  padding: 0;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.ntb-btn-link:hover { color: var(--ntb-accent-hi); }
+
+/* Section mot de passe dans le profil. */
+.ntb-password-section {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 0.5px solid var(--ntb-line);
+}
+.ntb-password-section .ntb-help {
+  color: var(--ntb-muted);
+  font-size: 13px;
+  margin: 4px 0 14px;
+}
+.ntb-pw-section-title {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--ntb-text);
+  margin: 0 0 1rem;
+  font-family: var(--ntb-sans);
+}
+
+/* Carte expirée : visuel atténué (l'action "Supprimer" reste disponible). */
+.ntb-card-expired .ntb-card-visual {
+  opacity: 0.55;
+  filter: grayscale(0.4);
+}
+
+/* ── Boutons (scopés .ntb-dashboard pour ne pas écraser le flux de réservation) ── */
+.ntb-dashboard .ntb-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 10px 20px;
+  border: 0.5px solid var(--ntb-line);
+  border-radius: var(--ntb-btn-radius, var(--ntb-r-sm));
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: var(--ntb-sans);
+  text-decoration: none;
+  text-align: center;
+  background: transparent;
+  color: var(--ntb-text);
+  transition: background var(--ntb-dur) var(--ntb-ease),
+              border-color var(--ntb-dur) var(--ntb-ease),
+              color var(--ntb-dur) var(--ntb-ease);
+  white-space: nowrap;
+}
+
+.ntb-dashboard .ntb-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.ntb-dashboard .ntb-btn-primary {
+  background: var(--ntb-accent);
+  border-color: transparent;
+  color: oklch(0.965 0.004 240);
+}
+
+.ntb-dashboard .ntb-btn-primary:hover:not(:disabled) {
+  background: var(--ntb-accent-hi);
+}
+
+.ntb-dashboard .ntb-btn-secondary {
+  background: var(--ntb-surf2);
+  border-color: var(--ntb-line);
+  color: var(--ntb-muted);
+}
+
+.ntb-dashboard .ntb-btn-secondary:hover:not(:disabled) {
+  color: var(--ntb-text);
+  border-color: var(--ntb-line-soft);
+}
+
+.ntb-dashboard .ntb-btn-danger {
+  background: oklch(0.68 0.16 25 / .12);
+  border-color: oklch(0.68 0.16 25 / .30);
+  color: oklch(0.68 0.16 25);
+}
+
+.ntb-dashboard .ntb-btn-danger:hover:not(:disabled) {
+  background: oklch(0.68 0.16 25 / .20);
+  border-color: oklch(0.68 0.16 25 / .50);
+}
+
+.ntb-dashboard .ntb-btn-small {
+  padding: 6px 12px;
+  font-size: 12px;
+}
+
+/* ── Messages ────────────────────────────────────────────────── */
+.ntb-message {
+  padding: 12px 16px;
+  margin: 16px 0;
+  border-radius: var(--ntb-r-sm);
+  font-size: 13px;
+  animation: ntb-slide-in var(--ntb-dur) var(--ntb-ease);
+}
+
+@keyframes ntb-slide-in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.ntb-message-success {
+  background: oklch(0.72 0.13 150 / .12);
+  border: 0.5px solid oklch(0.72 0.13 150 / .35);
+  color: oklch(0.72 0.13 150);
+}
+
+.ntb-message-error {
+  background: oklch(0.68 0.16 25 / .12);
+  border: 0.5px solid oklch(0.68 0.16 25 / .35);
+  color: oklch(0.68 0.16 25);
+}
+
+.ntb-alert {
+  padding: 12px 16px;
+  border-radius: var(--ntb-r-sm);
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+
+.ntb-alert-error {
+  background: oklch(0.68 0.16 25 / .12);
+  border: 0.5px solid oklch(0.68 0.16 25 / .35);
+  color: oklch(0.68 0.16 25);
+}
+
+/* ── Modal ───────────────────────────────────────────────────── */
+.ntb-modal {
+  position: fixed;
+  inset: 0;
+  background: oklch(0.12 0.010 240 / .72);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 16px;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.ntb-modal-content {
+  background: var(--ntb-surf);
+  border: 0.5px solid var(--ntb-line);
+  border-radius: 16px;
+  padding: 32px;
+  max-width: 480px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: ntb-modal-in var(--ntb-dur) var(--ntb-ease);
+}
+
+@keyframes ntb-modal-in {
+  from { opacity: 0; transform: scale(0.96) translateY(8px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.ntb-modal-content h3 {
+  font-family: var(--ntb-serif);
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--ntb-text);
+  margin: 0 0 12px;
+}
+
+.ntb-modal-content p {
+  font-size: 14px;
+  color: var(--ntb-muted);
+  margin-bottom: 24px;
+  line-height: 1.6;
+}
+
+.ntb-modal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+/* ── Payment Element container ───────────────────────────────── */
+#ntb-payment-element {
+  margin: 16px 0;
+  padding: 14px;
+  border: 0.5px solid var(--ntb-line);
+  border-radius: var(--ntb-r-sm);
+  background: var(--ntb-bg);
+}
+
+/* ── Modal recap réservation ─────────────────────────────────── */
+.ntb-bmodal {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+.ntb-bmodal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: oklch(0 0 0 / .45);
+  backdrop-filter: blur(3px);
+}
+
+.ntb-bmodal-panel {
+  position: relative;
+  background: var(--ntb-surf);
+  border: 1px solid var(--ntb-line);
+  border-radius: 18px;
+  padding: 28px 28px 24px;
+  width: 100%;
+  max-width: 480px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 24px 60px oklch(0 0 0 / .18);
+  animation: ntb-bmodal-in .22s var(--ntb-ease) both;
+  outline: none;
+}
+
+@keyframes ntb-bmodal-in {
+  from { opacity: 0; transform: translateY(10px) scale(0.97); }
+  to   { opacity: 1; transform: none; }
+}
+
+.ntb-bmodal-close {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  color: var(--ntb-faint);
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: color var(--ntb-dur), background var(--ntb-dur);
+  line-height: 1;
+}
+
+.ntb-bmodal-close:hover {
+  color: var(--ntb-text);
+  background: var(--ntb-bg2);
+}
+
+/* Reprend le style ntb-summary mais dans les variables --ntb-* du dashboard */
+.ntb-bmodal-panel .ntb-summary-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 4px;
+}
+
+.ntb-bmodal-panel .ntb-summary-status {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .03em;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+  background: var(--ntb-accent-soft);
+  color: var(--ntb-accent-hi);
+}
+
+.ntb-bmodal-panel .ntb-summary-status--confirmed {
+  background: oklch(0.72 0.15 140 / .16);
+  color: oklch(0.45 0.15 140);
+}
+.ntb-bmodal-panel .ntb-summary-status--completed {
+  background: oklch(0.72 0.15 140 / .10);
+  color: oklch(0.40 0.12 140);
+}
+.ntb-bmodal-panel .ntb-summary-status--cancelled {
+  background: oklch(0.68 0.16 25 / .12);
+  color: var(--ntb-danger);
+}
+.ntb-bmodal-panel .ntb-summary-status--pending {
+  background: var(--ntb-accent-soft);
+  color: var(--ntb-accent-hi);
+}
+
+.ntb-bmodal-panel .ntb-summary-row {
+  display: flex;
+  gap: 16px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--ntb-line-soft);
+  align-items: baseline;
+}
+.ntb-bmodal-panel .ntb-summary-row:last-child {
+  border-bottom: none;
+}
+
+.ntb-bmodal-panel .ntb-summary-label {
+  flex: 0 0 110px;
+  font-size: 13px;
+  color: var(--ntb-faint);
+  font-weight: 500;
+}
+
+.ntb-bmodal-panel .ntb-summary-value {
+  flex: 1;
+  font-size: 13px;
+  color: var(--ntb-text);
+}
+
+.ntb-bmodal-panel .ntb-summary-total .ntb-summary-label,
+.ntb-bmodal-panel .ntb-summary-total .ntb-summary-value {
+  font-weight: 700;
+  font-size: 15px;
+}
+.ntb-bmodal-panel .ntb-summary-total .ntb-summary-value {
+  color: var(--ntb-accent);
+}
+
+/* ── Responsive ──────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .ntb-topbar {
+    padding: 0 12px;
+    height: 48px;
+  }
+
+  .ntb-tab-link {
+    padding: 5px 9px;
+    font-size: 12.5px;
+    gap: 5px;
+  }
+
+  .ntb-tab-link svg { width: 13px; height: 13px; }
+
+  .ntb-logout-btn span { display: none; }
+
+  .ntb-content {
+    padding: 1.5rem 16px 0;
+  }
+
+  .ntb-booking-row2 { flex-direction: column; align-items: flex-start; gap: 6px; }
+  .ntb-route-from, .ntb-route-to { max-width: 140px; }
+
+  .ntb-bmodal { padding: 0; align-items: flex-end; }
+  .ntb-bmodal-panel {
+    max-width: 100%;
+    border-radius: 20px 20px 0 0;
+    max-height: 80vh;
+    animation: ntb-bmodal-in-mobile .25s var(--ntb-ease) both;
+  }
+  @keyframes ntb-bmodal-in-mobile {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  .ntb-cards-list {
+    grid-template-columns: 1fr;
+  }
+
+  .ntb-form-actions {
+    flex-direction: column;
+  }
+
+  .ntb-form-actions .ntb-btn {
+    width: 100%;
+  }
+
+  .ntb-modal-actions {
+    flex-direction: column-reverse;
+  }
+
+  .ntb-modal-actions .ntb-btn {
+    width: 100%;
+  }
+}

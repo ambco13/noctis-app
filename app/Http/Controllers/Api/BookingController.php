@@ -12,6 +12,8 @@ class BookingController extends Controller
     /**
      * Crée une réservation en attente de paiement. Le prix est recalculé
      * côté serveur ; rien de ce qui vient du client n'est cru sur parole.
+     * Contrat front : { success, booking_id, booking_ref, amount, currency }
+     * (+ champs passerelle selon payment_method, ajoutés en phase paiements).
      */
     public function store(Request $request): JsonResponse
     {
@@ -33,8 +35,12 @@ class BookingController extends Controller
         $booking = BookingService::createPending($validated);
 
         return response()->json([
+            'success' => true,
             'booking_id' => $booking->id,
+            'booking_ref' => $booking->booking_ref,
+            'amount' => $booking->price,
+            'currency' => $booking->currency,
             'summary' => BookingService::publicSummary($booking),
-        ], 201);
+        ]);
     }
 }

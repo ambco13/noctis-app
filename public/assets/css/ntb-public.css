@@ -838,14 +838,25 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 /* Masqué tant que le Payment Element Stripe n'est pas injecté (évite la boîte grise vide) */
 #ntb-stripe-element:empty { display: none; }
 
-/* "Payer maintenant" reste toujours contenu dans .ntb-step3-form, jamais
-   collé en barre fixe pleine largeur d'écran (contrairement à .ntb-sum-bar
-   ci-dessous, qui elle reste un CTA fixe volontaire à l'étape véhicule). */
+/* Desktop (>1024px) : "Payer maintenant" reste contenu dans .ntb-step3-form. */
 .ntb-pay-bar {
 	display: flex; gap: 12px; align-items: center;
 	max-width: 100%; box-sizing: border-box;
 }
 @media (max-width: 1024px) {
+	/* Mobile : bandeau fixe pleine largeur d'écran, comme à l'étape 2. */
+	.ntb-pay-bar {
+		position: fixed;
+		bottom: 0;
+		left: 0;
+		width: 100%;
+		padding: 16px;
+		background: var(--ntb-surf);
+		border-top: 1px solid var(--ntb-line);
+		border-radius: var(--ntb-r) var(--ntb-r) 0 0;
+		box-shadow: var(--ntb-shadow-up);
+		z-index: 50;
+	}
 	.ntb-pay-bar .ntb-pay-back,
 	.ntb-sum-bar .ntb-sum-back { display: flex !important; flex: 0 0 auto; }
 	.ntb-pay-bar .ntb-pay-back:hover,
@@ -868,9 +879,8 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 		gap: 12px;
 		align-items: center;
 	}
-	/* Réservé à l'étape 2 : espace pour la feuille mobile fixe du véhicule.
-	   L'étape 3 n'a plus de barre fixe, donc pas de padding à réserver. */
-	[data-ntb-screen="2"] { padding-bottom: 80px; }
+	[data-ntb-screen="2"],
+	[data-ntb-screen="3"] { padding-bottom: 80px; }
 }
 
 /* récap / confirmation */

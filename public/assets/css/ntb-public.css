@@ -389,7 +389,7 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 .ntb-prog-node { display: flex; align-items: center; gap: 8px; }
 .ntb-prog-bub {
 	width: var(--ntb-prog-bub-s); height: var(--ntb-prog-bub-s); flex: 0 0 auto; display: flex; align-items: center; justify-content: center;
-	border-radius: 50%; background: var(--ntb-surf2); border: 1px solid var(--ntb-line); color: var(--ntb-muted);
+	border-radius: 50%; background: transparent; border: 1px solid var(--ntb-line); color: var(--ntb-muted);
 	font-size: var(--ntb-text-sm); font-weight: 700; transition: all var(--ntb-dur);
 }
 .ntb-prog-node.active .ntb-prog-bub { background: var(--ntb-accent); border-color: var(--ntb-accent); color: var(--ntb-on-accent); box-shadow: 0 0 0 4px var(--ntb-accent-soft); }

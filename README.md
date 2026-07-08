@@ -135,3 +135,9 @@ Les tests tournent sur SQLite en mémoire (aucun impact sur la base).
       Stripe déclaré sur le domaine de production
 - [ ] Sauvegardes de la base ; les clés admin sont chiffrées avec `APP_KEY` :
       sauvegarder le `.env` séparément, sinon elles sont irrécupérables
+- [ ] Vérifier que l'hébergeur supporte SSH/Composer/CLI et un processus
+      persistant (`queue:work`) — un hébergement mutualisé gratuit type
+      InfinityFree ne le permet généralement pas
+- [ ] `TrustProxies` (`bootstrap/app.php`) à jour avec les IP du proxy réel
+      devant l'app (configuré pour Cloudflare actuellement — voir
+      https://www.cloudflare.com/ips/)

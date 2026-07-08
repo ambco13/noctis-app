@@ -169,7 +169,11 @@ return [
     |
     */
 
-    'secure' => env('SESSION_SECURE_COOKIE'),
+    // Défaut sûr : Secure automatiquement en production, même si la variable
+    // d'env est oubliée sur le serveur. Sans effet en local (APP_ENV=local).
+    // Comparaison env() directe (pas app()->environment()) : ce fichier est
+    // chargé trop tôt dans le bootstrap pour résoudre le container.
+    'secure' => env('SESSION_SECURE_COOKIE', env('APP_ENV') === 'production'),
 
     /*
     |--------------------------------------------------------------------------

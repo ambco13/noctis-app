@@ -56,6 +56,12 @@ services:
         sync: false
       - key: PAYPAL_SECRET
         sync: false
+      # Creation du compte admin (voir docker-entrypoint.sh) -- a retirer une
+      # fois le compte cree, sinon un redemarrage reecrase le mot de passe.
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
 
 databases:
   - name: noctis-db

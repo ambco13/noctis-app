@@ -454,10 +454,10 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 	.ntb-step2-aside {
 		width: 440px;
 		flex-shrink: 0;
-		/* Le gap (24px, déjà présent entre tous les enfants) fait à la fois
-		   office d'espace avant la carte map ET de séparation avec la copie
-		   du 2-3-4 — pas besoin de padding-top en plus (voir plus bas). */
-		gap: 24px;
+		/* Le gap (déjà présent entre tous les enfants) fait à la fois office
+		   d'espace avant la carte map ET de séparation avec la copie du
+		   2-3-4 — pas besoin de padding-top en plus (voir plus bas). */
+		gap: 12px;
 		align-self: flex-start;
 		position: sticky;
 		/* Aligné pile sur la position du 2-3-4 original dans l'en-tête, pour

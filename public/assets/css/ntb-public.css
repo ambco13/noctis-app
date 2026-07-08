@@ -105,24 +105,14 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 }
 
 /* En-tête étape 2 : titre à gauche, rail 2-3-4 à droite (même rangée flex).
-   Fixe en haut de l'écran, toujours visible peu importe le scroll. */
+   Le titre reste dans le flux normal (ne touche pas au nav du site). */
 .ntb-step2-header {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
 	gap: 16px;
-	position: fixed;
-	top: 0;
-	left: 0;
-	right: 0;
-	z-index: 100;
-	padding: 20px 24px;
-	background: var(--ntb-surf);
-	border-bottom: 1px solid var(--ntb-line);
+	padding: 24px 24px 0 24px;
 }
-@media (min-width: 1025px) { .ntb-step2-header { padding-left: 48px; padding-right: 48px; } }
-/* Compense la hauteur retirée du flux normal par le position:fixed ci-dessus. */
-.ntb-step2-body { margin-top: 88px; }
 /* masqué aux étapes 3-4 (le display:flex ci-dessus écraserait l'attribut hidden) */
 .ntb-step2-header[hidden] { display: none !important; }
 .ntb-step2-header .ntb-step3-left {
@@ -1090,7 +1080,13 @@ html[data-ntb-theme="light"] .ntb-ac-list {
 	display: flex !important;
 	justify-content: flex-end !important;
 	align-items: center !important;
+	/* Fixe sous le nav du site (pas tout l'en-tête, pas au-dessus du nav). */
+	position: fixed !important;
+	top: 75px;
+	right: 24px;
+	z-index: 90;
 }
+@media (min-width: 1025px) { .ntb-step3-right { right: 48px; } }
 .ntb-step3-right .ntb-prog {
 	display: flex !important;
 	flex-direction: row !important;

@@ -997,6 +997,17 @@
 		var aside = el( '.ntb-step2-aside' );
 		if ( ! aside ) return;
 
+		// Copie du 2-3-4 dans la carte : visible seulement quand le titre
+		// (en-tête) est sorti de l'écran en scrollant.
+		var header = el( '.ntb-step2-header' );
+		if ( header && window.innerWidth > 1024 ) {
+			var toggleProgCopy = function () {
+				aside.classList.toggle( 'ntb-show-prog', header.getBoundingClientRect().bottom <= 0 );
+			};
+			toggleProgCopy();
+			window.addEventListener( 'scroll', toggleProgCopy, { passive: true } );
+		}
+
 		// Bottom sheet swipe (mobile)
 		var handle = el( '[data-ntb-aside-handle]', aside );
 		if ( handle ) {

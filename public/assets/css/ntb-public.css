@@ -399,9 +399,9 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 }
 .ntb-scope.ntb-no-aside .ntb-step2-layout { flex: 0 0 100%; }
 @media (min-width: 1025px) {
-	.ntb-step2-layout { max-height: 100vh; overflow-y: auto; }
-	/* Étapes 3-4 (pas d'aside) : pas de scroll interne, la page défile normalement */
-	.ntb-scope.ntb-no-aside .ntb-step2-layout { max-height: none; overflow-y: visible; }
+	/* Pas de scroll interne : la page défile normalement, ce qui permet à
+	   .ntb-step2-aside (sticky) de rester visible pendant le défilement. */
+	.ntb-step2-layout { max-height: none; overflow-y: visible; }
 }
 @media (max-width: 1024px) { .ntb-step2-layout { flex: none; width: 100%; padding: 16px 16px 230px; } }
 

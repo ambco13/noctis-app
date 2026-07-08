@@ -452,6 +452,10 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 		align-self: flex-start;
 		position: sticky;
 		top: 24px;
+		/* Occupe ~toute la hauteur d'écran (comme l'ancien plugin, où l'aside
+		   s'étirait sur toute la colonne) : la carte carte/résumé s'étire
+		   dedans grâce à .ntb-aside-map-wrap { flex: 1 1 0 }. */
+		height: calc(100vh - 48px);
 		padding: 24px 24px 2px 4px;
 		background: transparent;
 		border: none;

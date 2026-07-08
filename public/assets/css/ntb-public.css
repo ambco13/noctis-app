@@ -139,6 +139,11 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 		align-items: start;
 		gap: 24px;
 	}
+	/* Étapes 3-4 : pas d'aside (elle est [hidden]) — une seule colonne pleine
+	   largeur, sinon le track de 440px reste réservé pour rien. */
+	.ntb-scope.ntb-no-aside .ntb-step2-body {
+		grid-template-columns: 1fr;
+	}
 }
 @media (prefers-color-scheme: light) {
 	.ntb-scope,

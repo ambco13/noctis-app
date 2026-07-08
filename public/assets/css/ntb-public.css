@@ -370,20 +370,12 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 	padding-bottom: 0;
 	pointer-events: none;
 }
+/* Toujours visible pour l'instant (bascule désactivée temporairement,
+   le temps d'ajuster son apparence). */
 .ntb-prog--aside {
-	max-height: 0;
-	opacity: 0;
-	overflow: hidden;
-	transform: translateY(-6px);
-	justify-content: right;
-	pointer-events: none;
-	transition: max-height 280ms var(--ntb-ease), opacity 220ms var(--ntb-ease), transform 280ms var(--ntb-ease), margin 280ms var(--ntb-ease);
-}
-.ntb-prog-swapped .ntb-prog--aside {
-	max-height: 60px;
+	max-height: 68px;
 	opacity: 1;
-	transform: none;
-	pointer-events: auto;
+	justify-content: right;
 }
 .ntb-prog-node { display: flex; align-items: center; gap: 8px; }
 .ntb-prog-bub {

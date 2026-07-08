@@ -483,9 +483,11 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 		gap: 24px;
 		align-self: flex-start;
 		position: sticky;
-		/* La nav est elle-même sticky (top:0, ~72px de haut) : la carte doit
-		   se caler en dessous, pas à 24px du tout haut de l'écran. */
-		top: 96px;
+		/* Aligné pile sur la position du 2-3-4 original dans l'en-tête, pour
+		   qu'il n'y ait aucun saut visuel au moment du fondu :
+		   nav (63px = 14+14 padding + 34 icône + 1 bordure)
+		   + padding-top de main (16px) + padding-top de l'en-tête (24px). */
+		top: 103px;
 		/* Occupe ~toute la hauteur d'écran (comme l'ancien plugin, où l'aside
 		   s'étirait sur toute la colonne) : la carte carte/résumé s'étire
 		   dedans grâce à .ntb-aside-map-wrap { flex: 1 1 0 }.

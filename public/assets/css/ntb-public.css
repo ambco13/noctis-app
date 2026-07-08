@@ -110,12 +110,7 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 	align-items: center;
 	justify-content: space-between;
 	gap: 16px;
-	padding: 24px 24px 16px 24px;
-	/* Sticky comme l'aside : reste visible pendant le scroll. */
-	position: sticky;
-	top: 0;
-	z-index: 40;
-	background: var(--ntb-bg);
+	padding: 24px 24px 0 24px;
 }
 /* masqué aux étapes 3-4 (le display:flex ci-dessus écraserait l'attribut hidden) */
 .ntb-step2-header[hidden] { display: none !important; }

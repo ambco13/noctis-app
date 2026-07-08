@@ -138,6 +138,7 @@ Les tests tournent sur SQLite en mémoire (aucun impact sur la base).
 - [ ] Vérifier que l'hébergeur supporte SSH/Composer/CLI et un processus
       persistant (`queue:work`) — un hébergement mutualisé gratuit type
       InfinityFree ne le permet généralement pas
-- [ ] `TrustProxies` (`bootstrap/app.php`) à jour avec les IP du proxy réel
-      devant l'app (configuré pour Cloudflare actuellement — voir
-      https://www.cloudflare.com/ips/)
+- [ ] `TrustProxies` (`bootstrap/app.php`) à jour avec l'infra réelle devant
+      l'app : `at: '*'` actuellement (déployé sur Render, PaaS sans IP de
+      proxy publiées) — à restreindre à des IP précises si un jour l'app
+      est aussi joignable hors de la couche de routage du PaaS

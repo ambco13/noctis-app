@@ -21,22 +21,15 @@ return Application::configure(basePath: dirname(__DIR__))
         // Pas de route "login" classique : les invités passent par /mon-compte.
         $middleware->redirectGuestsTo(fn () => route('account'));
 
-        // Le site est servi derrière Cloudflare (amirvtc.freedev.app) : sans
-        // ça, $request->ip() renvoie l'IP du proxy pour tout le monde, ce qui
-        // casse le rate limiting par IP (login, magic-link, password-forgot…)
-        // et la détection HTTPS. Plages IPv4/IPv6 officielles Cloudflare —
-        // à vérifier/mettre à jour sur https://www.cloudflare.com/ips/.
+        // Déployé sur Render (PaaS) : le conteneur ne reçoit du trafic que via
+        // la couche de routage interne de Render, jamais directement d'internet
+        // -- Render ne publie pas de plage d'IP fixe comme Cloudflare, donc on
+        // fait confiance à tous les proxies (pratique standard pour ce type de
+        // PaaS/Heroku-like). Sans ça, $request->secure() reste faux malgré le
+        // HTTPS réel (proxy non reconnu), d'où l'avertissement "formulaire non
+        // sécurisé" de Chrome et les cookies non marqués Secure.
         $middleware->trustProxies(
-            at: [
-                '173.245.48.0/20', '103.21.244.0/22', '103.22.200.0/22',
-                '103.31.4.0/22', '141.101.64.0/18', '108.162.192.0/18',
-                '190.93.240.0/20', '188.114.96.0/20', '197.234.240.0/22',
-                '198.41.128.0/17', '162.158.0.0/15', '104.16.0.0/13',
-                '104.24.0.0/14', '172.64.0.0/13', '131.0.72.0/22',
-                '2400:cb00::/32', '2606:4700::/32', '2803:f800::/32',
-                '2405:b500::/32', '2405:8100::/32', '2a06:98c0::/29',
-                '2c0f:f248::/32',
-            ],
+            at: '*',
             headers: Request::HEADER_X_FORWARDED_FOR
                 | Request::HEADER_X_FORWARDED_HOST
                 | Request::HEADER_X_FORWARDED_PORT

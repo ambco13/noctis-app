@@ -384,6 +384,22 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 @keyframes ntbSlideIn { from { opacity: 0; transform: translateX(18px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { .ntb-anim { animation: none; } }
 
+/* Arguments de confiance, sous le carrousel de véhicules (étape 2) */
+.ntb-trust {
+	display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;
+	margin-top: 36px; padding-top: 28px; border-top: 1px solid var(--ntb-line-soft);
+}
+@media (max-width: 900px) { .ntb-trust { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 520px) { .ntb-trust { grid-template-columns: 1fr; } }
+.ntb-trust-item { display: flex; gap: 12px; align-items: flex-start; min-width: 0; }
+.ntb-trust-ico {
+	flex: 0 0 auto; width: 38px; height: 38px; border-radius: 10px;
+	display: flex; align-items: center; justify-content: center;
+	background: var(--ntb-accent-soft); color: var(--ntb-accent-hi);
+}
+.ntb-trust-title { margin: 0 0 3px; font-size: var(--ntb-text-sm); font-weight: 700; color: var(--ntb-text); }
+.ntb-trust-text { margin: 0; font-size: 12.5px; line-height: 1.45; color: var(--ntb-faint); }
+
 /* loading + spinner */
 .ntb-loading { display: flex; align-items: center; gap: 10px; color: var(--ntb-muted); padding: 14px 0; }
 .ntb-loading[hidden] { display: none; }

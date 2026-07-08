@@ -81,6 +81,45 @@
                         </button>
                     </div>
                     <div class="ntb-flow-error" data-ntb-error hidden></div>
+
+                    <div class="ntb-trust">
+                        <div class="ntb-trust-item">
+                            <span class="ntb-trust-ico" aria-hidden="true">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 4v6c0 5-3.4 8.4-8 10-4.6-1.6-8-5-8-10V6l8-4z"/><path d="M9 12l2 2 4-4"/></svg>
+                            </span>
+                            <div>
+                                <p class="ntb-trust-title">{{ __('Chauffeurs vérifiés') }}</p>
+                                <p class="ntb-trust-text">{{ __('Identité et permis contrôlés avant chaque mise en service.') }}</p>
+                            </div>
+                        </div>
+                        <div class="ntb-trust-item">
+                            <span class="ntb-trust-ico" aria-hidden="true">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+                            </span>
+                            <div>
+                                <p class="ntb-trust-title">{{ __('Paiement sécurisé') }}</p>
+                                <p class="ntb-trust-text">{{ __('Carte, Apple Pay, Google Pay ou PayPal — vos données ne transitent jamais par nos serveurs.') }}</p>
+                            </div>
+                        </div>
+                        <div class="ntb-trust-item">
+                            <span class="ntb-trust-ico" aria-hidden="true">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg>
+                            </span>
+                            <div>
+                                <p class="ntb-trust-title">{{ __('Annulation gratuite') }}</p>
+                                <p class="ntb-trust-text">{{ __("Jusqu'à 1 heure avant le départ, sans frais.") }}</p>
+                            </div>
+                        </div>
+                        <div class="ntb-trust-item">
+                            <span class="ntb-trust-ico" aria-hidden="true">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg>
+                            </span>
+                            <div>
+                                <p class="ntb-trust-title">{{ __('Suivi en temps réel') }}</p>
+                                <p class="ntb-trust-text">{{ __("Position du chauffeur et heure d'arrivée dans votre espace client.") }}</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 

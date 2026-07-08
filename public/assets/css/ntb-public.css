@@ -105,24 +105,13 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 }
 
 /* En-tête étape 2 : titre à gauche, rail 2-3-4 à droite (même rangée flex).
-   Fixed juste sous le nav du site (62.8px = hauteur mesurée de .ntb-topnav),
-   toujours visible pendant le scroll. */
+   Le titre reste dans le flux normal (ne touche pas au nav du site). */
 .ntb-step2-header {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
 	gap: 16px;
-	position: fixed;
-	top: 62.8px;
-	left: 0;
-	right: 0;
-	z-index: 90;
-	background: var(--ntb-bg);
-	padding: 16px 24px;
-	box-sizing: border-box;
-}
-@media (min-width: 1025px) {
-	.ntb-step2-header { padding-left: 48px; padding-right: 48px; }
+	padding: 0px 24px 0 24px;
 }
 /* masqué aux étapes 3-4 (le display:flex ci-dessus écraserait l'attribut hidden) */
 .ntb-step2-header[hidden] { display: none !important; }
@@ -131,16 +120,13 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 	align-items: center;
 	gap: 12px;
 }
+
 /* Corps étape 2 : deux colonnes flex (contenu | carte + récap) */
 .ntb-step2-body {
 	display: flex;
 	align-items: stretch;
 	width: 100%;
 	min-height: 0;
-	/* Le header est sorti du flux (fixed) : on réserve le même espace au-dessus
-	   du corps pour que rien ne saute sous lui. Valeur à ajuster si un écart
-	   ou un chevauchement apparaît à l'usage. */
-	margin-top: 72px;
 }
 @media (prefers-color-scheme: light) {
 	.ntb-scope,

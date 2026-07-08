@@ -427,13 +427,15 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
    DESKTOP (≥ 1025px) — sidebar sticky avec carte + récap
    =========================================================== */
 @media (min-width: 1025px) {
-	/* Colonne droite en flux (comme l'étape 3) : pas de sticky, elle s'étire
-	   sur la hauteur de la colonne de gauche. */
+	/* Colonne droite sticky : reste visible pendant que le carrousel de
+	   véhicules (colonne de gauche) défile. */
 	.ntb-step2-aside {
 		width: 440px;
 		flex-shrink: 0;
 		gap: 24px;
-		align-self: stretch;
+		align-self: flex-start;
+		position: sticky;
+		top: 24px;
 		padding: 24px 24px 2px 4px;
 		background: transparent;
 		border: none;

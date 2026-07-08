@@ -104,7 +104,7 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 	gap: 0;
 }
 
-/* En-tête étape 2 : titre seul (le 2-3-4 est fixe dans la carte) */
+/* En-tête étape 2 : titre à gauche, rail 2-3-4 à droite (même rangée flex) */
 .ntb-step2-header {
 	display: flex;
 	align-items: center;
@@ -356,16 +356,6 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 }
 
 .ntb-prog { display: flex; align-items: center; gap: 6px; margin-left: auto; }
-/* À l'étape 2, le 2-3-4 de l'en-tête est masqué : l'aside (carte véhicule)
-   a déjà le sien. .ntb-no-aside n'est présent qu'aux étapes 3-4. */
-.ntb-scope:not(.ntb-no-aside) .ntb-step2-header .ntb-prog { display: none; }
-/* Copie fixe dans la carte étape 2 (à droite, à côté de la carte itinéraire). */
-.ntb-prog--aside {
-	max-height: 68px;
-	opacity: 1;
-	justify-content: right;
-	margin-bottom: 16px;
-}
 .ntb-prog-node { display: flex; align-items: center; gap: 8px; }
 .ntb-prog-bub {
 	width: var(--ntb-prog-bub-s); height: var(--ntb-prog-bub-s); flex: 0 0 auto; display: flex; align-items: center; justify-content: center;
@@ -425,9 +415,9 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 }
 .ntb-scope.ntb-no-aside .ntb-step2-layout { flex: 0 0 100%; }
 @media (min-width: 1025px) {
-	/* Pas de scroll interne : la page défile normalement, ce qui permet à
-	   .ntb-step2-aside (sticky) de rester visible pendant le défilement. */
-	.ntb-step2-layout { max-height: none; overflow-y: visible; }
+	.ntb-step2-layout { max-height: 100vh; overflow-y: auto; }
+	/* Étapes 3-4 (pas d'aside) : pas de scroll interne, la page défile normalement */
+	.ntb-scope.ntb-no-aside .ntb-step2-layout { max-height: none; overflow-y: visible; }
 }
 @media (max-width: 1024px) { .ntb-step2-layout { flex: none; width: 100%; padding: 16px 16px 230px; } }
 
@@ -453,45 +443,25 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
    DESKTOP (≥ 1025px) — sidebar sticky avec carte + récap
    =========================================================== */
 @media (min-width: 1025px) {
-	/* Colonne droite sticky : reste visible pendant que le carrousel de
-	   véhicules (colonne de gauche) défile. */
+	/* Colonne droite en flux (comme l'étape 3) : pas de sticky, elle s'étire
+	   sur la hauteur de la colonne de gauche. */
 	.ntb-step2-aside {
 		width: 440px;
 		flex-shrink: 0;
-		/* Le gap (déjà présent entre tous les enfants) fait à la fois office
-		   d'espace avant la carte map ET de séparation avec la copie du
-		   2-3-4 — pas besoin de padding-top en plus (voir plus bas). */
 		gap: 24px;
-		align-self: flex-start;
-		position: sticky;
-		/* Aligné pile sur la position du 2-3-4 original dans l'en-tête, pour
-		   qu'il n'y ait aucun saut visuel au moment du fondu :
-		   nav (63px = 14+14 padding + 34 icône + 1 bordure)
-		   + padding-top de main (16px) + padding-top de l'en-tête (24px). */
-		top: 103px;
-		/* Sans ça, l'aside démarre juste après la fin de l'en-tête (147px, plus
-		   bas que 103px) et le sticky ne s'accroche qu'après ~44px de scroll —
-		   d'où le décalage visible au chargement. -44px = hauteur du bouton
-		   retour (le seul élément qui dépasse la hauteur du titre dans
-		   l'en-tête), pour démarrer déjà aligné avec la ligne du titre. */
-		margin-top: -35px;
-		/* Occupe ~toute la hauteur d'écran (comme l'ancien plugin, où l'aside
-		   s'étirait sur toute la colonne) : la carte carte/résumé s'étire
-		   dedans grâce à .ntb-aside-map-wrap { flex: 1 1 0 }.
-		   -160px et pas -48px : au chargement (avant tout scroll), l'aside est
-		   encore dans le flux normal, sous le nav + l'en-tête — sans cette
-		   marge le bas de la carte (donc le bouton) dépassait de l'écran. */
-		height: calc(100vh - 160px);
-		/* Pas de padding-top : sinon la copie du 2-3-4 (1er enfant) est
-		   décalée de 24px en plus de sa propre transition, ce qui donne un
-		   "saut" au lieu de rester à sa place pendant le fondu. Le gap
-		   ci-dessus fournit déjà l'espacement nécessaire. */
-		padding: 0 24px 2px 4px;
+		align-self: stretch;
+		padding: 24px 24px 2px 4px;
 		background: transparent;
 		border: none;
 		border-radius: var(--ntb-r-sm);
 	}
-	.ntb-step2-aside .ntb-aside-map-wrap { margin-top: 6px; }
+	.ntb-step2-aside.ntb-header-visible {
+		top: auto;
+		height: auto;
+	}
+	/* Miroir du padding du carrousel (4px haut / 16px bas) pour que la carte
+	   et la sum-card s'alignent sur le haut et le bas des cartes véhicules */
+	.ntb-step2-aside .ntb-aside-map-wrap { margin-top: 4px; }
 	.ntb-step2-aside .ntb-sum-card { margin-bottom: 16px; }
 	/* Le mode replié (bottom sheet) n'existe pas sur desktop :
 	   on neutralise la classe si elle subsiste après un resize mobile→pc. */
@@ -604,7 +574,6 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 	overflow: hidden;
 	background: transparent;
 	contain: paint;
-	margin: 1px 0 0 0;
 	clip-path: inset(0);
 	flex-shrink: 0;
 }
@@ -618,6 +587,18 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 	}
 }
 /* ntb-panel-fixed ignoré — layout CSS sticky uniquement */
+
+/* Spacer au-dessus de la map — disparaît quand le header est visible */
+@media (min-width: 1025px) {
+	.ntb-step2-aside::before {
+		content: '';
+		display: block;
+		flex: 0 0 24px;
+	}
+	.ntb-step2-aside.ntb-header-visible::before {
+		display: none;
+	}
+}
 
 /* ── Summary card (aside step 2) ── */
 .ntb-sum-card {
@@ -752,7 +733,7 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 	scrollbar-width: none;
 	-ms-overflow-style: none;
 	gap: 16px;
-	padding: 4px 0px 16px 0px;
+	padding: 4px 2px 16px 1px;
 	flex-shrink: 0;
 }
 .ntb-veh-wrap::-webkit-scrollbar { display: none; }
@@ -939,8 +920,7 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 	   grand vide sous le total. */
 	justify-content: space-between;
 	position: sticky;
-	/* La nav est sticky (top:0, ~72px de haut) : se caler en dessous. */
-	top: 96px;
+	top: 24px;
 	/* Même garde-fou que .ntb-step3-form : ne jamais déborder de sa colonne. */
 	min-width: 0; max-width: 100%; box-sizing: border-box; overflow-wrap: break-word;
 	overflow: hidden;

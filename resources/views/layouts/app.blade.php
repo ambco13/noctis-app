@@ -20,7 +20,6 @@
             gap: 16px; padding: 14px 24px; box-sizing: border-box;
             background: var(--ntb-surf); border-bottom: 1px solid var(--ntb-line);
             max-width: 100vw;
-            position: sticky; top: 0; z-index: 100;
         }
         .ntb-topnav-brand {
             font-family: var(--ntb-serif); font-size: 19px; letter-spacing: .01em;
@@ -45,12 +44,8 @@
         .ntb-topnav-account:hover { color: var(--ntb-accent-hi); background: var(--ntb-accent-soft); }
 
         /* Filet de sécurité : un contenu imprévu (texte long, image...) ne doit
-           jamais créer de scroll horizontal sur la page.
-           overflow-x: clip (pas "hidden") : "hidden" force silencieusement
-           overflow-y à "auto" sur le même élément, ce qui transforme body/html
-           en zone de scroll indépendante et casse position:sticky des
-           descendants (aside de l'étape 2). "clip" évite cet effet de bord. */
-        html, body { max-width: 100%; overflow-x: clip; margin: 0; }
+           jamais créer de scroll horizontal sur la page. */
+        html, body { max-width: 100%; overflow-x: hidden; }
 
         /* Marge latérale globale du site : 24px en mobile, 48px à partir du desktop.
            Un peu d'espace en haut, beaucoup plus en bas (sous le formulaire). */

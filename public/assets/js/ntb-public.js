@@ -997,6 +997,18 @@
 		var aside = el( '.ntb-step2-aside' );
 		if ( ! aside ) return;
 
+		// Détecte si le header est visible (scroll proche du haut) — gère le gap supérieur
+		var updateHeaderVisible = null;
+		if ( window.innerWidth > 1024 ) {
+			updateHeaderVisible = function() {
+				var navEl = document.querySelector( 'header, .site-header, #masthead, [class*="header"]' );
+				var threshold = navEl ? navEl.getBoundingClientRect().bottom : 0;
+				aside.classList.toggle( 'ntb-header-visible', threshold > 0 );
+			};
+			updateHeaderVisible();
+			window.addEventListener( 'scroll', updateHeaderVisible, { passive: true } );
+		}
+
 		// Bottom sheet swipe (mobile)
 		var handle = el( '[data-ntb-aside-handle]', aside );
 		if ( handle ) {
@@ -1119,6 +1131,7 @@
 			window.addEventListener( 'load', function() {
 				requestAnimationFrame( function() {
 					aside.style.setProperty( '--ntb-nav-offset', getNavOffset() + 'px' );
+					updateHeaderVisible && updateHeaderVisible();
 				} );
 			} );
 			// Re-evaluate on scroll: some themes apply position:fixed to nav only after scroll starts

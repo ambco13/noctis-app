@@ -204,6 +204,25 @@
         <!-- COLONNE DROITE 35% — carte itinéraire + récapitulatif -->
         <div class="ntb-step2-aside">
 
+            <!-- 2-3-4 : copie fixe en haut de la carte (l'en-tête masque la
+                 sienne à l'étape 2, voir CSS .ntb-scope:not(.ntb-no-aside)) -->
+            <div class="ntb-prog ntb-prog--aside" aria-hidden="true">
+                <div class="ntb-prog-node active" data-step="2">
+                    <span class="ntb-prog-bub">2</span>
+                    <span class="ntb-prog-lab">{{ __('Véhicule') }}</span>
+                </div>
+                <span class="ntb-prog-line"></span>
+                <div class="ntb-prog-node" data-step="3">
+                    <span class="ntb-prog-bub">3</span>
+                    <span class="ntb-prog-lab">{{ __('Paiement') }}</span>
+                </div>
+                <span class="ntb-prog-line"></span>
+                <div class="ntb-prog-node" data-step="4">
+                    <span class="ntb-prog-bub">4</span>
+                    <span class="ntb-prog-lab">{{ __('Confirmation') }}</span>
+                </div>
+            </div>
+
             <!-- Carte Leaflet -->
             <div class="ntb-aside-map-wrap">
                 <div id="ntb-route-map" class="ntb-route-map" hidden aria-hidden="true"></div>

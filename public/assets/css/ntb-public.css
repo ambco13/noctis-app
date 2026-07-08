@@ -356,6 +356,10 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 }
 
 .ntb-prog { display: flex; align-items: center; gap: 6px; margin-left: auto; }
+/* À l'étape 2, le 2-3-4 de l'en-tête est masqué : la carte a le sien.
+   .ntb-no-aside n'est présent qu'aux étapes 3-4. */
+.ntb-scope:not(.ntb-no-aside) .ntb-step2-header .ntb-prog { display: none; }
+.ntb-prog--aside { justify-content: right; margin: 0 0 16px; }
 .ntb-prog-node { display: flex; align-items: center; gap: 8px; }
 .ntb-prog-bub {
 	width: var(--ntb-prog-bub-s); height: var(--ntb-prog-bub-s); flex: 0 0 auto; display: flex; align-items: center; justify-content: center;

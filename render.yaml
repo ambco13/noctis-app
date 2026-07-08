@@ -1,0 +1,64 @@
+# Blueprint Render : "New +" → "Blueprint" → pointer ce repo.
+# Les clés `sync: false` seront demandées une par une lors de la création
+# (elles ne sont jamais stockées dans ce fichier ni dans git).
+services:
+  - type: web
+    name: noctis-app
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: APP_NAME
+        value: "Noctis Taxi"
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      - key: APP_LOCALE
+        value: fr
+      - key: APP_FALLBACK_LOCALE
+        value: en
+      - key: APP_URL
+        sync: false # https://<ton-service>.onrender.com (ou domaine custom)
+      - key: APP_KEY
+        sync: false # généré en local : php artisan key:generate --show
+      - key: LOG_CHANNEL
+        value: stack
+      - key: LOG_LEVEL
+        value: error
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_URL
+        fromDatabase:
+          name: noctis-db
+          property: connectionString
+      - key: SESSION_DRIVER
+        value: database
+      - key: SESSION_SECURE_COOKIE
+        value: "true"
+      - key: CACHE_STORE
+        value: database
+      # Pas de worker persistant sur le plan gratuit : les jobs (emails/SMS)
+      # s'exécutent en synchrone dans la requête au lieu d'être mis en file.
+      - key: QUEUE_CONNECTION
+        value: sync
+      - key: MAIL_MAILER
+        value: log # à remplacer par un vrai SMTP avant un usage réel
+      - key: GOOGLE_MAPS_API_KEY
+        sync: false
+      - key: STRIPE_KEY
+        sync: false
+      - key: STRIPE_SECRET
+        sync: false
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false
+      - key: PAYPAL_CLIENT_ID
+        sync: false
+      - key: PAYPAL_SECRET
+        sync: false
+
+databases:
+  - name: noctis-db
+    plan: free
+    databaseName: noctis
+    user: noctis

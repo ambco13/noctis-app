@@ -1125,12 +1125,20 @@
 				}
 				node = node.parentElement;
 			}
-			var navOff = getNavOffset();
-			aside.style.setProperty( '--ntb-nav-offset', navOff + 'px' );
+			// Le seuil sticky doit correspondre à la position réelle de l'aside au
+			// chargement (nav + en-tête étape 2, qui n'est pas fixed) : sinon elle
+			// resterait figée sous le nav pendant tout le scroll qui sépare son
+			// point de départ naturel du bas du nav.
+			var stepHeader = el( '.ntb-step2-header' );
+			function stickyTop() {
+				var h = ( stepHeader && stepHeader.offsetParent !== null ) ? stepHeader.getBoundingClientRect().height : 0;
+				return getNavOffset() + Math.round( h );
+			}
+			aside.style.setProperty( '--ntb-nav-offset', stickyTop() + 'px' );
 			// Re-measure on load: some themes (Astra) finalise sticky header height after DOMContentLoaded
 			window.addEventListener( 'load', function() {
 				requestAnimationFrame( function() {
-					aside.style.setProperty( '--ntb-nav-offset', getNavOffset() + 'px' );
+					aside.style.setProperty( '--ntb-nav-offset', stickyTop() + 'px' );
 					updateHeaderVisible && updateHeaderVisible();
 				} );
 			} );
@@ -1141,7 +1149,7 @@
 				rafPending = true;
 				requestAnimationFrame( function() {
 					rafPending = false;
-					aside.style.setProperty( '--ntb-nav-offset', getNavOffset() + 'px' );
+					aside.style.setProperty( '--ntb-nav-offset', stickyTop() + 'px' );
 				} );
 			}, { passive: true } );
 		}

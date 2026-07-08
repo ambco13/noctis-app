@@ -105,13 +105,24 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 }
 
 /* En-tête étape 2 : titre à gauche, rail 2-3-4 à droite (même rangée flex).
-   Le titre reste dans le flux normal (ne touche pas au nav du site). */
+   Fixed juste sous le nav du site (62.8px = hauteur mesurée de .ntb-topnav),
+   toujours visible pendant le scroll. */
 .ntb-step2-header {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
 	gap: 16px;
-	padding: 24px 24px 0 24px;
+	position: fixed;
+	top: 62.8px;
+	left: 0;
+	right: 0;
+	z-index: 90;
+	background: var(--ntb-bg);
+	padding: 16px 24px;
+	box-sizing: border-box;
+}
+@media (min-width: 1025px) {
+	.ntb-step2-header { padding-left: 48px; padding-right: 48px; }
 }
 /* masqué aux étapes 3-4 (le display:flex ci-dessus écraserait l'attribut hidden) */
 .ntb-step2-header[hidden] { display: none !important; }
@@ -120,13 +131,16 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 	align-items: center;
 	gap: 12px;
 }
-
 /* Corps étape 2 : deux colonnes flex (contenu | carte + récap) */
 .ntb-step2-body {
 	display: flex;
 	align-items: stretch;
 	width: 100%;
 	min-height: 0;
+	/* Le header est sorti du flux (fixed) : on réserve le même espace au-dessus
+	   du corps pour que rien ne saute sous lui. Valeur à ajuster si un écart
+	   ou un chevauchement apparaît à l'usage. */
+	margin-top: 72px;
 }
 @media (prefers-color-scheme: light) {
 	.ntb-scope,
@@ -416,9 +430,8 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 }
 .ntb-scope.ntb-no-aside .ntb-step2-layout { flex: 0 0 100%; }
 @media (min-width: 1025px) {
-	.ntb-step2-layout { max-height: 100vh; overflow-y: auto; }
-	/* Étapes 3-4 (pas d'aside) : pas de scroll interne, la page défile normalement */
-	.ntb-scope.ntb-no-aside .ntb-step2-layout { max-height: none; overflow-y: visible; }
+	/* Pas de scroll interne : la page défile normalement, comme les étapes 3-4. */
+	.ntb-step2-layout { max-height: none; overflow-y: visible; }
 }
 @media (max-width: 1024px) { .ntb-step2-layout { flex: none; width: 100%; padding: 16px 16px 230px; } }
 
@@ -444,13 +457,17 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
    DESKTOP (≥ 1025px) — sidebar sticky avec carte + récap
    =========================================================== */
 @media (min-width: 1025px) {
-	/* Colonne droite en flux (comme l'étape 3) : pas de sticky, elle s'étire
-	   sur la hauteur de la colonne de gauche. */
+	/* Colonne droite : reste toujours visible à l'écran (sticky sous le nav),
+	   sa hauteur est plafonnée à l'espace restant sous le nav, moins 30px,
+	   pour que la sum-card (avec le bouton "Choisir") ne soit jamais coupée. */
 	.ntb-step2-aside {
 		width: 440px;
 		flex-shrink: 0;
 		gap: 24px;
 		align-self: stretch;
+		position: sticky;
+		top: var(--ntb-nav-offset, 0px);
+		max-height: calc(100vh - var(--ntb-nav-offset, 0px) - 50px);
 		padding: 24px 24px 2px 4px;
 		background: transparent;
 		border: none;
@@ -463,7 +480,7 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 	/* Miroir du padding du carrousel (4px haut / 16px bas) pour que la carte
 	   et la sum-card s'alignent sur le haut et le bas des cartes véhicules */
 	.ntb-step2-aside .ntb-aside-map-wrap { margin-top: 4px; }
-	.ntb-step2-aside .ntb-sum-card { margin-bottom: 16px; }
+	.ntb-step2-aside .ntb-sum-card { margin-bottom: 10px}
 	/* Le mode replié (bottom sheet) n'existe pas sur desktop :
 	   on neutralise la classe si elle subsiste après un resize mobile→pc. */
 	.ntb-step2-aside.is-collapsed {
@@ -607,7 +624,6 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 	border-radius: var(--ntb-r-sm);
 	box-shadow: 0 1px 2px rgba(0,0,0,.04), 0 1px 8px rgba(0,0,0,.06);
 	padding: 16px;
-	margin-bottom: 0;
 	display: flex;
 	flex-direction: column;
 	gap: 0;
@@ -712,7 +728,7 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 	align-items: center;
 	justify-content: center;
 	color: #374151;
-	z-index: 9999;
+	z-index: 5;
 	padding: 0;
 	transition: box-shadow 180ms ease, opacity 180ms ease;
 }

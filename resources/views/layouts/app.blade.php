@@ -20,6 +20,7 @@
             gap: 16px; padding: 14px 24px; box-sizing: border-box;
             background: var(--ntb-surf); border-bottom: 1px solid var(--ntb-line);
             max-width: 100vw;
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
         }
         .ntb-topnav-brand {
             font-family: var(--ntb-serif); font-size: 19px; letter-spacing: .01em;
@@ -49,7 +50,7 @@
 
         /* Marge latérale globale du site : 24px en mobile, 48px à partir du desktop.
            Un peu d'espace en haut, beaucoup plus en bas (sous le formulaire). */
-        body > main { padding: 16px 24px 64px; box-sizing: border-box; }
+        body > main { padding: calc(16px + 63px) 24px 64px; box-sizing: border-box; }
         @media (min-width: 1025px) {
             .ntb-topnav { padding-left: 48px; padding-right: 48px; }
             body > main { padding-left: 48px; padding-right: 48px; }

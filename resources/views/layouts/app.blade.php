@@ -45,8 +45,13 @@
         .ntb-topnav-account:hover { color: var(--ntb-accent-hi); background: var(--ntb-accent-soft); }
 
         /* Filet de sécurité : un contenu imprévu (texte long, image...) ne doit
-           jamais créer de scroll horizontal sur la page. */
-        html, body { max-width: 100%; overflow-x: hidden; }
+           jamais créer de scroll horizontal sur la page.
+           `clip` et non `hidden` : `overflow-x: hidden` transforme body en
+           scroll container (overflow-y calculé en `auto`), ce qui casse tout
+           `position: sticky` descendant — le sticky se cale alors sur la
+           scrollport de body, qui ne défile jamais. `clip` coupe le
+           débordement sans créer de scroll container. */
+        html, body { max-width: 100%; overflow-x: clip; }
 
         /* Marge latérale globale du site : 24px en mobile, 48px à partir du desktop.
            Un peu d'espace en haut, beaucoup plus en bas (sous le formulaire). */

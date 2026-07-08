@@ -7,7 +7,9 @@ COPY . .
 RUN composer dump-autoload --optimize --no-dev
 
 # ---- Étape 2 : image d'exécution ----
-FROM php:8.3-cli
+# 8.4 et non 8.3 : composer.lock (généré en local en PHP 8.4) verrouille des
+# versions de paquets qui exigent PHP >= 8.4.1 au runtime (platform_check.php).
+FROM php:8.4-cli
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
         libpq-dev libzip-dev libicu-dev libonig-dev \

@@ -255,7 +255,13 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 /* ============================================================
    ÉTAPE 1 — formulaire d'accueil
    ============================================================ */
-.ntb-home { width: 100%; box-sizing: border-box; }
+.ntb-home {
+	width: 100%; box-sizing: border-box;
+	/* Remplit toute la hauteur restante de l'écran (moins la nav + le padding
+	   vertical de main) et centre le formulaire verticalement dedans. */
+	min-height: calc(100vh - 140px);
+	display: flex; align-items: center; justify-content: center;
+}
 .ntb-home .ntb-home-form {
 	background: var(--ntb-surf-glass); backdrop-filter: var(--ntb-glass-blur, blur(8px));
 	border: 1px solid var(--ntb-line); border-radius: var(--ntb-r-sm); padding: 14px 20px;

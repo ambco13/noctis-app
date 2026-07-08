@@ -20,6 +20,7 @@
             gap: 16px; padding: 14px 24px; box-sizing: border-box;
             background: var(--ntb-surf); border-bottom: 1px solid var(--ntb-line);
             max-width: 100vw;
+            position: sticky; top: 0; z-index: 100;
         }
         .ntb-topnav-brand {
             font-family: var(--ntb-serif); font-size: 19px; letter-spacing: .01em;

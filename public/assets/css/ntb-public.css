@@ -454,7 +454,9 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 		gap: 24px;
 		align-self: flex-start;
 		position: sticky;
-		top: 24px;
+		/* La nav est elle-même sticky (top:0, ~72px de haut) : la carte doit
+		   se caler en dessous, pas à 24px du tout haut de l'écran. */
+		top: 96px;
 		/* Occupe ~toute la hauteur d'écran (comme l'ancien plugin, où l'aside
 		   s'étirait sur toute la colonne) : la carte carte/résumé s'étire
 		   dedans grâce à .ntb-aside-map-wrap { flex: 1 1 0 }.
@@ -916,7 +918,8 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 	   grand vide sous le total. */
 	justify-content: space-between;
 	position: sticky;
-	top: 24px;
+	/* La nav est sticky (top:0, ~72px de haut) : se caler en dessous. */
+	top: 96px;
 	/* Même garde-fou que .ntb-step3-form : ne jamais déborder de sa colonne. */
 	min-width: 0; max-width: 100%; box-sizing: border-box; overflow-wrap: break-word;
 	overflow: hidden;

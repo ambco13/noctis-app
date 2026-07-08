@@ -8,8 +8,10 @@
 
     <link rel="stylesheet" href="{{ asset('vendor/flatpickr/flatpickr.min.css') }}">
     <link rel="stylesheet" href="{{ asset('vendor/leaflet/leaflet.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/ntb-public.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/ntb-pickers.css') }}">
+    {{-- ?v=mtime : casse le cache navigateur à chaque modif du CSS, sans quoi
+         un simple F5 peut reservir une version obsolète du fichier. --}}
+    <link rel="stylesheet" href="{{ asset('assets/css/ntb-public.css') }}?v={{ filemtime(public_path('assets/css/ntb-public.css')) }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/ntb-pickers.css') }}?v={{ filemtime(public_path('assets/css/ntb-pickers.css')) }}">
     @stack('styles')
     {!! \App\Support\Design::styleBlock() !!}
     <style>
@@ -117,8 +119,8 @@
     <script src="{{ asset('vendor/flatpickr/flatpickr.min.js') }}"></script>
     <script src="{{ asset('vendor/flatpickr/fr.js') }}"></script>
     <script src="{{ asset('vendor/leaflet/leaflet.min.js') }}"></script>
-    <script src="{{ asset('assets/js/ntb-datepicker.js') }}"></script>
-    <script src="{{ asset('assets/js/ntb-public.js') }}"></script>
+    <script src="{{ asset('assets/js/ntb-datepicker.js') }}?v={{ filemtime(public_path('assets/js/ntb-datepicker.js')) }}"></script>
+    <script src="{{ asset('assets/js/ntb-public.js') }}?v={{ filemtime(public_path('assets/js/ntb-public.js')) }}"></script>
     @stack('scripts')
 </body>
 </html>

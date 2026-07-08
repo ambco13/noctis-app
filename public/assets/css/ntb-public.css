@@ -356,6 +356,9 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 }
 
 .ntb-prog { display: flex; align-items: center; gap: 6px; margin-left: auto; }
+/* À l'étape 2, le 2-3-4 de l'en-tête est masqué : l'aside (carte véhicule)
+   a déjà le sien. .ntb-no-aside n'est présent qu'aux étapes 3-4. */
+.ntb-scope:not(.ntb-no-aside) .ntb-step2-header .ntb-prog { display: none; }
 /* Copie fixe dans la carte étape 2 (à droite, à côté de la carte itinéraire). */
 .ntb-prog--aside {
 	max-height: 68px;

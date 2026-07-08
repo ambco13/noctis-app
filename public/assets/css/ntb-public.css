@@ -356,11 +356,11 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 }
 
 .ntb-prog { display: flex; align-items: center; gap: 6px; margin-left: auto; }
-/* Copie dans l'aside étape 2 : masquée tant que le titre (en-tête) est
-   visible à l'écran ; JS bascule .ntb-show-prog sur .ntb-step2-aside au
-   scroll pour la faire apparaître, centrée, quand le titre sort de l'écran. */
-.ntb-prog--aside { display: none; margin: 0 0 16px; justify-content: center; }
-.ntb-step2-aside.ntb-show-prog .ntb-prog--aside { display: flex; }
+/* Bascule stricte entre les deux copies (jamais les deux affichées en même
+   temps) : JS met .ntb-prog-swapped sur .ntb-scope au scroll. */
+.ntb-prog-swapped .ntb-step2-header .ntb-prog { display: none; }
+.ntb-prog--aside { display: none; margin: 0 0 16px; }
+.ntb-prog-swapped .ntb-prog--aside { display: flex; }
 .ntb-prog-node { display: flex; align-items: center; gap: 8px; }
 .ntb-prog-bub {
 	width: var(--ntb-prog-bub-s); height: var(--ntb-prog-bub-s); flex: 0 0 auto; display: flex; align-items: center; justify-content: center;

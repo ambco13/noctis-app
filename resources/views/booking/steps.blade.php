@@ -81,6 +81,28 @@
                         </button>
                     </div>
                     <div class="ntb-flow-error" data-ntb-error hidden></div>
+
+                    {{-- TEST STICKY — bloc temporaire pour vérifier le comportement sticky
+                         de la colonne droite avec une colonne gauche longue. À retirer une
+                         fois le test terminé. --}}
+                    <div class="ntb-test-filler">
+                        <div class="ntb-test-filler-block">
+                            <h3>Section de test 1</h3>
+                            <p>Contenu factice pour allonger la colonne gauche et vérifier que le sticky de la colonne droite fonctionne sur tout le scroll.</p>
+                        </div>
+                        <div class="ntb-test-filler-block">
+                            <h3>Section de test 2</h3>
+                            <p>Contenu factice — même objectif que ci-dessus.</p>
+                        </div>
+                        <div class="ntb-test-filler-block">
+                            <h3>Section de test 3</h3>
+                            <p>Contenu factice — même objectif que ci-dessus.</p>
+                        </div>
+                        <div class="ntb-test-filler-block">
+                            <h3>Section de test 4</h3>
+                            <p>Contenu factice — même objectif que ci-dessus.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
 

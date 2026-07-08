@@ -382,6 +382,12 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 .ntb-prog-line.done { background: var(--ntb-accent-line); }
 @media (max-width: 700px) { .ntb-prog-lab { display: none; } .ntb-prog { width: 100%; justify-content: space-between; margin-bottom: 12px; } .ntb-prog-line { flex: 1; width: auto; } }
 
+/* TEST STICKY — bloc temporaire, voir steps.blade.php. À retirer avec lui. */
+.ntb-test-filler { margin-top: 40px; padding-top: 32px; border-top: 1px solid var(--ntb-line-soft); display: flex; flex-direction: column; gap: 24px; }
+.ntb-test-filler-block { padding: 20px; background: var(--ntb-surf2); border-radius: var(--ntb-r-sm); }
+.ntb-test-filler-block h3 { margin: 0 0 8px; font-size: var(--ntb-text-lg); }
+.ntb-test-filler-block p { margin: 0; color: var(--ntb-muted); line-height: 1.5; }
+
 .ntb-dist-banner {
 	display: flex; align-items: center; gap: 12px; background: var(--ntb-surf-glass);
 	backdrop-filter: var(--ntb-glass-blur, blur(8px)); -webkit-backdrop-filter: var(--ntb-glass-blur, blur(8px));

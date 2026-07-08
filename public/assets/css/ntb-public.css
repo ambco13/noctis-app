@@ -461,10 +461,6 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 		border: none;
 		border-radius: var(--ntb-r-sm);
 	}
-	.ntb-step2-aside.ntb-header-visible {
-		top: auto;
-		height: auto;
-	}
 	/* Miroir du padding du carrousel (4px haut / 16px bas) pour que la carte
 	   et la sum-card s'alignent sur le haut et le bas des cartes véhicules */
 	.ntb-step2-aside .ntb-aside-map-wrap { margin-top: 4px; }
@@ -593,18 +589,6 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 	}
 }
 /* ntb-panel-fixed ignoré — layout CSS sticky uniquement */
-
-/* Spacer au-dessus de la map — disparaît quand le header est visible */
-@media (min-width: 1025px) {
-	.ntb-step2-aside::before {
-		content: '';
-		display: block;
-		flex: 0 0 24px;
-	}
-	.ntb-step2-aside.ntb-header-visible::before {
-		display: none;
-	}
-}
 
 /* ── Summary card (aside step 2) ── */
 .ntb-sum-card {

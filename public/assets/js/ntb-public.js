@@ -997,12 +997,13 @@
 		var aside = el( '.ntb-step2-aside' );
 		if ( ! aside ) return;
 
-		// Copie du 2-3-4 dans la carte : visible seulement quand le titre
-		// (en-tête) est sorti de l'écran en scrollant.
+		// Copie du 2-3-4 dans la carte : bascule dès que le titre commence à
+		// bouger (tout premier pixel de scroll), pas seulement une fois
+		// complètement sorti de l'écran — évite le temps mort/à-coup visuel.
 		var header = el( '.ntb-step2-header' );
 		if ( header && window.innerWidth > 1024 ) {
 			var toggleProgCopy = function () {
-				aside.classList.toggle( 'ntb-show-prog', header.getBoundingClientRect().bottom <= 0 );
+				aside.classList.toggle( 'ntb-show-prog', window.scrollY > 0 );
 			};
 			toggleProgCopy();
 			window.addEventListener( 'scroll', toggleProgCopy, { passive: true } );

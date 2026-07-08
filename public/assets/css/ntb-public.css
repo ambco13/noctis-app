@@ -809,6 +809,9 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 	   défaut (min-width: auto) — sans ceci, un contenu trop large (adresse,
 	   email...) peut forcer toute la grille à déborder de la page. */
 	min-width: 0; max-width: 100%; box-sizing: border-box; overflow-wrap: break-word;
+	/* Filet de sécurité absolu : quelle que soit la cause, rien à l'intérieur
+	   ne peut visuellement dépasser la carte. */
+	overflow: hidden;
 }
 .ntb-step3-form .ntb-field:nth-child(n+3) { grid-column: 1 / -1; }
 /* Zone message compacte : deux lignes de haut, elle grandit à la saisie */
@@ -898,6 +901,7 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 	top: 24px;
 	/* Même garde-fou que .ntb-step3-form : ne jamais déborder de sa colonne. */
 	min-width: 0; max-width: 100%; box-sizing: border-box; overflow-wrap: break-word;
+	overflow: hidden;
 }
 @media (max-width: 1024px) { .ntb-recap { position: static; order: -1; } }
 .ntb-confirm-inner { background: var(--ntb-surf-glass); backdrop-filter: var(--ntb-glass-blur, blur(8px)); border: 1px solid var(--ntb-line); border-radius: var(--ntb-r-sm); padding: var(--ntb-sp-md); box-shadow: var(--ntb-shadow-lg); }

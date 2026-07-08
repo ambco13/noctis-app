@@ -356,6 +356,9 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 }
 
 .ntb-prog { display: flex; align-items: center; gap: 6px; margin-left: auto; }
+/* Dans l'aside étape 2 (à côté de la carte) : centré, pleine largeur, avec
+   un peu d'air avant la carte itinéraire en dessous. */
+.ntb-step2-aside > .ntb-prog { margin: 0 0 16px; justify-content: center; }
 .ntb-prog-node { display: flex; align-items: center; gap: 8px; }
 .ntb-prog-bub {
 	width: var(--ntb-prog-bub-s); height: var(--ntb-prog-bub-s); flex: 0 0 auto; display: flex; align-items: center; justify-content: center;
@@ -454,8 +457,11 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 		top: 24px;
 		/* Occupe ~toute la hauteur d'écran (comme l'ancien plugin, où l'aside
 		   s'étirait sur toute la colonne) : la carte carte/résumé s'étire
-		   dedans grâce à .ntb-aside-map-wrap { flex: 1 1 0 }. */
-		height: calc(100vh - 48px);
+		   dedans grâce à .ntb-aside-map-wrap { flex: 1 1 0 }.
+		   -160px et pas -48px : au chargement (avant tout scroll), l'aside est
+		   encore dans le flux normal, sous le nav + l'en-tête — sans cette
+		   marge le bas de la carte (donc le bouton) dépassait de l'écran. */
+		height: calc(100vh - 160px);
 		padding: 24px 24px 2px 4px;
 		background: transparent;
 		border: none;

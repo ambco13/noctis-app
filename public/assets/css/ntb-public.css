@@ -1080,13 +1080,12 @@ html[data-ntb-theme="light"] .ntb-ac-list {
 	display: flex !important;
 	justify-content: flex-end !important;
 	align-items: center !important;
-	/* Fixe sous le nav du site (pas tout l'en-tête, pas au-dessus du nav). */
-	position: fixed !important;
+	/* Aligné dans la ligne flex avec .ntb-step3-left (titre) au chargement ;
+	   se fige (sticky, pas fixed) sous le nav du site une fois scrollé. */
+	position: sticky !important;
 	top: 75px;
-	right: 24px;
 	z-index: 90;
 }
-@media (min-width: 1025px) { .ntb-step3-right { right: 48px; } }
 .ntb-step3-right .ntb-prog {
 	display: flex !important;
 	flex-direction: row !important;

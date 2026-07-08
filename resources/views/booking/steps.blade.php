@@ -27,7 +27,7 @@
         </div>
     @else
 
-        <!-- EN-TÊTE ÉTAPE 2 : titre + progression (dupliquée dans la carte, visible seulement quand le titre sort de l'écran) -->
+        <!-- EN-TÊTE ÉTAPE 2 : titre seul (le 2-3-4 est fixe dans la carte à droite) -->
         <div class="ntb-step2-header" data-ntb-s2-header>
             <div class="ntb-step3-left">
                 <div role="button" tabindex="0" class="ntb-back-btn" data-ntb-back hidden aria-label="{{ __('Retour') }}">
@@ -37,22 +37,6 @@
                     data-title-2="{{ __('Choisissez votre expérience') }}"
                     data-title-3="{{ __('Vos coordonnées et le paiement') }}"
                     data-title-4="{{ __('Votre réservation est confirmée') }}">{{ __('Choisissez votre expérience') }}</h2>
-            </div>
-            <div class="ntb-prog" aria-hidden="true">
-                <div class="ntb-prog-node active" data-step="2">
-                    <span class="ntb-prog-bub">2</span>
-                    <span class="ntb-prog-lab">{{ __('Véhicule') }}</span>
-                </div>
-                <span class="ntb-prog-line"></span>
-                <div class="ntb-prog-node" data-step="3">
-                    <span class="ntb-prog-bub">3</span>
-                    <span class="ntb-prog-lab">{{ __('Paiement') }}</span>
-                </div>
-                <span class="ntb-prog-line"></span>
-                <div class="ntb-prog-node" data-step="4">
-                    <span class="ntb-prog-bub">4</span>
-                    <span class="ntb-prog-lab">{{ __('Confirmation') }}</span>
-                </div>
             </div>
         </div>
 
@@ -202,8 +186,7 @@
         <!-- COLONNE DROITE 35% — carte itinéraire + récapitulatif -->
         <div class="ntb-step2-aside">
 
-            <!-- Copie du 2-3-4 : masquée tant que le titre (dans l'en-tête)
-                 est visible à l'écran, JS bascule .ntb-show-prog au scroll. -->
+            <!-- 2-3-4 : fixe, en haut de la carte -->
             <div class="ntb-prog ntb-prog--aside" aria-hidden="true">
                 <div class="ntb-prog-node active" data-step="2">
                     <span class="ntb-prog-bub">2</span>

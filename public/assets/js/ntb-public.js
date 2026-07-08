@@ -997,19 +997,6 @@
 		var aside = el( '.ntb-step2-aside' );
 		if ( ! aside ) return;
 
-		// Copie du 2-3-4 dans la carte : bascule dès que le titre commence à
-		// bouger (tout premier pixel de scroll). Une seule classe sur .ntb-scope
-		// pilote l'affichage/masquage des deux copies ensemble (jamais les
-		// deux visibles en même temps).
-		var header = el( '.ntb-step2-header' );
-		if ( header && window.innerWidth > 1024 ) {
-			var toggleProgCopy = function () {
-				state.root.classList.toggle( 'ntb-prog-swapped', window.scrollY > 0 );
-			};
-			toggleProgCopy();
-			window.addEventListener( 'scroll', toggleProgCopy, { passive: true } );
-		}
-
 		// Bottom sheet swipe (mobile)
 		var handle = el( '[data-ntb-aside-handle]', aside );
 		if ( handle ) {

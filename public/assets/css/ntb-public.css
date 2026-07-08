@@ -104,16 +104,13 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 	gap: 0;
 }
 
-/* En-tête étape 2 : titre à gauche, rail 2-3-4 à droite (même rangée flex) */
+/* En-tête étape 2 : titre seul (le 2-3-4 est fixe dans la carte) */
 .ntb-step2-header {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
 	gap: 16px;
 	padding: 24px 24px 0 24px;
-	max-height: 120px;
-	overflow: hidden;
-	transition: max-height 280ms var(--ntb-ease), opacity 220ms var(--ntb-ease), padding 280ms var(--ntb-ease);
 }
 /* masqué aux étapes 3-4 (le display:flex ci-dessus écraserait l'attribut hidden) */
 .ntb-step2-header[hidden] { display: none !important; }
@@ -359,19 +356,7 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 }
 
 .ntb-prog { display: flex; align-items: center; gap: 6px; margin-left: auto; }
-/* Bascule douce entre les deux copies (jamais les deux pleinement visibles
-   en même temps) : JS met .ntb-prog-swapped sur .ntb-scope au scroll.
-   L'en-tête se réduit et s'estompe (au lieu d'un display:none brutal) pour
-   ne pas laisser de bandeau vide tout en restant fluide. */
-.ntb-prog-swapped .ntb-step2-header {
-	max-height: 0;
-	opacity: 0;
-	padding-top: 0;
-	padding-bottom: 0;
-	pointer-events: none;
-}
-/* Toujours visible pour l'instant (bascule désactivée temporairement,
-   le temps d'ajuster son apparence). */
+/* Copie fixe dans la carte étape 2 (à droite, à côté de la carte itinéraire). */
 .ntb-prog--aside {
 	max-height: 68px;
 	opacity: 1;

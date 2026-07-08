@@ -600,6 +600,7 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 	overflow: hidden;
 	background: transparent;
 	contain: paint;
+	padding: 4px 0px 0px 0px;
 	clip-path: inset(0);
 	flex-shrink: 0;
 }
@@ -747,7 +748,7 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 	scrollbar-width: none;
 	-ms-overflow-style: none;
 	gap: 16px;
-	padding: 4px 2px 16px 1px;
+	padding: 4px 0px 16px 0px;
 	flex-shrink: 0;
 }
 .ntb-veh-wrap::-webkit-scrollbar { display: none; }

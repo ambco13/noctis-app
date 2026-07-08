@@ -50,7 +50,7 @@
            overflow-y à "auto" sur le même élément, ce qui transforme body/html
            en zone de scroll indépendante et casse position:sticky des
            descendants (aside de l'étape 2). "clip" évite cet effet de bord. */
-        html, body { max-width: 100%; overflow-x: clip; }
+        html, body { max-width: 100%; overflow-x: clip; margin: 0; }
 
         /* Marge latérale globale du site : 24px en mobile, 48px à partir du desktop.
            Un peu d'espace en haut, beaucoup plus en bas (sous le formulaire). */

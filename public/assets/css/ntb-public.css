@@ -111,6 +111,9 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 	justify-content: space-between;
 	gap: 16px;
 	padding: 24px 24px 0 24px;
+	max-height: 120px;
+	overflow: hidden;
+	transition: max-height 280ms var(--ntb-ease), opacity 220ms var(--ntb-ease), padding 280ms var(--ntb-ease);
 }
 /* masqué aux étapes 3-4 (le display:flex ci-dessus écraserait l'attribut hidden) */
 .ntb-step2-header[hidden] { display: none !important; }
@@ -356,13 +359,33 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 }
 
 .ntb-prog { display: flex; align-items: center; gap: 6px; margin-left: auto; }
-/* Bascule stricte entre les deux copies (jamais les deux affichées en même
-   temps) : JS met .ntb-prog-swapped sur .ntb-scope au scroll.
-   L'en-tête entier disparaît (pas juste le 2-3-4 dedans) : sinon son
-   padding reste occupé et laisse un bandeau vide une fois le titre scrollé. */
-.ntb-prog-swapped .ntb-step2-header { display: none !important; }
-.ntb-prog--aside { display: none; justify-content: right;}
-.ntb-prog-swapped .ntb-prog--aside { display: flex; }
+/* Bascule douce entre les deux copies (jamais les deux pleinement visibles
+   en même temps) : JS met .ntb-prog-swapped sur .ntb-scope au scroll.
+   L'en-tête se réduit et s'estompe (au lieu d'un display:none brutal) pour
+   ne pas laisser de bandeau vide tout en restant fluide. */
+.ntb-prog-swapped .ntb-step2-header {
+	max-height: 0;
+	opacity: 0;
+	padding-top: 0;
+	padding-bottom: 0;
+	pointer-events: none;
+}
+.ntb-prog--aside {
+	max-height: 0;
+	opacity: 0;
+	overflow: hidden;
+	transform: translateY(-6px);
+	justify-content: right;
+	pointer-events: none;
+	transition: max-height 280ms var(--ntb-ease), opacity 220ms var(--ntb-ease), transform 280ms var(--ntb-ease), margin 280ms var(--ntb-ease);
+}
+.ntb-prog-swapped .ntb-prog--aside {
+	max-height: 60px;
+	opacity: 1;
+	transform: none;
+	margin-bottom: 16px;
+	pointer-events: auto;
+}
 .ntb-prog-node { display: flex; align-items: center; gap: 8px; }
 .ntb-prog-bub {
 	width: var(--ntb-prog-bub-s); height: var(--ntb-prog-bub-s); flex: 0 0 auto; display: flex; align-items: center; justify-content: center;

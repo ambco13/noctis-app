@@ -7,6 +7,9 @@ set -e
 
 php artisan storage:link || true
 php artisan migrate --force
+# --seed : VehicleSeeder et SettingSeeder sont idempotents (no-op si des
+# données existent déjà), donc sûr à relancer à chaque démarrage.
+php artisan db:seed --force
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache

@@ -588,6 +588,13 @@
 		var box = el( '[data-ntb-recap]', state.root );
 		if ( ! box || ! state.selected ) return;
 		box.innerHTML =
+			'<div class="ntb-prog ntb-prog--aside" aria-hidden="true">' +
+				'<div class="ntb-prog-node done" data-step="2"><span class="ntb-prog-bub">2</span><span class="ntb-prog-lab">' + ( I.stepVehicle || 'Véhicule' ) + '</span></div>' +
+				'<span class="ntb-prog-line done"></span>' +
+				'<div class="ntb-prog-node active" data-step="3"><span class="ntb-prog-bub">3</span><span class="ntb-prog-lab">' + ( I.stepPayment || 'Paiement' ) + '</span></div>' +
+				'<span class="ntb-prog-line"></span>' +
+				'<div class="ntb-prog-node" data-step="4"><span class="ntb-prog-bub">4</span><span class="ntb-prog-lab">' + ( I.stepConfirmation || 'Confirmation' ) + '</span></div>' +
+			'</div>' +
 			'<h3 class="ntb-recap-title">' + ( 'Récapitulatif' ) + '</h3>' +
 			'<dl class="ntb-recap-lines">' +
 			line( 'Départ', state.pickup ) +

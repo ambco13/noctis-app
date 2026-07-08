@@ -361,6 +361,7 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 	max-height: 68px;
 	opacity: 1;
 	justify-content: right;
+	margin-bottom: 16px;
 }
 .ntb-prog-node { display: flex; align-items: center; gap: 8px; }
 .ntb-prog-bub {
@@ -600,7 +601,7 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 	overflow: hidden;
 	background: transparent;
 	contain: paint;
-	padding: 4px 0px 0px 0px;
+	margin: 1px 0 0 0;
 	clip-path: inset(0);
 	flex-shrink: 0;
 }

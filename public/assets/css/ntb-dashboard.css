@@ -19,7 +19,10 @@
   max-width: 860px;
   margin: 0 auto;
   padding: 0 0 10px;
-  overflow-x: hidden;
+  /* `clip` et non `hidden` : hidden ferait de .ntb-dashboard un scroll
+     container (overflow-y calculé en `auto`), ce qui neutraliserait le
+     position: sticky de .ntb-topbar. Bug présent dans le plugin d'origine. */
+  overflow-x: clip;
 }
 
 /* ── Topbar sticky ───────────────────────────────────────────── */

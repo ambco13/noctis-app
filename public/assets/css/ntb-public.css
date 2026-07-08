@@ -827,7 +827,7 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 	/* "Vos coordonnées et le paiement" : une seule colonne pleine largeur.
 	   En grille à 2 colonnes fixes, Nom complet/Téléphone se comprimaient
 	   côte à côte au lieu de passer à la ligne. */
-	.ntb-step3-form { grid-template-columns: 1fr; width: 100%; }
+	.ntb-step3-form { grid-template-columns: minmax(0, 1fr); width: 100%; }
 	.ntb-step3-form .ntb-field:nth-child(n+3) { grid-column: auto; }
 }
 

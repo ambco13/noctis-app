@@ -58,9 +58,9 @@
 </head>
 <body>
     <header class="ntb-topnav">
-        <a class="ntb-topnav-brand" href="{{ route('booking.form') }}">{{ config('app.name') }}</a>
+        <a class="ntb-topnav-brand" href="{{ route('booking.form', ['new' => 1]) }}">{{ config('app.name') }}</a>
         <nav class="ntb-topnav-links">
-            <a href="{{ route('booking.form') }}">{{ __('Réserver') }}</a>
+            <a href="{{ route('booking.form', ['new' => 1]) }}">{{ __('Réserver') }}</a>
             <a href="{{ route('account') }}" class="ntb-topnav-account"
                 title="{{ auth()->check() ? auth()->user()->email : __('Mon compte') }}"
                 aria-label="{{ __('Mon compte') }}">

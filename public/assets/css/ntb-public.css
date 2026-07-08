@@ -121,12 +121,24 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 	gap: 12px;
 }
 
-/* Corps étape 2 : deux colonnes flex (contenu | carte + récap) */
+/* Corps étape 2 : deux colonnes (contenu | carte + récap) */
 .ntb-step2-body {
 	display: flex;
 	align-items: stretch;
 	width: 100%;
 	min-height: 0;
+}
+@media (min-width: 1025px) {
+	/* Grid plutôt que flex+stretch : la colonne droite garde sa hauteur
+	   naturelle (carte + récap) au lieu d'être étirée sur celle du
+	   carrousel — condition nécessaire pour que le sticky ait de la marge
+	   pour "voyager" pendant le scroll. */
+	.ntb-step2-body {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) 440px;
+		align-items: start;
+		gap: 24px;
+	}
 }
 @media (prefers-color-scheme: light) {
 	.ntb-scope,
@@ -434,7 +446,7 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 		width: 440px;
 		flex-shrink: 0;
 		gap: 24px;
-		align-self: stretch;
+		align-self: start;
 		position: sticky;
 		top: var(--ntb-nav-offset, 0px);
 		max-height: calc(100vh - var(--ntb-nav-offset, 0px) - 50px);
@@ -543,8 +555,8 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 }
 
 .ntb-aside-map-wrap {
-	flex: 1 1 0;
-	min-height: 100px;
+	flex: 0 0 auto;
+	aspect-ratio: 4 / 3;
 	border-radius: var(--ntb-r-sm);
 	overflow: hidden;
 	background: #e9e7e1;

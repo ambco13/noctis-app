@@ -18,7 +18,10 @@ class SettingSeeder extends Seeder
         $defaults = [
             // Général.
             'test_mode' => '1',
-            'aside_detach_body' => '1',
+            // '0' : le mode "ancré au body" était un contournement pour la
+            // compatibilité de themes WordPress specifiques -- inutile ici
+            // (app standalone, sticky CSS classique suffit et fonctionne).
+            'aside_detach_body' => '0',
             'currency' => 'EUR',
             'currency_symbol' => '€',
             'date_format' => 'd/m/Y',

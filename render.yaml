@@ -45,23 +45,15 @@ services:
       # s'exécutent en synchrone dans la requête au lieu d'être mis en file.
       - key: QUEUE_CONNECTION
         value: sync
-      # Gmail SMTP -- MAIL_USERNAME/PASSWORD/FROM_ADDRESS a saisir manuellement
-      # sur Render (mot de passe d'application Google, pas le mot de passe du
-      # compte -- voir myaccount.google.com/apppasswords).
+      # Resend (API HTTP, pas SMTP) -- le plan gratuit Render bloque les
+      # connexions SMTP sortantes (port 587/465), Gmail SMTP timeout donc
+      # systematiquement. Resend passe par HTTPS (443), jamais bloque.
       - key: MAIL_MAILER
-        value: smtp
-      - key: MAIL_SCHEME
-        value: smtp
-      - key: MAIL_HOST
-        value: smtp.gmail.com
-      - key: MAIL_PORT
-        value: "587"
-      - key: MAIL_USERNAME
-        sync: false
-      - key: MAIL_PASSWORD
-        sync: false
+        value: resend
       - key: MAIL_FROM_ADDRESS
-        sync: false # doit etre identique a MAIL_USERNAME (Gmail l'exige)
+        value: onboarding@resend.dev # sans domaine verifie sur Resend
+      - key: RESEND_API_KEY
+        sync: false # cle re_... depuis resend.com -> API Keys
       - key: GOOGLE_MAPS_API_KEY
         sync: false
       - key: STRIPE_KEY

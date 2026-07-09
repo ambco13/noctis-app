@@ -4,9 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Vehicle;
+use Cloudinary\Cloudinary;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\UploadedFile;
 use Illuminate\View\View;
 
 class VehicleAdminController extends Controller
@@ -68,17 +69,40 @@ class VehicleAdminController extends Controller
         $data['sort_order'] = (int) ($data['sort_order'] ?? 0);
 
         if ($request->hasFile('image')) {
-            // "public" (local, non persistant sur Render) tant que CLOUDINARY_URL
-            // n'est pas defini ; "cloudinary" sinon (voir config/filesystems.php).
-            $disk = config('filesystems.vehicle_images_disk');
-            $path = $request->file('image')->store('vehicles', $disk);
-
-            $data['image_path'] = $disk === 'public'
-                ? 'storage/'.$path
-                : Storage::disk($disk)->url($path);
+            $data['image_path'] = $this->storeImage($request->file('image'));
         }
         unset($data['image']);
 
         return $data;
+    }
+
+    /**
+     * "public" (local, non persistant sur Render) tant que CLOUDINARY_URL n'est
+     * pas defini ; upload direct via le SDK Cloudinary sinon -- on utilise
+     * l'URL renvoyee TELLE QUELLE par la reponse d'upload plutot que de la
+     * reconstruire (le driver Flysystem du package Laravel reconstruit une
+     * URL a partir du chemin local, qui ne correspond pas toujours au
+     * public_id reellement stocke cote Cloudinary quand le nom de fichier
+     * contient une extension -- 404 constate en prod).
+     */
+    private function storeImage(UploadedFile $file): string
+    {
+        if (config('filesystems.vehicle_images_disk') !== 'cloudinary') {
+            return 'storage/'.$file->store('vehicles', 'public');
+        }
+
+        $cloud = config('filesystems.disks.cloudinary');
+        $cloudinary = new Cloudinary([
+            'cloud' => [
+                'cloud_name' => $cloud['cloud_name'],
+                'api_key' => $cloud['api_key'],
+                'api_secret' => $cloud['api_secret'],
+            ],
+            'url' => ['secure' => true],
+        ]);
+
+        $response = $cloudinary->uploadApi()->upload($file->getRealPath(), ['folder' => 'vehicles']);
+
+        return (string) $response['secure_url'];
     }
 }

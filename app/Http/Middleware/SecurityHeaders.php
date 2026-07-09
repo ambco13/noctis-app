@@ -17,7 +17,10 @@ class SecurityHeaders
     {
         $response = $next($request);
 
-        $response->headers->set('X-Frame-Options', 'DENY');
+        // TEMPORAIRE : X-Frame-Options retiré + frame-ancestors élargi pour
+        // permettre à responsivechecktool.com d'encadrer le site pendant les
+        // tests responsive. À RETIRER une fois les tests terminés (remettre
+        // X-Frame-Options: DENY et frame-ancestors 'self' ci-dessous).
         $response->headers->set('X-Content-Type-Options', 'nosniff');
         $response->headers->set('Referrer-Policy', 'strict-origin-when-cross-origin');
 
@@ -41,6 +44,8 @@ class SecurityHeaders
             "object-src 'none'",
             "base-uri 'self'",
             "form-action 'self'",
+            // TEMPORAIRE (voir commentaire plus haut) : remettre "'self'" seul.
+            "frame-ancestors 'self' https://responsivechecktool.com",
         ]));
 
         return $response;

@@ -51,7 +51,11 @@
         </div>
 
         <script>
-        (function () {
+        // NTB2_DATA n'est défini que plus bas dans layouts/app.blade.php (après
+        // @yield('content')) : on attend DOMContentLoaded pour être sûr qu'il
+        // existe déjà, sinon ce script (exécuté immédiatement au parsing) ne
+        // voit jamais la variable et n'attache jamais le listener.
+        document.addEventListener('DOMContentLoaded', function () {
             var btn = document.getElementById('ntb-logout-btn');
             if (!btn || !window.NTB2_DATA) return;
             btn.addEventListener('click', function (e) {
@@ -61,7 +65,7 @@
                     headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': NTB2_DATA.nonce }
                 }).finally(function () { window.location.href = NTB2_DATA.homeUrl; });
             });
-        })();
+        });
         </script>
     @else
         @include('account.auth')

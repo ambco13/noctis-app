@@ -460,7 +460,7 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 		align-self: start;
 		position: sticky;
 		top: var(--ntb-nav-offset, 0px);
-		max-height: calc(100vh - var(--ntb-nav-offset, 0px) - 50px);
+		height: calc(100vh - var(--ntb-nav-offset, 0px) - 50px);
 		padding: 24px 24px 2px 4px;
 		background: transparent;
 		border: none;

@@ -1155,6 +1155,51 @@
 		}
 	}
 
+	/* =====================================================================
+	 * PROGRESSION 2-3-4 (.ntb-prog) — passe en position:fixed pile quand le
+	 * scroll atteint sa position naturelle dans l'en-tête étape 2, pour
+	 * qu'elle reste visible sans provoquer de saut visuel à l'activation.
+	 * ===================================================================== */
+	function initProgFixed() {
+		var prog = el( '.ntb-prog' );
+		if ( ! prog ) return;
+
+		var naturalTop = null;
+
+		function measureNaturalTop() {
+			var wasFixed = prog.classList.contains( 'is-fixed' );
+			if ( wasFixed ) { prog.classList.remove( 'is-fixed' ); prog.style.top = ''; }
+			naturalTop = prog.getBoundingClientRect().top + window.scrollY;
+			if ( wasFixed ) { prog.classList.add( 'is-fixed' ); }
+		}
+
+		function apply() {
+			if ( window.innerWidth <= 1024 ) {
+				prog.classList.remove( 'is-fixed' );
+				prog.style.top = '';
+				return;
+			}
+			var targetTop = getNavOffset() + 16;
+			var shouldFix = ( window.scrollY + targetTop ) >= naturalTop;
+			prog.classList.toggle( 'is-fixed', shouldFix );
+			prog.style.top = shouldFix ? ( targetTop + 'px' ) : '';
+		}
+
+		measureNaturalTop();
+		apply();
+
+		var rafPending = false;
+		window.addEventListener( 'scroll', function() {
+			if ( rafPending ) return;
+			rafPending = true;
+			requestAnimationFrame( function() { rafPending = false; apply(); } );
+		}, { passive: true } );
+		window.addEventListener( 'resize', function() { measureNaturalTop(); apply(); } );
+		window.addEventListener( 'load', function() {
+			requestAnimationFrame( function() { measureNaturalTop(); apply(); } );
+		} );
+	}
+
 	// Un champ non focus doit toujours afficher son DÉBUT (avec l'ellipsis
 	// CSS à la fin) plutôt que de rester scrollé sur la position du curseur
 	// après une saisie — sinon "Nom Prénom" ou l'email affichent leur fin.
@@ -1170,6 +1215,7 @@
 		// requestAnimationFrame guarantees theme JS (sticky headers) has run before we measure nav height
 		requestAnimationFrame( function() {
 			initAside();
+			initProgFixed();
 		} );
 		killOutlines();
 	} );

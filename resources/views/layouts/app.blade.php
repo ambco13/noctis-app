@@ -58,7 +58,11 @@
         body > main { padding: 55px 24px 20px; box-sizing: border-box; }
         @media (min-width: 1025px) {
             .ntb-topnav { padding-left: 48px; padding-right: 48px; }
-            body > main { padding-left: 48px; padding-right: 48px; }
+            /* max-width = 3 cartes véhicule (269px×3) + 2 gaps (16px×2) + paddings
+               carrousel (~7px) + padding colonne gauche (48px) + gap grille vers
+               l'aside (24px) + aside (440px) + padding main (48px×2) = 1454px.
+               Au-delà, l'espace en trop devient du padding automatique (centré). */
+            body > main { max-width: 1454px; margin-left: auto; margin-right: auto; padding-left: 48px; padding-right: 48px; }
         }
     </style>
 </head>

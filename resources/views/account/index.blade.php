@@ -23,21 +23,21 @@
                    class="ntb-tab-link {{ $tab === 'bookings' ? 'active' : '' }}"
                    @if ($tab === 'bookings') aria-current="page" @endif>
                     <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="16" height="16" rx="2"/><path d="M16 3v4M8 3v4M4 11h16"/></svg>
-                    {{ __('Mes réservations') }}
+                    <span class="ntb-topbar-label">{{ __('Mes réservations') }}</span>
                 </a>
                 <div class="ntb-tab-divider" aria-hidden="true"></div>
                 <a href="{{ route('account', ['tab' => 'profile']) }}"
                    class="ntb-tab-link {{ $tab === 'profile' ? 'active' : '' }}"
                    @if ($tab === 'profile') aria-current="page" @endif>
                     <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="7" r="4"/><path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></svg>
-                    {{ __('Mon profil') }}
+                    <span class="ntb-topbar-label">{{ __('Mon profil') }}</span>
                 </a>
             </div>
             <div class="ntb-topbar-right">
                 <div class="ntb-avatar" aria-hidden="true">{{ $initials }}</div>
                 <a href="#" id="ntb-logout-btn" class="ntb-logout-btn">
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 8V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2v-2"/><path d="M7 12h14l-3-3m0 6 3-3"/></svg>
-                    {{ __('Déconnexion') }}
+                    <span class="ntb-topbar-label">{{ __('Déconnexion') }}</span>
                 </a>
             </div>
         </nav>

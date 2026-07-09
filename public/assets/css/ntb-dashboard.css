@@ -14,6 +14,14 @@
   background: var(--ntb-bg);
   -webkit-font-smoothing: antialiased;
 }
+/* Sans ça, width:100% + padding (ex. .ntb-profile-form input) déborde de son
+   conteneur du montant du padding — même reset que .ntb-scope dans
+   ntb-public.css. */
+.ntb-dashboard *,
+.ntb-dashboard *::before,
+.ntb-dashboard *::after {
+  box-sizing: border-box;
+}
 /* ── Conteneur principal ─────────────────────────────────────── */
 .ntb-dashboard {
   max-width: 860px;
@@ -983,8 +991,6 @@
 
   .ntb-tab-link svg { width: 13px; height: 13px; }
 
-  .ntb-logout-btn span { display: none; }
-
   .ntb-content {
     padding: 1.5rem 16px 0;
   }
@@ -1022,5 +1028,21 @@
 
   .ntb-modal-actions .ntb-btn {
     width: 100%;
+  }
+}
+
+/* Topbar très étroite : icônes seules (v1), pas de place pour les libellés
+   "Mes réservations" / "Mon profil" / "Déconnexion". */
+@media (max-width: 520px) {
+  .ntb-topbar-label {
+    display: none;
+  }
+
+  .ntb-tab-link {
+    padding: 6px;
+  }
+
+  .ntb-logout-btn {
+    padding: 6px;
   }
 }

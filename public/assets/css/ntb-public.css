@@ -566,8 +566,8 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 }
 
 .ntb-aside-map-wrap {
-	flex: 0 0 auto;
-	aspect-ratio: 4 / 3;
+	flex: 1 1 auto;
+	min-height: 280px;
 	border-radius: var(--ntb-r-sm);
 	overflow: hidden;
 	background: #e9e7e1;

@@ -22,8 +22,11 @@ services:
         sync: false # https://<ton-service>.onrender.com (ou domaine custom)
       - key: APP_KEY
         sync: false # généré en local : php artisan key:generate --show
+      # stderr et non stack : storage/logs/laravel.log n'est pas visible dans
+      # l'onglet Logs de Render. En dur ici pour ne pas etre ecrase par un
+      # futur sync du blueprint si quelqu'un le change a la main sur Render.
       - key: LOG_CHANNEL
-        value: stack
+        value: stderr
       - key: LOG_LEVEL
         value: error
       - key: DB_CONNECTION

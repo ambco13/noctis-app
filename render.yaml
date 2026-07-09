@@ -72,6 +72,27 @@ services:
         sync: false
       - key: ADMIN_PASSWORD
         sync: false
+      # Stockage des images vehicules sur Cloudflare R2 (S3-compatible) : le
+      # disque local de Render (plan gratuit) n'est PAS persistant, tout
+      # fichier uploade via l'admin disparait au prochain redemarrage/deploy.
+      # Sans ces variables, FILESYSTEM_DISK reste "local" (comportement dev,
+      # non persistant sur Render).
+      - key: FILESYSTEM_DISK
+        value: s3
+      - key: AWS_ACCESS_KEY_ID
+        sync: false # R2 dashboard -> Manage API Tokens
+      - key: AWS_SECRET_ACCESS_KEY
+        sync: false
+      - key: AWS_DEFAULT_REGION
+        value: auto
+      - key: AWS_BUCKET
+        sync: false # nom du bucket R2 cree
+      - key: AWS_ENDPOINT
+        sync: false # https://<account_id>.r2.cloudflarestorage.com
+      - key: AWS_USE_PATH_STYLE_ENDPOINT
+        value: "true"
+      - key: AWS_URL
+        sync: false # URL publique du bucket (r2.dev ou domaine custom)
 
 databases:
   - name: noctis-db

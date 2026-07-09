@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Vehicle;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class VehicleAdminController extends Controller
@@ -68,16 +67,7 @@ class VehicleAdminController extends Controller
         $data['sort_order'] = (int) ($data['sort_order'] ?? 0);
 
         if ($request->hasFile('image')) {
-            // Disque "public" local par defaut (dev) ; sur Render (disque
-            // ephemere), FILESYSTEM_DISK=s3 pointe vers un bucket R2 persistant
-            // -- image_path stocke alors l'URL publique complete plutot qu'un
-            // chemin relatif, asset() la renvoie inchangee dans ce cas.
-            $disk = config('filesystems.default');
-            $path = $request->file('image')->store('vehicles', $disk);
-
-            $data['image_path'] = $disk === 'public'
-                ? 'storage/'.$path
-                : Storage::disk($disk)->url($path);
+            $data['image_path'] = 'storage/'.$request->file('image')->store('vehicles', 'public');
         }
         unset($data['image']);
 

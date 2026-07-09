@@ -1156,50 +1156,28 @@
 	}
 
 	/* =====================================================================
-	 * PROGRESSION 2-3-4 (.ntb-prog) — passe en position:fixed pile quand le
-	 * scroll atteint sa position naturelle dans l'en-tête étape 2, pour
-	 * qu'elle reste visible sans provoquer de saut visuel à l'activation.
-	 *
-	 * IntersectionObserver plutôt qu'un calcul manuel de scrollY : un
-	 * sentinel invisible reste dans le flux normal du document à
-	 * l'emplacement d'origine de .ntb-prog (qui, lui, quitte le flux une
-	 * fois fixed — l'observer ne peut donc pas se fier à sa propre position
-	 * une fois activé). Le navigateur gère nativement tous les cas limites
-	 * (reflow après chargement des polices, redimensionnement...).
+	 * PROGRESSION 2-3-4 (.ntb-prog) — passe en position:fixed une fois au
+	 * chargement (pas de logique liée au scroll : jamais réévalué pendant
+	 * le défilement, juste fixé à sa position calculée puis laissé tel quel).
 	 * ===================================================================== */
 	function initProgFixed() {
 		var prog = el( '.ntb-prog' );
-		if ( ! prog || typeof IntersectionObserver === 'undefined' ) return;
+		if ( ! prog ) return;
 
-		var sentinel = document.createElement( 'span' );
-		sentinel.setAttribute( 'aria-hidden', 'true' );
-		sentinel.style.cssText = 'display:block;width:0;height:0;';
-		prog.parentNode.insertBefore( sentinel, prog );
-
-		var observer = null;
-
-		function build() {
-			if ( observer ) observer.disconnect();
-
+		function apply() {
 			if ( window.innerWidth <= 1024 ) {
 				prog.classList.remove( 'is-fixed' );
 				prog.style.top = '';
 				return;
 			}
-
-			var targetTop = getNavOffset() + 16;
-			observer = new IntersectionObserver( function ( entries ) {
-				var shouldFix = ! entries[ entries.length - 1 ].isIntersecting;
-				prog.classList.toggle( 'is-fixed', shouldFix );
-				prog.style.top = shouldFix ? ( targetTop + 'px' ) : '';
-			}, { rootMargin: '-' + targetTop + 'px 0px 0px 0px', threshold: 0 } );
-			observer.observe( sentinel );
+			prog.classList.add( 'is-fixed' );
+			prog.style.top = ( getNavOffset() + 16 ) + 'px';
 		}
 
-		build();
-		window.addEventListener( 'resize', build );
+		apply();
+		window.addEventListener( 'resize', apply );
 		window.addEventListener( 'load', function () {
-			requestAnimationFrame( build );
+			requestAnimationFrame( apply );
 		} );
 	}
 

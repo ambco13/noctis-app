@@ -45,7 +45,7 @@ class SecurityHeaders
             "base-uri 'self'",
             "form-action 'self'",
             // TEMPORAIRE (voir commentaire plus haut) : remettre "'self'" seul.
-            "frame-ancestors 'self' https://responsivechecktool.com",
+            "frame-ancestors 'self' https://responsivechecktool.com https://amiresponsive.co.uk",
         ]));
 
         return $response;

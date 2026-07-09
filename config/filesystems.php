@@ -51,14 +51,26 @@ return [
         // bancaire requise (contrairement a R2/Backblaze pour un bucket public).
         // Non utilise tant que CLOUDINARY_URL n'est pas defini -- voir
         // VehicleAdminController, qui retombe sur "public" (local) sinon.
-        'cloudinary' => [
-            'driver' => 'cloudinary',
-            'key' => env('CLOUDINARY_KEY'),
-            'secret' => env('CLOUDINARY_SECRET'),
-            'cloud' => env('CLOUDINARY_CLOUD_NAME'),
-            'url' => env('CLOUDINARY_URL'),
-            'secure' => true,
-        ],
+        //
+        // Le SDK Cloudinary attend des cles PLATES 'cloud_name'/'api_key'/
+        // 'api_secret' (pas 'cloud'/'key'/'secret'/'url' imbriques) -- ces
+        // noms collisionnent avec des sections internes du SDK ('cloud' et
+        // 'url' sont des noms de section, une valeur scalaire y provoque une
+        // TypeError). CLOUDINARY_URL n'est jamais lu automatiquement ici : le
+        // disque recoit toujours un tableau (jamais null), donc on le parse
+        // nous-memes plutot que de compter sur le fallback getenv() du SDK.
+        'cloudinary' => (function (): array {
+            $url = env('CLOUDINARY_URL');
+            $parts = $url ? parse_url($url) : [];
+
+            return [
+                'driver' => 'cloudinary',
+                'cloud_name' => $parts['host'] ?? null,
+                'api_key' => $parts['user'] ?? null,
+                'api_secret' => $parts['pass'] ?? null,
+                'secure' => true,
+            ];
+        })(),
 
     ],
 

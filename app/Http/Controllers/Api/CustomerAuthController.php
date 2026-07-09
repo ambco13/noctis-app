@@ -255,10 +255,22 @@ class CustomerAuthController extends Controller
 
     /**
      * URL de redirection sûre : même origine uniquement.
+     *
+     * str_starts_with() sur une simple chaîne serait contournable (ex.
+     * "https://site.com.evil.com" commence bien par "https://site.com") :
+     * on compare host + scheme parsés, pas des préfixes de texte.
      */
     private function safeRedirect(string $url): string
     {
-        if ($url !== '' && str_starts_with($url, url('/'))) {
+        if ($url === '') {
+            return url('/');
+        }
+
+        $target = parse_url($url);
+        $expected = parse_url(url('/'));
+
+        if (($target['host'] ?? null) === ($expected['host'] ?? null)
+            && ($target['scheme'] ?? null) === ($expected['scheme'] ?? null)) {
             return $url;
         }
 

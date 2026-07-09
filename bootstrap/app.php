@@ -1,6 +1,7 @@
 <?php
 
 use App\Exceptions\BookingException;
+use App\Http\Middleware\SecurityHeaders;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -20,6 +21,8 @@ return Application::configure(basePath: dirname(__DIR__))
 
         // Pas de route "login" classique : les invités passent par /mon-compte.
         $middleware->redirectGuestsTo(fn () => route('account'));
+
+        $middleware->append(SecurityHeaders::class);
 
         // Déployé sur Render (PaaS) : le conteneur ne reçoit du trafic que via
         // la couche de routage interne de Render, jamais directement d'internet

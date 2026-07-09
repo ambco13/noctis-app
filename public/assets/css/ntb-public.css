@@ -375,13 +375,11 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 
 .ntb-prog { display: flex; align-items: center; gap: 6px; margin-left: auto; }
 @media (min-width: 1025px) {
-	/* .is-fixed + son "top" (inline, en JS) ajoutés pile quand le scroll
-	   atteint la position naturelle de l'élément -- aucun saut visuel,
-	   contrairement à un position:fixed statique placé à une valeur
-	   arbitraire dès le chargement. */
-	.ntb-prog.is-fixed {
+	/* Sans top/right/left/bottom précisés, le navigateur garde la position
+	   "statique" (celle qu'aurait eu l'élément dans le flux normal) comme
+	   position fixe -- aucun saut visuel, aucun calcul JS nécessaire. */
+	.ntb-prog {
 		position: fixed;
-		right: 48px;
 		z-index: 90;
 	}
 }

@@ -1155,32 +1155,6 @@
 		}
 	}
 
-	/* =====================================================================
-	 * PROGRESSION 2-3-4 (.ntb-prog) — passe en position:fixed une fois au
-	 * chargement (pas de logique liée au scroll : jamais réévalué pendant
-	 * le défilement, juste fixé à sa position calculée puis laissé tel quel).
-	 * ===================================================================== */
-	function initProgFixed() {
-		var prog = el( '.ntb-prog' );
-		if ( ! prog ) return;
-
-		function apply() {
-			if ( window.innerWidth <= 1024 ) {
-				prog.classList.remove( 'is-fixed' );
-				prog.style.top = '';
-				return;
-			}
-			prog.classList.add( 'is-fixed' );
-			prog.style.top = ( getNavOffset() + 16 ) + 'px';
-		}
-
-		apply();
-		window.addEventListener( 'resize', apply );
-		window.addEventListener( 'load', function () {
-			requestAnimationFrame( apply );
-		} );
-	}
-
 	// Un champ non focus doit toujours afficher son DÉBUT (avec l'ellipsis
 	// CSS à la fin) plutôt que de rester scrollé sur la position du curseur
 	// après une saisie — sinon "Nom Prénom" ou l'email affichent leur fin.
@@ -1196,7 +1170,6 @@
 		// requestAnimationFrame guarantees theme JS (sticky headers) has run before we measure nav height
 		requestAnimationFrame( function() {
 			initAside();
-			initProgFixed();
 		} );
 		killOutlines();
 	} );

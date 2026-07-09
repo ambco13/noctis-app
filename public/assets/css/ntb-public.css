@@ -474,11 +474,6 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 		background: transparent;
 		border: none;
 		border-radius: var(--ntb-r-sm);
-		/* Filet de sécurité : sur un écran bas (fenêtre réduite, petit laptop),
-		   la carte (min-height 280px) + la sum-card peuvent dépasser la hauteur
-		   calculée -- scroll interne plutôt qu'un débordement visuel qui
-		   couperait le bouton "Choisir ce véhicule". */
-		overflow-y: auto;
 	}
 	/* Miroir du padding du carrousel (4px haut / 16px bas) pour que la carte
 	   et la sum-card s'alignent sur le haut et le bas des cartes véhicules */

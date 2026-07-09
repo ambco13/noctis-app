@@ -55,7 +55,7 @@
 
         /* Marge latérale globale du site : 24px en mobile, 48px à partir du desktop.
            Un peu d'espace en haut, beaucoup plus en bas (sous le formulaire). */
-        body > main { padding: calc(16px + 63px) 24px 64px; box-sizing: border-box; }
+        body > main { padding: 55px 24px 64px; box-sizing: border-box; }
         @media (min-width: 1025px) {
             .ntb-topnav { padding-left: 48px; padding-right: 48px; }
             body > main { padding-left: 48px; padding-right: 48px; }

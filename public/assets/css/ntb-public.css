@@ -565,6 +565,7 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 }
 
 .ntb-aside-map-wrap {
+	position: relative;
 	flex: 1 1 auto;
 	min-height: 280px;
 	border-radius: var(--ntb-r-sm);
@@ -574,15 +575,18 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 }
 
 .ntb-route-map {
-	width: 100%;
-	height: 100%;
+	/* position:absolute plutôt que height:100% : un enfant en height:100%
+	   d'un item flex dont la hauteur vient de flex-grow (pas d'une valeur
+	   explicite) ne se résout pas de façon fiable selon les navigateurs —
+	   Leaflet lit alors un conteneur de 0px de haut. */
+	position: absolute;
+	inset: 0;
 	border-radius: 0;
 	border: none;
 	overflow: hidden;
 	background: transparent;
 	contain: paint;
 	clip-path: inset(0);
-	flex-shrink: 0;
 }
 /* Tuiles OSM inversées en dark mode pour correspondre au thème sombre */
 .ntb-route-map .leaflet-tile-pane {

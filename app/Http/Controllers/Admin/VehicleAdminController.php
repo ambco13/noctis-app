@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Vehicle;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class VehicleAdminController extends Controller
@@ -67,7 +68,14 @@ class VehicleAdminController extends Controller
         $data['sort_order'] = (int) ($data['sort_order'] ?? 0);
 
         if ($request->hasFile('image')) {
-            $data['image_path'] = 'storage/'.$request->file('image')->store('vehicles', 'public');
+            // "public" (local, non persistant sur Render) tant que CLOUDINARY_URL
+            // n'est pas defini ; "cloudinary" sinon (voir config/filesystems.php).
+            $disk = config('filesystems.vehicle_images_disk');
+            $path = $request->file('image')->store('vehicles', $disk);
+
+            $data['image_path'] = $disk === 'public'
+                ? 'storage/'.$path
+                : Storage::disk($disk)->url($path);
         }
         unset($data['image']);
 

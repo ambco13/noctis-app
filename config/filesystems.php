@@ -47,20 +47,35 @@ return [
             'report' => false,
         ],
 
-        's3' => [
-            'driver' => 's3',
-            'key' => env('AWS_ACCESS_KEY_ID'),
-            'secret' => env('AWS_SECRET_ACCESS_KEY'),
-            'region' => env('AWS_DEFAULT_REGION'),
-            'bucket' => env('AWS_BUCKET'),
-            'url' => env('AWS_URL'),
-            'endpoint' => env('AWS_ENDPOINT'),
-            'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
-            'throw' => false,
-            'report' => false,
+        // Images vehicules (admin) : disque persistant gratuit, sans carte
+        // bancaire requise (contrairement a R2/Backblaze pour un bucket public).
+        // Non utilise tant que CLOUDINARY_URL n'est pas defini -- voir
+        // VehicleAdminController, qui retombe sur "public" (local) sinon.
+        'cloudinary' => [
+            'driver' => 'cloudinary',
+            'key' => env('CLOUDINARY_KEY'),
+            'secret' => env('CLOUDINARY_SECRET'),
+            'cloud' => env('CLOUDINARY_CLOUD_NAME'),
+            'url' => env('CLOUDINARY_URL'),
+            'secure' => true,
         ],
 
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Disque des images vehicules (admin)
+    |--------------------------------------------------------------------------
+    |
+    | Distinct du disque "default" (delibere) : le disque par defaut de
+    | Laravel sert a d'autres usages internes et ne doit jamais dependre
+    | d'identifiants cloud optionnels. "public" (local) tant que Cloudinary
+    | n'est pas configure -- fonctionne toujours, juste non persistant sur
+    | Render (plan gratuit, disque ephemere).
+    |
+    */
+
+    'vehicle_images_disk' => env('CLOUDINARY_URL') ? 'cloudinary' : 'public',
 
     /*
     |--------------------------------------------------------------------------

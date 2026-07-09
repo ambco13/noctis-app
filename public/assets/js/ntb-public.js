@@ -1159,44 +1159,47 @@
 	 * PROGRESSION 2-3-4 (.ntb-prog) — passe en position:fixed pile quand le
 	 * scroll atteint sa position naturelle dans l'en-tête étape 2, pour
 	 * qu'elle reste visible sans provoquer de saut visuel à l'activation.
+	 *
+	 * IntersectionObserver plutôt qu'un calcul manuel de scrollY : un
+	 * sentinel invisible reste dans le flux normal du document à
+	 * l'emplacement d'origine de .ntb-prog (qui, lui, quitte le flux une
+	 * fois fixed — l'observer ne peut donc pas se fier à sa propre position
+	 * une fois activé). Le navigateur gère nativement tous les cas limites
+	 * (reflow après chargement des polices, redimensionnement...).
 	 * ===================================================================== */
 	function initProgFixed() {
 		var prog = el( '.ntb-prog' );
-		if ( ! prog ) return;
+		if ( ! prog || typeof IntersectionObserver === 'undefined' ) return;
 
-		var naturalTop = null;
+		var sentinel = document.createElement( 'span' );
+		sentinel.setAttribute( 'aria-hidden', 'true' );
+		sentinel.style.cssText = 'display:block;width:0;height:0;';
+		prog.parentNode.insertBefore( sentinel, prog );
 
-		function measureNaturalTop() {
-			var wasFixed = prog.classList.contains( 'is-fixed' );
-			if ( wasFixed ) { prog.classList.remove( 'is-fixed' ); prog.style.top = ''; }
-			naturalTop = prog.getBoundingClientRect().top + window.scrollY;
-			if ( wasFixed ) { prog.classList.add( 'is-fixed' ); }
-		}
+		var observer = null;
 
-		function apply() {
+		function build() {
+			if ( observer ) observer.disconnect();
+
 			if ( window.innerWidth <= 1024 ) {
 				prog.classList.remove( 'is-fixed' );
 				prog.style.top = '';
 				return;
 			}
+
 			var targetTop = getNavOffset() + 16;
-			var shouldFix = ( window.scrollY + targetTop ) >= naturalTop;
-			prog.classList.toggle( 'is-fixed', shouldFix );
-			prog.style.top = shouldFix ? ( targetTop + 'px' ) : '';
+			observer = new IntersectionObserver( function ( entries ) {
+				var shouldFix = ! entries[ entries.length - 1 ].isIntersecting;
+				prog.classList.toggle( 'is-fixed', shouldFix );
+				prog.style.top = shouldFix ? ( targetTop + 'px' ) : '';
+			}, { rootMargin: '-' + targetTop + 'px 0px 0px 0px', threshold: 0 } );
+			observer.observe( sentinel );
 		}
 
-		measureNaturalTop();
-		apply();
-
-		var rafPending = false;
-		window.addEventListener( 'scroll', function() {
-			if ( rafPending ) return;
-			rafPending = true;
-			requestAnimationFrame( function() { rafPending = false; apply(); } );
-		}, { passive: true } );
-		window.addEventListener( 'resize', function() { measureNaturalTop(); apply(); } );
-		window.addEventListener( 'load', function() {
-			requestAnimationFrame( function() { measureNaturalTop(); apply(); } );
+		build();
+		window.addEventListener( 'resize', build );
+		window.addEventListener( 'load', function () {
+			requestAnimationFrame( build );
 		} );
 	}
 

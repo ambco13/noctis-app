@@ -286,7 +286,7 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 	   layouts/app.blade.php), donc l'image doit couvrir tout le viewport,
 	   pas juste l'espace sous la nav. */
 	min-height: 100vh;
-	display: flex; align-items: center; justify-content: center;
+	display: flex; align-items: stretch; justify-content: center;
 	position: relative;
 	overflow: hidden;
 	/* Image temporaire (hotlink Blacklane) -- à remplacer par une photo hébergée
@@ -307,10 +307,15 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
    48px côtés desktop) -- l'image de fond, elle, va jusqu'aux bords.
    En padding et non en margin : avec width:100%, un margin horizontal
    s'ajouterait PAR-DESSUS les 100% (box-sizing:border-box ne couvre pas le
-   margin) et ferait déborder le conteneur hors du viewport en mobile. */
+   margin) et ferait déborder le conteneur hors du viewport en mobile.
+   3 sections empilées sur toute la hauteur du hero (repris de la ref.
+   Blacklane) : un espace vide qui absorbe la hauteur en trop (pousse le
+   texte et le formulaire vers le bas plutôt que de tout centrer), le texte,
+   puis le formulaire. */
 .ntb-hero-inner {
 	position: relative; z-index: 1;
 	width: 100%;
+	min-height: 100%;
 	box-sizing: border-box;
 	padding: 90px 24px 40px;
 	display: flex;
@@ -318,6 +323,7 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 	align-items: center;
 	gap: 40px;
 }
+.ntb-hero-gap { flex: 1 1 auto; }
 @media (min-width: 1025px) {
 	.ntb-hero-inner { padding: 132px 48px 56px; gap: 56px; }
 }

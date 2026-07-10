@@ -395,11 +395,26 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 	.ntb-hero-title { margin-bottom: 12px; }
 }
 .ntb-home .ntb-home-form {
-	background: var(--ntb-surf-glass); backdrop-filter: var(--ntb-glass-blur, blur(8px));
+	position: relative;
+	/* Verre porté par ::before, PAS par le form lui-même : un élément avec
+	   backdrop-filter devient un "backdrop root" et neutralise le
+	   backdrop-filter de ses descendants (les popups .ntb-ac-list /
+	   .nc-time-picker ne pouvaient plus flouter la page -> flou absent).
+	   En le mettant sur ::before, le form n'est plus backdrop root et les
+	   popups imbriqués retrouvent leur flou. */
+	background: transparent;
 	border: 1px solid var(--ntb-line); border-radius: var(--ntb-r-sm); padding: 14px 20px;
 	box-shadow: var(--ntb-shadow-lg);
 	display: block; max-width: 1200px; width: 100%; margin-left: auto; margin-right: auto; box-sizing: border-box;
 }
+.ntb-home .ntb-home-form::before {
+	content: ''; position: absolute; inset: 0; z-index: 0;
+	border-radius: inherit; pointer-events: none;
+	background: var(--ntb-surf-glass);
+	backdrop-filter: var(--ntb-glass-blur, blur(8px));
+	-webkit-backdrop-filter: var(--ntb-glass-blur, blur(8px));
+}
+.ntb-home .ntb-home-form > * { position: relative; z-index: 1; }
 /* Popups du formulaire (suggestions d'adresse, heure) : même effet verre
    que la carte du formulaire, au lieu du fond opaque --ntb-surf utilisé
    ailleurs sur le site. Le calendrier flatpickr est traité à part en JS

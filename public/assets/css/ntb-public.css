@@ -575,7 +575,10 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 .ntb-aside-map-wrap {
 	position: relative;
 	flex: 1 1 auto;
-	min-height: 280px;
+	/* Pas de min-height : sur un écran bas, la carte doit pouvoir rétrécir
+	   autant que nécessaire pour que .ntb-sum-card (flex-shrink:0, le bouton
+	   "Choisir ce véhicule") reste toujours entièrement visible en priorité. */
+	min-height: 0;
 	border-radius: var(--ntb-r-sm);
 	overflow: hidden;
 	background: #e9e7e1;

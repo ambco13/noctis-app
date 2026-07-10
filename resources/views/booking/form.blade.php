@@ -5,7 +5,6 @@
 @section('content')
 <div class="ntb-scope ntb-home">
   <div class="ntb-hero-inner">
-    <div class="ntb-hero-gap" aria-hidden="true"></div>
     <div class="ntb-hero-text">
         <p class="ntb-hero-eyebrow">{{ __('Paris & régions') }}</p>
         <h1 class="ntb-hero-title">{!! __('Votre chauffeur vous<br>attend.') !!}</h1>

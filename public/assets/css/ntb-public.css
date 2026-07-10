@@ -311,24 +311,22 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
    En padding et non en margin : avec width:100%, un margin horizontal
    s'ajouterait PAR-DESSUS les 100% (box-sizing:border-box ne couvre pas le
    margin) et ferait déborder le conteneur hors du viewport en mobile.
-   3 sections empilées sur toute la hauteur du hero (repris de la ref.
-   Blacklane) : un espace vide qui absorbe la hauteur en trop (pousse le
-   texte et le formulaire vers le bas plutôt que de tout centrer), le texte,
-   puis le formulaire. */
+   Padding-top réduit au minimum (juste assez pour ne pas passer sous la nav
+   fixed) : le texte et le formulaire remontent, ce qui laisse de la place
+   sous le formulaire pour les popups (suggestions, calendrier, heure). */
 .ntb-hero-inner {
 	position: relative; z-index: 1;
 	width: 100%;
 	min-height: 100%;
 	box-sizing: border-box;
-	padding: 90px 24px 20px;
+	padding: 80px 24px 24px;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	gap: 40px;
 }
-.ntb-hero-gap { flex: 1 1 auto; }
 @media (min-width: 1025px) {
-	.ntb-hero-inner { padding: 132px 48px 24px; gap: 56px; }
+	.ntb-hero-inner { padding: 96px 48px 32px; gap: 56px; }
 }
 
 /* Texte d'accroche du hero — repris du site vitrine WordPress d'origine

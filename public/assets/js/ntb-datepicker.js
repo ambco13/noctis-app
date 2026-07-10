@@ -123,11 +123,14 @@
 	}
 
 	/* Hero (page 1) : le bloc texte+formulaire est ancré en bas de l'écran.
-	   Dès qu'un popup s'ouvre, on mesure de combien le remonter pour le
-	   centrer dans .ntb-home, puis .ntb-form-focused applique ce décalage
-	   à bottom (transition CSS = glissement animé, pas un saut). La mesure
-	   se fait uniquement au front montant (pas encore focused) : une fois
-	   remonté, sa position n'est plus la position de repos. */
+	   Dès qu'un popup s'ouvre, on mesure de combien remonter tout le bloc
+	   (texte + formulaire, déplacés ensemble) pour amener le FORMULAIRE
+	   (pas le bloc entier -- le titre est trop haut pour que centrer le
+	   bloc entier place réellement le formulaire au milieu) au milieu de
+	   .ntb-home, laissant la place en dessous pour le popup. Le tout est
+	   plafonné pour ne jamais passer sous la nav fixe. La mesure se fait
+	   uniquement au front montant (pas encore focused) : une fois remonté,
+	   sa position n'est plus la position de repos. */
 	function updateHeroFocus() {
 		var hero = document.querySelector( '.ntb-home' );
 		if ( ! hero ) return;
@@ -136,11 +139,17 @@
 			|| document.querySelector( '.flatpickr-calendar.open' );
 		if ( open && ! hero.classList.contains( 'ntb-form-focused' ) ) {
 			var inner = hero.querySelector( '.ntb-hero-inner' );
-			if ( inner ) {
+			var form  = hero.querySelector( '.ntb-home-form' );
+			if ( inner && form ) {
 				var heroRect = hero.getBoundingClientRect();
 				var innerRect = inner.getBoundingClientRect();
-				var desiredTop = heroRect.top + ( heroRect.height - innerRect.height ) / 2;
-				var lift = Math.max( 0, innerRect.top - desiredTop );
+				var formRect = form.getBoundingClientRect();
+				var heroCenter = heroRect.top + heroRect.height / 2;
+				var formCenter = formRect.top + formRect.height / 2;
+				var lift = Math.max( 0, formCenter - heroCenter );
+				var nav = document.querySelector( '.ntb-topnav' );
+				var minInnerTop = ( nav ? nav.getBoundingClientRect().bottom : 0 ) + 16;
+				lift = Math.min( lift, Math.max( 0, innerRect.top - minInnerTop ) );
 				hero.style.setProperty( '--ntb-hero-lift', lift + 'px' );
 			}
 		}

@@ -175,13 +175,14 @@
 
 	/* Hero (page 1) : le bloc texte+formulaire est ancré en bas de l'écran.
 	   Dès qu'un popup s'ouvre, on mesure de combien remonter tout le bloc
-	   (texte + formulaire, déplacés ensemble) pour amener le FORMULAIRE
-	   (pas le bloc entier -- le titre est trop haut pour que centrer le
-	   bloc entier place réellement le formulaire au milieu) au milieu de
-	   .ntb-home, laissant la place en dessous pour le popup. Le tout est
-	   plafonné pour ne jamais passer sous la nav fixe. La mesure se fait
-	   uniquement au front montant (pas encore focused) : une fois remonté,
-	   sa position n'est plus la position de repos. */
+	   (texte + formulaire, déplacés ensemble) pour amener le CENTRE DU
+	   FORMULAIRE (pas le bloc entier -- le titre est trop haut pour que
+	   centrer le bloc entier place réellement le formulaire au milieu) au
+	   centre exact de .ntb-home. Le titre suit ; il peut remonter dans la
+	   zone (vide) de la nav, c'est assumé. Seul garde-fou : ne pas faire
+	   sortir le haut du bloc hors de l'écran (écrans très courts). La mesure
+	   se fait uniquement au front montant (pas encore focused) : une fois
+	   remonté, sa position n'est plus la position de repos. */
 	function updateHeroFocus() {
 		var hero = document.querySelector( '.ntb-home' );
 		if ( ! hero ) return;
@@ -198,9 +199,8 @@
 				var heroCenter = heroRect.top + heroRect.height / 2;
 				var formCenter = formRect.top + formRect.height / 2;
 				var lift = Math.max( 0, formCenter - heroCenter );
-				var nav = document.querySelector( '.ntb-topnav' );
-				var minInnerTop = ( nav ? nav.getBoundingClientRect().bottom : 0 ) + 16;
-				lift = Math.min( lift, Math.max( 0, innerRect.top - minInnerTop ) );
+				// Garde-fou : garder au moins 8px du bloc visibles en haut.
+				lift = Math.min( lift, Math.max( 0, innerRect.top - 8 ) );
 				hero.style.setProperty( '--ntb-hero-lift', lift + 'px' );
 			}
 		}

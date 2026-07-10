@@ -173,16 +173,28 @@
 		updateHeroFocus();
 	}
 
-	/* Hero (page 1) : le bloc texte+formulaire est ancré en bas de l'écran
-	   (.ntb-home { justify-content: flex-end }). Dès qu'un popup s'ouvre,
-	   passe en justify-content:center (classe .ntb-form-focused) pour
-	   remonter le bloc au milieu et laisser de la place au popup. */
+	/* Hero (page 1) : le bloc texte+formulaire est ancré en bas de l'écran.
+	   Dès qu'un popup s'ouvre, on mesure de combien le remonter pour le
+	   centrer dans .ntb-home, puis .ntb-form-focused applique ce décalage
+	   à bottom (transition CSS = glissement animé, pas un saut). La mesure
+	   se fait uniquement au front montant (pas encore focused) : une fois
+	   remonté, sa position n'est plus la position de repos. */
 	function updateHeroFocus() {
 		var hero = document.querySelector( '.ntb-home' );
 		if ( ! hero ) return;
 		var open = document.querySelector( '.ntb-ac-list:not([hidden])' )
 			|| document.querySelector( '.nc-time-picker.nc-open' )
 			|| document.querySelector( '.flatpickr-calendar.open' );
+		if ( open && ! hero.classList.contains( 'ntb-form-focused' ) ) {
+			var inner = hero.querySelector( '.ntb-hero-inner' );
+			if ( inner ) {
+				var heroRect = hero.getBoundingClientRect();
+				var innerRect = inner.getBoundingClientRect();
+				var desiredTop = heroRect.top + ( heroRect.height - innerRect.height ) / 2;
+				var lift = Math.max( 0, innerRect.top - desiredTop );
+				hero.style.setProperty( '--ntb-hero-lift', lift + 'px' );
+			}
+		}
 		hero.classList.toggle( 'ntb-form-focused', !! open );
 	}
 

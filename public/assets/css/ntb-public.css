@@ -291,9 +291,10 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 	min-height: 100vh;
 	/* .ntb-home porte aussi la classe .ntb-scope, qui fixe déjà
 	   flex-direction:column (règle générique partagée avec les étapes 2-4) --
-	   justify-content pilote donc l'axe VERTICAL ici, pas horizontal. C'est ce
-	   qui positionne .ntb-hero-inner : ancré en bas par défaut (flex-end),
-	   recentré au milieu quand un champ est actif (.ntb-form-focused). */
+	   justify-content pilote donc l'axe VERTICAL ici, pas horizontal. Ancre
+	   .ntb-hero-inner en bas en permanence ; la remontée au focus (glissement
+	   animé, pas un saut) se fait via bottom/transition sur .ntb-hero-inner
+	   lui-même -- justify-content n'est pas animable, bottom l'est. */
 	display: flex; align-items: center; justify-content: flex-end;
 	position: relative;
 	overflow: hidden;
@@ -303,7 +304,6 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 	background-size: cover;
 	background-position: center;
 }
-.ntb-home.ntb-form-focused { justify-content: center; }
 .ntb-home::before {
 	content: '';
 	position: absolute;
@@ -329,7 +329,14 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 	flex-direction: column;
 	align-items: center;
 	gap: 40px;
+	/* Repos = 0 (position naturelle, ancrée en bas par .ntb-home). Au focus,
+	   --ntb-hero-lift (calculé en JS, cf. updateHeroFocus) pousse ce bottom
+	   pour centrer le bloc dans .ntb-home -- la transition sur bottom donne
+	   le glissement, contrairement à un toggle de justify-content. */
+	bottom: 0;
+	transition: bottom .45s var(--ntb-ease);
 }
+.ntb-home.ntb-form-focused .ntb-hero-inner { bottom: var(--ntb-hero-lift, 0px); }
 @media (min-width: 1025px) {
 	.ntb-hero-inner { padding: 40px 48px 32px; gap: 56px; }
 }

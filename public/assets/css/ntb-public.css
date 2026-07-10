@@ -297,20 +297,22 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 }
 /* Contenu (texte d'accroche + formulaire) : reprend l'espacement qu'avait
    auparavant le padding de main (55px haut / 24px côtés / 20px bas mobile,
-   48px côtés desktop), mais en margin sur ce conteneur plutôt qu'en padding
-   sur main -- l'image de fond, elle, va jusqu'aux bords. */
+   48px côtés desktop) -- l'image de fond, elle, va jusqu'aux bords.
+   En padding et non en margin : avec width:100%, un margin horizontal
+   s'ajouterait PAR-DESSUS les 100% (box-sizing:border-box ne couvre pas le
+   margin) et ferait déborder le conteneur hors du viewport en mobile. */
 .ntb-hero-inner {
 	position: relative; z-index: 1;
 	width: 100%;
 	box-sizing: border-box;
-	margin: 90px 24px 40px;
+	padding: 90px 24px 40px;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	gap: 40px;
 }
 @media (min-width: 1025px) {
-	.ntb-hero-inner { margin: 132px 48px 56px; gap: 56px; }
+	.ntb-hero-inner { padding: 132px 48px 56px; gap: 56px; }
 }
 
 /* Texte d'accroche du hero — repris du site vitrine WordPress d'origine
@@ -343,7 +345,7 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 	margin: 0 auto; max-width: 480px;
 }
 @media (max-width: 640px) {
-	.ntb-hero-inner { margin-top: 72px; gap: 28px; }
+	.ntb-hero-inner { padding-top: 72px; gap: 28px; }
 	.ntb-hero-eyebrow { font-size: 11px; margin-bottom: 14px; }
 	.ntb-hero-title { margin-bottom: 12px; }
 }

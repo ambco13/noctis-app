@@ -425,6 +425,14 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 	background: var(--ntb-surf-glass);
 	backdrop-filter: var(--ntb-glass-blur, blur(8px));
 }
+/* Fondu haut/bas du picker heure : par défaut il fond vers --ntb-surf, qui
+   bascule en BLANC en thème clair (@media prefers-color-scheme: light),
+   alors que le hero garde un verre sombre -> bandes blanches. Sur le hero on
+   fond donc vers le verre (--ntb-surf-glass, sombre dans les deux thèmes)
+   pour que les bords épousent le fond du picker. */
+.ntb-home .nc-time-picker::after {
+	background: linear-gradient(to bottom, var(--ntb-surf-glass) 0%, transparent 30%, transparent 70%, var(--ntb-surf-glass) 100%);
+}
 .ntb-hf-grid { display: grid; gap: 11px; grid-template-columns: 1.3fr 1.3fr .9fr .8fr auto auto; align-items: end; }
 .ntb-hf-grid > * { min-width: 0; }
 .ntb-hf-go { min-height: 40px; align-self: center; white-space: nowrap; padding: 7px 18px; font-size: var(--ntb-text-sm); display: inline-flex; align-items: center; justify-content: center; }

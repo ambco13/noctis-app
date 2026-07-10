@@ -11,16 +11,21 @@
 	var MONTHS_FULL  = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
 	var MONTHS_SHORT = ['Jan','Fév','Mar','Avr','Mai','Jun','Jul','Aoû','Sep','Oct','Nov','Déc'];
 
+	/* Appareil tactile (téléphone/tablette) : on désactive la saisie clavier
+	   des champs date/heure pour que le clavier ne monte pas -- seul le picker
+	   sert à choisir. Sur desktop (pointeur fin) on garde la saisie clavier. */
+	var isCoarse = !! ( window.matchMedia && window.matchMedia( '(pointer: coarse)' ).matches );
+
 	document.addEventListener( 'DOMContentLoaded', function () {
 
-		/* ── Date — flatpickr avec saisie clavier ──────────────── */
+		/* ── Date — flatpickr (saisie clavier desktop uniquement) ──────── */
 		var dateEl = document.getElementById( 'ntb-date' );
 		if ( dateEl ) {
 			flatpickr( dateEl, {
 				dateFormat:    'Y-m-d',
 				altInput:      true,
 				altFormat:     'd/m/Y',
-				allowInput:    true,
+				allowInput:    ! isCoarse,
 				minDate:       'today',
 				locale:        fr,
 				disableMobile: true,
@@ -391,6 +396,12 @@
 		}
 		display.id = input.id;
 		input.removeAttribute( 'id' );
+
+		/* Tactile : lecture seule pour que le clavier ne monte pas -- le picker
+		   reste ouvrable au tap (le clic n'est pas bloqué par readonly). */
+		if ( isCoarse ) {
+			display.readOnly = true;
+		}
 
 		/* Popup deux colonnes */
 		var picker = document.createElement( 'div' );

@@ -58,7 +58,9 @@
 					function place() {
 						var dateRect = dateField.getBoundingClientRect();
 						var vw       = window.innerWidth;
-						var newW     = Math.max( Math.round( dateRect.width ), 220 );
+						/* Légèrement moins large que le champ (~8 %) pour un calendrier
+						   plus compact, sans descendre sous une largeur lisible. */
+						var newW     = Math.max( Math.round( dateRect.width * 0.92 ), 208 );
 						var leftPos  = Math.round( dateRect.left + window.scrollX );
 
 						if ( leftPos + newW > window.scrollX + vw - gap ) {

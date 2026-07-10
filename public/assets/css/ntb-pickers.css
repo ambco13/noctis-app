@@ -63,8 +63,8 @@ html[data-ntb-theme="light"] .flatpickr-day.nextMonthDay  { color: oklch(0.70 0.
 	width:     100% !important;
 	min-width: 100% !important;
 	max-width: 100% !important;
-	padding: 4px 0 0;
-	max-height: 220px;
+	padding: 2px 0 0;
+	max-height: 188px;
 	overflow: hidden;
 }
 span.flatpickr-weekday {
@@ -74,16 +74,16 @@ span.flatpickr-weekday {
 .flatpickr-day {
 	flex-basis:    calc(100% / 7) !important;
 	max-width:     calc(100% / 7) !important;
-	height:        36px !important;
-	line-height:   36px !important;
+	height:        30px !important;
+	line-height:   30px !important;
 	font-size:     13px !important;
 	border-radius: var(--ntb-r-sm)  !important;
 }
 @media (max-width: 540px) {
-	.flatpickr-calendar      { padding: 10px 6px; }
-	.dayContainer            { max-height: 208px !important; }
+	.flatpickr-calendar      { padding: 8px 6px; }
+	.dayContainer            { max-height: 178px !important; }
 	span.flatpickr-weekday   { font-size: 9px !important; }
-	.flatpickr-day           { height: 34px !important; line-height: 34px !important; font-size: 12px !important; border-radius: var(--ntb-r-sm) !important; }
+	.flatpickr-day           { height: 30px !important; line-height: 30px !important; font-size: 12px !important; border-radius: var(--ntb-r-sm) !important; }
 }
 
 /* Calendrier */
@@ -97,19 +97,19 @@ span.flatpickr-weekday {
 		inset 0 1px 0 oklch(1 0 0 / .05);
 	font-family: var(--ntb-sans);
 	color: var(--ntb-text);
-	padding: 10px;
+	padding: 8px;
 }
 .flatpickr-calendar::before,
 .flatpickr-calendar::after { display: none; }
 
 /* Barre mois */
 .flatpickr-months {
-	padding-bottom: 8px;
-	margin-bottom: 4px;
+	padding-bottom: 5px;
+	margin-bottom: 3px;
 	border-bottom: 1px solid var(--ntb-line);
 	align-items: center;
 }
-.flatpickr-month { background: transparent; height: 34px; }
+.flatpickr-month { background: transparent; height: 30px; }
 .flatpickr-current-month {
 	font-family: var(--ntb-serif);
 	font-size: 15px;

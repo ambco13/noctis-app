@@ -42,22 +42,28 @@
 					   les couleurs résolues du scope pour qu'il suive le design. */
 					syncCalendarTheme( dateEl, inst );
 					updateHeroFocus();
-					/* La largeur du calendrier = largeur du champ date.
-					   La grille s'adapte via CSS (flex-basis 100%/7). */
-					requestAnimationFrame( function () {
-						var cal       = inst.calendarContainer;
-						var dateField = dateEl.closest( '.ntb-field' ) || dateEl.parentElement;
-						var dateRect  = dateField.getBoundingClientRect();
-						var vw        = window.innerWidth;
-						var gap       = 8;
-						var newW    = Math.max( Math.round( dateRect.width ), 220 );
-						var leftPos = Math.round( dateRect.left + window.scrollX );
 
-						/* Anti-débordement droit */
+					var cal       = inst.calendarContainer;
+					var dateField = dateEl.closest( '.ntb-field' ) || dateEl.parentElement;
+					var onHero    = !! dateEl.closest( '.ntb-home' );
+					var gap       = 8;
+
+					/* Aligne le calendrier sous le champ (largeur = largeur du champ,
+					   anti-débordement latéral). Sur le hero, on force aussi
+					   l'ouverture vers le BAS et on colle le haut du calendrier au bas
+					   du champ : le champ glisse vers le centre au focus, or le
+					   calendrier (dans <body>) ne suit pas la transition CSS -- sinon
+					   flatpickr l'ouvrirait vers le haut (place manquante à l'instant
+					   de l'ouverture, form encore en bas) et il recouvrirait le titre. */
+					function place() {
+						var dateRect = dateField.getBoundingClientRect();
+						var vw       = window.innerWidth;
+						var newW     = Math.max( Math.round( dateRect.width ), 220 );
+						var leftPos  = Math.round( dateRect.left + window.scrollX );
+
 						if ( leftPos + newW > window.scrollX + vw - gap ) {
 							leftPos = Math.max( window.scrollX + gap, window.scrollX + vw - newW - gap );
 						}
-						/* Anti-débordement gauche */
 						if ( leftPos < window.scrollX + gap ) {
 							leftPos = window.scrollX + gap;
 						}
@@ -65,7 +71,27 @@
 						cal.style.width    = newW + 'px';
 						cal.style.minWidth = newW + 'px';
 						cal.style.left     = leftPos + 'px';
-					} );
+
+						if ( onHero ) {
+							cal.classList.remove( 'arrowBottom' );
+							cal.classList.add( 'arrowTop' );
+							cal.style.top = Math.round( dateRect.bottom + window.scrollY + gap ) + 'px';
+						}
+					}
+
+					requestAnimationFrame( place );
+
+					/* Suit le glissement du form (~450ms) frame par frame, pour que le
+					   calendrier reste collé au champ pendant la montée. */
+					if ( onHero ) {
+						var start = performance.now();
+						( function follow( now ) {
+							place();
+							if ( now - start < 550 && inst.isOpen ) {
+								requestAnimationFrame( follow );
+							}
+						} )( start );
+					}
 				},
 				onClose: function () {
 					updateHeroFocus();

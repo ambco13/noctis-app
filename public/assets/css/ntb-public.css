@@ -221,7 +221,7 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 .ntb-home .ntb-field-input input,
 .ntb-home .ntb-field-input textarea { color: rgba(255,255,255,.85) !important; }
 .ntb-home .ntb-field-input input::placeholder,
-.ntb-home .ntb-field-input textarea::placeholder { color: rgba(255,255,255,.5); }
+.ntb-home .ntb-field-input textarea::placeholder { color: rgba(255,255,255,.75); }
 .ntb-field-input {
 	display: flex; align-items: center; gap: 9px; background: transparent;
 	border: 0; border-bottom: 1px solid var(--ntb-field-line, #fff); border-radius: 0; padding: 0 var(--ntb-sp-md); min-height: var(--ntb-input-h);

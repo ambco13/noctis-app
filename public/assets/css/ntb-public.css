@@ -360,7 +360,7 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 	background: var(--ntb-surf-glass); backdrop-filter: var(--ntb-glass-blur, blur(8px));
 	border: 1px solid var(--ntb-line); border-radius: var(--ntb-r-sm); padding: 14px 20px;
 	box-shadow: var(--ntb-shadow-lg);
-	display: block; max-width: 1440px; width: 100%; margin-left: auto; margin-right: auto; box-sizing: border-box;
+	display: block; max-width: 1200px; width: 100%; margin-left: auto; margin-right: auto; box-sizing: border-box;
 }
 .ntb-hf-grid { display: grid; gap: 11px; grid-template-columns: 1.3fr 1.3fr .9fr .8fr auto auto; align-items: end; }
 .ntb-hf-grid > * { min-width: 0; }

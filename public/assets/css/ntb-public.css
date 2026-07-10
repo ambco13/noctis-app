@@ -289,7 +289,12 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 	   layouts/app.blade.php), donc l'image doit couvrir tout le viewport,
 	   pas juste l'espace sous la nav. */
 	min-height: 100vh;
-	display: flex; align-items: stretch; justify-content: center;
+	/* .ntb-home porte aussi la classe .ntb-scope, qui fixe déjà
+	   flex-direction:column (règle générique partagée avec les étapes 2-4) --
+	   justify-content pilote donc l'axe VERTICAL ici, pas horizontal. C'est ce
+	   qui positionne .ntb-hero-inner : ancré en bas par défaut (flex-end),
+	   recentré au milieu quand un champ est actif (.ntb-form-focused). */
+	display: flex; align-items: center; justify-content: flex-end;
 	position: relative;
 	overflow: hidden;
 	/* Image temporaire (hotlink Blacklane) -- à remplacer par une photo hébergée
@@ -298,6 +303,7 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 	background-size: cover;
 	background-position: center;
 }
+.ntb-home.ntb-form-focused { justify-content: center; }
 .ntb-home::before {
 	content: '';
 	position: absolute;
@@ -311,22 +317,21 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
    En padding et non en margin : avec width:100%, un margin horizontal
    s'ajouterait PAR-DESSUS les 100% (box-sizing:border-box ne couvre pas le
    margin) et ferait déborder le conteneur hors du viewport en mobile.
-   Padding-top réduit au minimum (juste assez pour ne pas passer sous la nav
-   fixed) : le texte et le formulaire remontent, ce qui laisse de la place
-   sous le formulaire pour les popups (suggestions, calendrier, heure). */
+   Le positionnement vertical (bas par défaut, milieu si focus) vient de
+   .ntb-home ci-dessus -- ce padding ne sert qu'à espacer le contenu de ses
+   propres bords, pas à pousser le bloc quelque part. */
 .ntb-hero-inner {
 	position: relative; z-index: 1;
 	width: 100%;
-	min-height: 100%;
 	box-sizing: border-box;
-	padding: 80px 24px 24px;
+	padding: 32px 24px 24px;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	gap: 40px;
 }
 @media (min-width: 1025px) {
-	.ntb-hero-inner { padding: 96px 48px 32px; gap: 56px; }
+	.ntb-hero-inner { padding: 40px 48px 32px; gap: 56px; }
 }
 
 /* Texte d'accroche du hero — repris du site vitrine WordPress d'origine
@@ -359,7 +364,7 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 	margin: 0 auto; max-width: 480px;
 }
 @media (max-width: 640px) {
-	.ntb-hero-inner { padding-top: 72px; gap: 28px; }
+	.ntb-hero-inner { gap: 28px; }
 	.ntb-hero-eyebrow { font-size: 11px; margin-bottom: 14px; }
 	.ntb-hero-title { margin-bottom: 12px; }
 }
@@ -1199,7 +1204,12 @@ html[data-ntb-theme="light"] .ntb-ac-list {
    RESPONSIVE — Mobile
    ============================================================ */
 @media (max-width: 1024px) {
-	.ntb-scope { display: block; }
+	/* :not(.ntb-home) : le hero (page 1) partage la classe .ntb-scope pour ses
+	   variables --ntb-* mais a besoin de rester display:flex à toutes les
+	   largeurs (positionnement vertical du bloc texte+formulaire) -- sans
+	   cette exclusion, ce reset le fait passer en display:block et casse
+	   totalement son layout sous 1024px. */
+	.ntb-scope:not(.ntb-home) { display: block; }
 	.ntb-step2-body { display: block; }
 	.ntb-step2-header { padding: 16px 16px 0; }
 	.ntb-prog { display: none !important; }

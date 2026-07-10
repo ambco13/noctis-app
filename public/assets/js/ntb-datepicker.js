@@ -41,6 +41,7 @@
 					/* Le calendrier vit dans <body>, hors .ntb-scope : on lui recopie
 					   les couleurs résolues du scope pour qu'il suive le design. */
 					syncCalendarTheme( dateEl, inst );
+					updateHeroFocus();
 					/* La largeur du calendrier = largeur du champ date.
 					   La grille s'adapte via CSS (flex-basis 100%/7). */
 					requestAnimationFrame( function () {
@@ -65,6 +66,9 @@
 						cal.style.minWidth = newW + 'px';
 						cal.style.left     = leftPos + 'px';
 					} );
+				},
+				onClose: function () {
+					updateHeroFocus();
 				},
 			} );
 		}
@@ -116,6 +120,19 @@
 		if ( spaceBelow < popupHeight + 12 && spaceAbove > spaceBelow ) {
 			popup.classList.add( 'ntb-pop-up' );
 		}
+	}
+
+	/* Hero (page 1) : le bloc texte+formulaire est ancré en bas de l'écran
+	   (.ntb-home { justify-content: flex-end }). Dès qu'un popup s'ouvre,
+	   passe en justify-content:center (classe .ntb-form-focused) pour
+	   remonter le bloc au milieu et laisser de la place au popup. */
+	function updateHeroFocus() {
+		var hero = document.querySelector( '.ntb-home' );
+		if ( ! hero ) return;
+		var open = document.querySelector( '.ntb-ac-list:not([hidden])' )
+			|| document.querySelector( '.nc-time-picker.nc-open' )
+			|| document.querySelector( '.flatpickr-calendar.open' );
+		hero.classList.toggle( 'ntb-form-focused', !! open );
 	}
 
 	/* ═══════════════════════════════════════════════════════════
@@ -413,6 +430,7 @@
 				scrollInstant( colH, h0 );
 				scrollInstant( colM, m0 / 5 );
 			}
+			updateHeroFocus();
 		} );
 
 		/* Saisie clavier — auto-insère ":" après les 2 premiers chiffres */
@@ -446,7 +464,10 @@
 
 		/* Fermeture hors clic */
 		document.addEventListener( 'click', function (e) {
-			if ( ! field.contains( e.target ) ) picker.classList.remove( 'nc-open' );
+			if ( ! field.contains( e.target ) ) {
+				picker.classList.remove( 'nc-open' );
+				updateHeroFocus();
+			}
 		} );
 	}
 

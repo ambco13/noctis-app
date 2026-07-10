@@ -128,6 +128,7 @@
 			clearTimeout( timer );
 			if ( q.length < 3 ) {
 				list.hidden = true;
+				updateHeroFocus();
 				return;
 			}
 			timer = setTimeout( function () {
@@ -140,6 +141,7 @@
 		document.addEventListener( 'click', function ( e ) {
 			if ( ! wrap.contains( e.target ) ) {
 				list.hidden = true;
+				updateHeroFocus();
 			}
 		} );
 	}
@@ -147,6 +149,7 @@
 	function renderPredictions( list, input, preds, placeEl ) {
 		if ( ! preds.length ) {
 			list.hidden = true;
+			updateHeroFocus();
 			return;
 		}
 		list.innerHTML = '';
@@ -161,11 +164,26 @@
 				input.value = p.full || ( p.main + ( p.secondary ? ', ' + p.secondary : '' ) );
 				if ( placeEl ) placeEl.value = p.id || '';
 				list.hidden = true;
+				updateHeroFocus();
 			} );
 			list.appendChild( b );
 		} );
 		list.hidden = false;
 		positionPopupVertically( input, list );
+		updateHeroFocus();
+	}
+
+	/* Hero (page 1) : le bloc texte+formulaire est ancré en bas de l'écran
+	   (.ntb-home { justify-content: flex-end }). Dès qu'un popup s'ouvre,
+	   passe en justify-content:center (classe .ntb-form-focused) pour
+	   remonter le bloc au milieu et laisser de la place au popup. */
+	function updateHeroFocus() {
+		var hero = document.querySelector( '.ntb-home' );
+		if ( ! hero ) return;
+		var open = document.querySelector( '.ntb-ac-list:not([hidden])' )
+			|| document.querySelector( '.nc-time-picker.nc-open' )
+			|| document.querySelector( '.flatpickr-calendar.open' );
+		hero.classList.toggle( 'ntb-form-focused', !! open );
 	}
 
 	/* Ouvre vers le haut (classe .ntb-pop-up) si la place manque en dessous

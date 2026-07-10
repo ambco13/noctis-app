@@ -87,11 +87,35 @@
 			'--ntb-text', '--ntb-muted', '--ntb-faint',
 			'--ntb-accent', '--ntb-accent-hi', '--ntb-accent-soft',
 			'--ntb-serif', '--ntb-sans', '--ntb-mono',
-			'--ntb-r', '--ntb-r-sm', '--ntb-dur', '--ntb-ease'
+			'--ntb-r', '--ntb-r-sm', '--ntb-dur', '--ntb-ease',
+			'--ntb-surf-glass', '--ntb-glass-blur'
 		].forEach( function ( v ) {
 			var val = cs.getPropertyValue( v );
 			if ( val ) cal.style.setProperty( v, val );
 		} );
+		/* Le calendrier est déplacé dans <body> par flatpickr : un sélecteur
+		   CSS ".ntb-home .flatpickr-calendar" ne peut jamais le cibler (il
+		   sort du DOM de .ntb-home). Sur le hero, effet verre appliqué
+		   directement ici plutôt que par CSS. */
+		if ( fieldEl.closest( '.ntb-home' ) ) {
+			cal.style.setProperty( 'background', 'var(--ntb-surf-glass)' );
+			cal.style.setProperty( 'backdrop-filter', 'var(--ntb-glass-blur, blur(8px))' );
+			cal.style.setProperty( '-webkit-backdrop-filter', 'var(--ntb-glass-blur, blur(8px))' );
+		}
+	}
+
+	/* Ouvre vers le haut (classe .ntb-pop-up) si la place manque en dessous
+	   -- utile quand le champ est proche du bas de l'écran (ex. hero page 1,
+	   formulaire ancré en bas du viewport). */
+	function positionPopupVertically( anchor, popup ) {
+		popup.classList.remove( 'ntb-pop-up' );
+		var rect = anchor.getBoundingClientRect();
+		var popupHeight = popup.offsetHeight;
+		var spaceBelow = window.innerHeight - rect.bottom;
+		var spaceAbove = rect.top;
+		if ( spaceBelow < popupHeight + 12 && spaceAbove > spaceBelow ) {
+			popup.classList.add( 'ntb-pop-up' );
+		}
 	}
 
 	/* ═══════════════════════════════════════════════════════════
@@ -383,6 +407,7 @@
 			closeAll();
 			if ( ! isOpen ) {
 				picker.classList.add( 'nc-open' );
+				positionPopupVertically( field, picker );
 				var h0 = curH >= 0 ? curH : 0;
 				var m0 = curM >= 0 ? curM : 0;
 				scrollInstant( colH, h0 );

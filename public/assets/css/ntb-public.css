@@ -266,6 +266,9 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 	scrollbar-width: thin;
 	scrollbar-color: var(--ntb-line) transparent;
 }
+/* Pas assez de place en dessous (champ proche du bas de l'écran) : ouvre
+   vers le haut à la place -- classe posée par positionPopupVertically(). */
+.ntb-ac-list.ntb-pop-up { top: auto; bottom: 100%; margin-top: 0; margin-bottom: 6px; }
 .ntb-ac-list::-webkit-scrollbar       { width: 4px; }
 .ntb-ac-list::-webkit-scrollbar-track { background: transparent; }
 .ntb-ac-list::-webkit-scrollbar-thumb { background: var(--ntb-line); border-radius: 2px; }
@@ -367,6 +370,16 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 	border: 1px solid var(--ntb-line); border-radius: var(--ntb-r-sm); padding: 14px 20px;
 	box-shadow: var(--ntb-shadow-lg);
 	display: block; max-width: 1200px; width: 100%; margin-left: auto; margin-right: auto; box-sizing: border-box;
+}
+/* Popups du formulaire (suggestions d'adresse, heure) : même effet verre
+   que la carte du formulaire, au lieu du fond opaque --ntb-surf utilisé
+   ailleurs sur le site. Le calendrier flatpickr est traité à part en JS
+   (ntb-datepicker.js, syncCalendarTheme) : il est déplacé dans <body> par
+   flatpickr, donc hors de portée d'un sélecteur ".ntb-home .flatpickr-calendar". */
+.ntb-home .ntb-ac-list,
+.ntb-home .nc-time-picker {
+	background: var(--ntb-surf-glass);
+	backdrop-filter: var(--ntb-glass-blur, blur(8px));
 }
 .ntb-hf-grid { display: grid; gap: 11px; grid-template-columns: 1.3fr 1.3fr .9fr .8fr auto auto; align-items: end; }
 .ntb-hf-grid > * { min-width: 0; }

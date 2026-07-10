@@ -249,6 +249,9 @@ input.flatpickr-input.alt-input { cursor: pointer; caret-color: transparent; }
 	--_item: 36px;
 }
 .nc-time-picker.nc-open { display: flex; align-items: stretch; }
+/* Pas assez de place en dessous (champ proche du bas de l'écran) : ouvre
+   vers le haut à la place -- classe posée par positionPopupVertically(). */
+.nc-time-picker.ntb-pop-up { top: auto; bottom: calc(100% + 6px); }
 
 /* Bande centrale de sélection */
 .nc-time-picker::before {

@@ -165,6 +165,21 @@
 			list.appendChild( b );
 		} );
 		list.hidden = false;
+		positionPopupVertically( input, list );
+	}
+
+	/* Ouvre vers le haut (classe .ntb-pop-up) si la place manque en dessous
+	   -- utile quand le champ est proche du bas de l'écran (ex. hero page 1,
+	   formulaire ancré en bas du viewport). */
+	function positionPopupVertically( anchor, popup ) {
+		popup.classList.remove( 'ntb-pop-up' );
+		var rect = anchor.getBoundingClientRect();
+		var popupHeight = popup.offsetHeight;
+		var spaceBelow = window.innerHeight - rect.bottom;
+		var spaceAbove = rect.top;
+		if ( spaceBelow < popupHeight + 12 && spaceAbove > spaceBelow ) {
+			popup.classList.add( 'ntb-pop-up' );
+		}
 	}
 
 	/* =====================================================================

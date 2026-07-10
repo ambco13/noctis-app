@@ -4,6 +4,7 @@
 
 @section('content')
 <div class="ntb-scope ntb-home">
+  <div class="ntb-hero-inner">
     <form class="ntb-home-form" method="post" action="{{ route('booking.step1') }}" data-ntb-step1>
         @csrf
         <input type="hidden" name="NTB2_step1_submit" value="1" />
@@ -84,5 +85,6 @@
             </div>
         </div>
     </form>
+  </div>
 </div>
 @endsection

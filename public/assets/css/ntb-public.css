@@ -275,12 +275,12 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
    ============================================================ */
 .ntb-home {
 	width: 100%; box-sizing: border-box;
-	/* Remplit toute la hauteur restante de l'écran (moins la nav + le padding
-	   vertical de main) et centre le formulaire verticalement dedans. */
-	min-height: calc(100vh - 140px);
+	/* Image plein cadre : main n'a plus de padding sur cette page (voir
+	   layouts/app.blade.php), donc il ne reste que la hauteur du nav à
+	   soustraire. */
+	min-height: calc(100vh - 55px);
 	display: flex; align-items: center; justify-content: center;
 	position: relative;
-	border-radius: var(--ntb-r-sm);
 	overflow: hidden;
 	/* Image temporaire (hotlink Blacklane) -- à remplacer par une photo hébergée
 	   par nous dès qu'on en a une. */
@@ -295,8 +295,20 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 	background: linear-gradient(to bottom, rgba(0,0,0,.45), rgba(0,0,0,.25));
 	pointer-events: none;
 }
-.ntb-home .ntb-home-form {
+/* Contenu (formulaire + futurs textes) : reprend l'espacement qu'avait
+   auparavant le padding de main (55px haut / 24px côtés / 20px bas mobile,
+   48px côtés desktop), mais en margin sur ce conteneur plutôt qu'en padding
+   sur main -- l'image de fond, elle, va jusqu'aux bords. */
+.ntb-hero-inner {
 	position: relative; z-index: 1;
+	width: 100%;
+	box-sizing: border-box;
+	margin: 55px 24px 20px;
+}
+@media (min-width: 1025px) {
+	.ntb-hero-inner { margin-left: 48px; margin-right: 48px; }
+}
+.ntb-home .ntb-home-form {
 	background: var(--ntb-surf-glass); backdrop-filter: var(--ntb-glass-blur, blur(8px));
 	border: 1px solid var(--ntb-line); border-radius: var(--ntb-r-sm); padding: 14px 20px;
 	box-shadow: var(--ntb-shadow-lg);

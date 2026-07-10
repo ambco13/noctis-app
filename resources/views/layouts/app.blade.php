@@ -64,6 +64,10 @@
                Au-delà, l'espace en trop devient du padding automatique (centré). */
             body > main { max-width: 1454px; margin-left: auto; margin-right: auto; padding-left: 48px; padding-right: 48px; }
         }
+        /* Page 1 (hero) : l'image de fond doit aller jusqu'aux bords du
+           navigateur, donc pas de padding/max-width sur main ici -- l'espace
+           autour du formulaire vient du margin de .ntb-hero-inner à la place. */
+        body > main:has(.ntb-home) { padding: 0; max-width: none; margin: 0; }
     </style>
 </head>
 <body>

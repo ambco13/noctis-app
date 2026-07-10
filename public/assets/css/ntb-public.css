@@ -295,7 +295,7 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 	background: linear-gradient(to bottom, rgba(0,0,0,.45), rgba(0,0,0,.25));
 	pointer-events: none;
 }
-/* Contenu (formulaire + futurs textes) : reprend l'espacement qu'avait
+/* Contenu (texte d'accroche + formulaire) : reprend l'espacement qu'avait
    auparavant le padding de main (55px haut / 24px côtés / 20px bas mobile,
    48px côtés desktop), mais en margin sur ce conteneur plutôt qu'en padding
    sur main -- l'image de fond, elle, va jusqu'aux bords. */
@@ -303,10 +303,49 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 	position: relative; z-index: 1;
 	width: 100%;
 	box-sizing: border-box;
-	margin: 55px 24px 20px;
+	margin: 90px 24px 40px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 40px;
 }
 @media (min-width: 1025px) {
-	.ntb-hero-inner { margin-left: 48px; margin-right: 48px; }
+	.ntb-hero-inner { margin: 132px 48px 56px; gap: 56px; }
+}
+
+/* Texte d'accroche du hero — repris du site vitrine WordPress d'origine
+   (front-page.php du thème noctis), adapté à cette page standalone. */
+.ntb-hero-text { max-width: 720px; width: 100%; text-align: center; color: #fff; }
+.ntb-hero-eyebrow {
+	display: inline-flex; align-items: center; gap: 8px;
+	font-family: var(--ntb-mono); font-size: 12px; font-weight: 500;
+	text-transform: uppercase; letter-spacing: .14em;
+	color: var(--ntb-accent-hi);
+	margin: 0 0 20px;
+}
+.ntb-hero-eyebrow::before {
+	content: ''; width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+	background: var(--ntb-accent-hi);
+	box-shadow: 0 0 8px var(--ntb-accent-hi);
+	animation: ntb-hero-pulse 2.4s ease-in-out infinite;
+}
+@keyframes ntb-hero-pulse { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
+.ntb-hero-title {
+	font-family: var(--ntb-serif); font-weight: 400;
+	font-size: clamp(36px, 6vw, 64px); line-height: 1.12;
+	margin: 0 0 18px; color: #fff;
+	text-shadow: 0 2px 28px rgba(0,0,0,.4);
+}
+.ntb-hero-tagline {
+	font-family: var(--ntb-sans); font-weight: 300;
+	font-size: clamp(15px, 2vw, 17px); line-height: 1.65;
+	color: rgba(255,255,255,.82);
+	margin: 0 auto; max-width: 480px;
+}
+@media (max-width: 640px) {
+	.ntb-hero-inner { margin-top: 72px; gap: 28px; }
+	.ntb-hero-eyebrow { font-size: 11px; margin-bottom: 14px; }
+	.ntb-hero-title { margin-bottom: 12px; }
 }
 .ntb-home .ntb-home-form {
 	background: var(--ntb-surf-glass); backdrop-filter: var(--ntb-glass-blur, blur(8px));

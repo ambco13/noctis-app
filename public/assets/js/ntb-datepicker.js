@@ -135,12 +135,18 @@
 	function updateHeroFocus() {
 		var hero = document.querySelector( '.ntb-home' );
 		if ( ! hero ) return;
-		var open = document.querySelector( '.ntb-ac-list:not([hidden])' )
+		var form = hero.querySelector( '.ntb-home-form' );
+		/* Monte si un champ du form est focus OU si un popup est ouvert (le
+		   calendrier flatpickr vit dans <body>, hors du form : d'où le test
+		   séparé sur .flatpickr-calendar.open, sinon le focus dans le
+		   calendrier ne serait pas détecté comme "dans le form"). */
+		var focused = form && form.contains( document.activeElement );
+		var open = focused
+			|| document.querySelector( '.ntb-ac-list:not([hidden])' )
 			|| document.querySelector( '.nc-time-picker.nc-open' )
 			|| document.querySelector( '.flatpickr-calendar.open' );
 		if ( open && ! hero.classList.contains( 'ntb-form-focused' ) ) {
 			var inner = hero.querySelector( '.ntb-hero-inner' );
-			var form  = hero.querySelector( '.ntb-home-form' );
 			if ( inner && form ) {
 				var heroRect = hero.getBoundingClientRect();
 				var innerRect = inner.getBoundingClientRect();

@@ -70,6 +70,21 @@
 
 		els( '[data-ntb-autocomplete]', form ).forEach( initAutocomplete );
 
+		/* Hero (page 1) : monter le bloc dès qu'un champ reçoit le focus (clic),
+		   pas seulement à l'ouverture d'un popup. Sinon Départ/Arrivée ne
+		   montaient qu'à l'apparition des suggestions (après 3 lettres), alors
+		   que Date/Heure montent dès le clic -- incohérent. Le focusin bulle,
+		   donc un seul écouteur sur le form suffit pour tous les champs. */
+		if ( form.closest( '.ntb-home' ) ) {
+			form.addEventListener( 'focusin', updateHeroFocus );
+			form.addEventListener( 'focusout', function () {
+				/* rAF : laisser le focus (et l'état des popups) se stabiliser
+				   avant de décider de redescendre, pour ne pas retomber en
+				   passant d'un champ à l'autre. */
+				requestAnimationFrame( updateHeroFocus );
+			} );
+		}
+
 		var submitting = false;
 
 		var submitDiv = el( '[data-ntb-step1-submit]', form );
@@ -186,12 +201,18 @@
 	function updateHeroFocus() {
 		var hero = document.querySelector( '.ntb-home' );
 		if ( ! hero ) return;
-		var open = document.querySelector( '.ntb-ac-list:not([hidden])' )
+		var form = hero.querySelector( '.ntb-home-form' );
+		/* Monte si un champ du form est focus OU si un popup est ouvert (le
+		   calendrier flatpickr vit dans <body>, hors du form : d'où le test
+		   séparé sur .flatpickr-calendar.open, sinon le focus dans le
+		   calendrier ne serait pas détecté comme "dans le form"). */
+		var focused = form && form.contains( document.activeElement );
+		var open = focused
+			|| document.querySelector( '.ntb-ac-list:not([hidden])' )
 			|| document.querySelector( '.nc-time-picker.nc-open' )
 			|| document.querySelector( '.flatpickr-calendar.open' );
 		if ( open && ! hero.classList.contains( 'ntb-form-focused' ) ) {
 			var inner = hero.querySelector( '.ntb-hero-inner' );
-			var form  = hero.querySelector( '.ntb-home-form' );
 			if ( inner && form ) {
 				var heroRect = hero.getBoundingClientRect();
 				var innerRect = inner.getBoundingClientRect();

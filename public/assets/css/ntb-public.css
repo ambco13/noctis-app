@@ -340,7 +340,7 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
    deux AU-DESSUS du form ancré en bas, donc les annuler ne bouge pas le form
    -- le centrage reste exact). Plus spécifique que la règle @media desktop
    ci-dessous, donc l'emporte à toutes les largeurs. */
-.ntb-home.ntb-form-focused .ntb-hero-inner { gap: 0; padding-top: 0; }
+.ntb-home.ntb-form-focused .ntb-hero-inner { gap: 28px; padding-top: 0; }
 .ntb-home.ntb-form-focused .ntb-hero-inner { bottom: var(--ntb-hero-lift, 0px); }
 @media (min-width: 1025px) {
 	.ntb-hero-inner { padding: 40px 48px 32px; gap: 56px; }

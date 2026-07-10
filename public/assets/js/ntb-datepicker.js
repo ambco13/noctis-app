@@ -113,6 +113,11 @@
 	   formulaire ancré en bas du viewport). */
 	function positionPopupVertically( anchor, popup ) {
 		popup.classList.remove( 'ntb-pop-up' );
+		/* Sur le hero (page 1), le form se recentre au focus et laisse toujours
+		   la place en dessous : on force l'ouverture vers le bas. Sans ça, la
+		   mesure se ferait pendant que le form est encore en bas (montée en
+		   cours) et basculerait le popup vers le haut, par-dessus le titre. */
+		if ( anchor.closest( '.ntb-home' ) ) return;
 		var rect = anchor.getBoundingClientRect();
 		var popupHeight = popup.offsetHeight;
 		var spaceBelow = window.innerHeight - rect.bottom;

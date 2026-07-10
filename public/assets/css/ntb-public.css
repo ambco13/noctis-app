@@ -170,6 +170,28 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 		--ntb-shadow-pop:  0 24px 50px -20px rgba(0,0,0,.14);
 		--ntb-shadow-card: 0 14px 36px -16px rgba(0,0,0,.08);
 	}
+	/* Le hero est TOUJOURS sombre (image plein écran sombre, texte blanc, verre
+	   sombre). En thème clair, .ntb-home hériterait de la palette claire ci-dessus
+	   et le texte des popups (heure, calendrier, adresses) deviendrait sombre donc
+	   illisible sur le verre sombre. On ré-impose donc la palette sombre pour le
+	   hero (même valeurs que .ntb-scope par défaut). Placé après .ntb-scope et de
+	   même spécificité : l'emporte par ordre pour l'élément .ntb-home. */
+	.ntb-home {
+		--ntb-bg:          oklch(0.185 0.010 240);
+		--ntb-bg2:         oklch(0.165 0.010 240);
+		--ntb-surf:        oklch(0.235 0.012 240);
+		--ntb-surf2:       oklch(0.285 0.013 240);
+		--ntb-surf-glass:  oklch(0.21  0.012 240 / .92);
+		--ntb-line:        oklch(0.345 0.013 240);
+		--ntb-line-soft:   oklch(0.30  0.012 240);
+		--ntb-text:        oklch(0.965 0.004 240);
+		--ntb-muted:       oklch(0.74  0.012 240);
+		--ntb-faint:       oklch(0.56  0.012 240);
+		--ntb-accent:      oklch(0.64  0.115 236);
+		--ntb-accent-hi:   oklch(0.72  0.115 236);
+		--ntb-accent-soft: oklch(0.64  0.115 236 / .16);
+		--ntb-accent-line: oklch(0.64  0.115 236 / .45);
+	}
 }
 .ntb-scope *, .ntb-scope *::before, .ntb-scope *::after { box-sizing: border-box; }
 .ntb-scope,

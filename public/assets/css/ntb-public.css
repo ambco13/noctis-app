@@ -369,6 +369,20 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 	font-size: clamp(15px, 2vw, 17px); line-height: 1.65;
 	color: rgba(255,255,255,.82);
 	margin: 0 auto; max-width: 480px;
+	/* Au focus (form monté), la tagline s'efface pour libérer l'espace sous
+	   le titre : sinon les popups qui s'ouvrent vers le haut (calendrier,
+	   suggestions, heure) la recouvrent. Collapse animé (fondu + max-height)
+	   pour accompagner la montée du form. Comme la tagline est au-dessus du
+	   form (lui ancré en bas), la collapser ne déplace pas le form -- le lift
+	   mesuré au repos reste valable. */
+	overflow: hidden;
+	transition: opacity .25s var(--ntb-ease), max-height .45s var(--ntb-ease);
+	max-height: 5em;
+}
+.ntb-home.ntb-form-focused .ntb-hero-tagline {
+	opacity: 0;
+	max-height: 0;
+	pointer-events: none;
 }
 @media (max-width: 640px) {
 	.ntb-hero-inner { gap: 28px; }

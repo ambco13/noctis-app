@@ -447,6 +447,16 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 	background: var(--ntb-surf-glass);
 	backdrop-filter: var(--ntb-glass-blur, blur(8px));
 }
+/* Liste d'adresses du hero : barre de défilement masquée (on scrolle sans
+   barre visible, façon Blacklane), pour un rendu épuré sur le verre. */
+.ntb-home .ntb-ac-list { scrollbar-width: none; }
+.ntb-home .ntb-ac-list::-webkit-scrollbar { display: none; }
+/* Mobile : ~2 suggestions visibles, on scrolle pour les suivantes (façon
+   Blacklane). Sinon, clavier ouvert, une longue liste recouvrirait tout
+   l'écran. */
+@media (max-width: 640px) {
+	.ntb-home .ntb-ac-list { max-height: 150px; }
+}
 /* Fondu haut/bas du picker heure : par défaut il fond vers --ntb-surf, qui
    bascule en BLANC en thème clair (@media prefers-color-scheme: light),
    alors que le hero garde un verre sombre -> bandes blanches. Sur le hero on

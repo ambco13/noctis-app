@@ -34,7 +34,9 @@ class SecurityHeaders
             "default-src 'self'",
             "script-src 'self' 'unsafe-inline' https://js.stripe.com",
             "style-src 'self' 'unsafe-inline'",
-            "img-src 'self' data: https://*.basemaps.cartocdn.com https://res.cloudinary.com",
+            // static.blacklane.com : image de fond temporaire du hero (page 1),
+            // à retirer une fois remplacée par une photo hébergée par nous.
+            "img-src 'self' data: https://*.basemaps.cartocdn.com https://res.cloudinary.com https://static.blacklane.com",
             "font-src 'self' data:",
             "connect-src 'self' https://api.stripe.com",
             "frame-src https://js.stripe.com https://hooks.stripe.com",

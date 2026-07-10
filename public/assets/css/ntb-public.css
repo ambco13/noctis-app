@@ -275,10 +275,10 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
    ============================================================ */
 .ntb-home {
 	width: 100%; box-sizing: border-box;
-	/* Image plein cadre : main n'a plus de padding sur cette page (voir
-	   layouts/app.blade.php), donc il ne reste que la hauteur du nav à
-	   soustraire. */
-	min-height: calc(100vh - 55px);
+	/* Plein écran : la nav est transparente et fixed par-dessus (voir
+	   layouts/app.blade.php), donc l'image doit couvrir tout le viewport,
+	   pas juste l'espace sous la nav. */
+	min-height: 100vh;
 	display: flex; align-items: center; justify-content: center;
 	position: relative;
 	overflow: hidden;

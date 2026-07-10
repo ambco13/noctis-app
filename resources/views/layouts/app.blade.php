@@ -22,6 +22,8 @@
             max-width: 100vw;
             position: fixed; top: 0; left: 0; right: 0; z-index: 100;
         }
+        /* Page hero (page 1) : nav transparente par-dessus l'image plein écran. */
+        body:has(.ntb-home) .ntb-topnav { background: transparent; border-bottom: none; }
         .ntb-topnav-brand {
             font-family: var(--ntb-serif); font-size: 19px; letter-spacing: .01em;
             color: var(--ntb-text); text-decoration: none;
@@ -43,6 +45,10 @@
             background: var(--ntb-surf2); color: var(--ntb-muted);
         }
         .ntb-topnav-account:hover { color: var(--ntb-accent-hi); background: var(--ntb-accent-soft); }
+        /* Texte blanc par-dessus l'image sombre du hero. */
+        body:has(.ntb-home) .ntb-topnav-brand,
+        body:has(.ntb-home) .ntb-topnav-links a { color: #ffffff; }
+        body:has(.ntb-home) .ntb-topnav-account { background: rgba(255,255,255,.15); color: #ffffff; }
 
         /* Filet de sécurité : un contenu imprévu (texte long, image...) ne doit
            jamais créer de scroll horizontal sur la page.

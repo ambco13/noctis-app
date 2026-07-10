@@ -299,7 +299,7 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 	content: '';
 	position: absolute;
 	inset: 0;
-	background: linear-gradient(to bottom, rgba(0,0,0,.45), rgba(0,0,0,.25));
+	background: linear-gradient(to bottom, rgba(0,0,0,.32), rgba(0,0,0,.14));
 	pointer-events: none;
 }
 /* Contenu (texte d'accroche + formulaire) : reprend l'espacement qu'avait
@@ -317,7 +317,7 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 	width: 100%;
 	min-height: 100%;
 	box-sizing: border-box;
-	padding: 90px 24px 40px;
+	padding: 90px 24px 20px;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -325,7 +325,7 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 }
 .ntb-hero-gap { flex: 1 1 auto; }
 @media (min-width: 1025px) {
-	.ntb-hero-inner { padding: 132px 48px 56px; gap: 56px; }
+	.ntb-hero-inner { padding: 132px 48px 24px; gap: 56px; }
 }
 
 /* Texte d'accroche du hero — repris du site vitrine WordPress d'origine
@@ -347,7 +347,7 @@ body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 @keyframes ntb-hero-pulse { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
 .ntb-hero-title {
 	font-family: var(--ntb-serif); font-weight: 400;
-	font-size: clamp(36px, 6vw, 64px); line-height: 1.12;
+	font-size: clamp(42px, 7.5vw, 82px); line-height: 1.1;
 	margin: 0 0 18px; color: #fff;
 	text-shadow: 0 2px 28px rgba(0,0,0,.4);
 }

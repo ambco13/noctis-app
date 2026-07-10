@@ -57,7 +57,7 @@
            `position: sticky` descendant — le sticky se cale alors sur la
            scrollport de body, qui ne défile jamais. `clip` coupe le
            débordement sans créer de scroll container. */
-        html, body { max-width: 100%; overflow-x: clip; }
+        html, body { max-width: 100%; overflow-x: clip; margin: 0; padding: 0; }
 
         /* Marge latérale globale du site : 24px en mobile, 48px à partir du desktop.
            Un peu d'espace en haut, beaucoup plus en bas (sous le formulaire). */

@@ -742,10 +742,6 @@
 		els( '[data-pay-panel]', state.root ).forEach( function ( p ) {
 			p.hidden = p.getAttribute( 'data-pay-panel' ) !== method;
 		} );
-		// Zone de paiement ouverte : on annule l'égalisation des hauteurs
-		// formulaire/récap (le formulaire devient plus grand que le récap).
-		var grid = el( '.ntb-step3-grid', state.root );
-		if ( grid ) grid.classList.add( 'ntb-pay-open' );
 		if ( method === 'stripe' ) {
 			initStripeForm();
 		}
@@ -1188,11 +1184,28 @@
 			} );
 		} );
 
+		// Seuil sticky partagé : bas du nav + hauteur de l'en-tête étape 2
+		// (titre + rail 2-3-4, qui n'est pas fixed mais dont le rail, lui,
+		// reste fixed à sa position de chargement). Posé sur la racine
+		// [data-ntb-steps] pour servir à la fois à l'aside (étape 2) ET au
+		// récap (étape 3) : tout élément sticky doit se caler SOUS le rail
+		// 2-3-4, pas seulement sous le nav.
+		var stepHeader = el( '.ntb-step2-header' );
+		function stickyTop() {
+			var h = ( stepHeader && stepHeader.offsetParent !== null ) ? stepHeader.getBoundingClientRect().height : 0;
+			return getNavOffset() + Math.round( h );
+		}
+		function syncNavOffset() {
+			state.root.style.setProperty( '--ntb-nav-offset', stickyTop() + 'px' );
+		}
+		syncNavOffset();
+
 		if ( D.asideDetachBody ) {
 			var layout = aside.closest( '.ntb-step2-layout' );
 			if ( ! layout ) return;
 
 			function pin() {
+				syncNavOffset();
 				if ( window.innerWidth <= 1024 ) {
 					aside.style.position = '';
 					aside.style.left     = '';
@@ -1200,7 +1213,6 @@
 					aside.style.width    = '';
 					aside.style.height   = '';
 					aside.style.zIndex   = '';
-					aside.style.removeProperty( '--ntb-nav-offset' );
 					return;
 				}
 				var navOff = getNavOffset();
@@ -1233,20 +1245,10 @@
 				}
 				node = node.parentElement;
 			}
-			// Le seuil sticky doit correspondre à la position réelle de l'aside au
-			// chargement (nav + en-tête étape 2, qui n'est pas fixed) : sinon elle
-			// resterait figée sous le nav pendant tout le scroll qui sépare son
-			// point de départ naturel du bas du nav.
-			var stepHeader = el( '.ntb-step2-header' );
-			function stickyTop() {
-				var h = ( stepHeader && stepHeader.offsetParent !== null ) ? stepHeader.getBoundingClientRect().height : 0;
-				return getNavOffset() + Math.round( h );
-			}
-			aside.style.setProperty( '--ntb-nav-offset', stickyTop() + 'px' );
 			// Re-measure on load: some themes (Astra) finalise sticky header height after DOMContentLoaded
 			window.addEventListener( 'load', function() {
 				requestAnimationFrame( function() {
-					aside.style.setProperty( '--ntb-nav-offset', stickyTop() + 'px' );
+					syncNavOffset();
 					updateHeaderVisible && updateHeaderVisible();
 				} );
 			} );
@@ -1257,7 +1259,7 @@
 				rafPending = true;
 				requestAnimationFrame( function() {
 					rafPending = false;
-					aside.style.setProperty( '--ntb-nav-offset', stickyTop() + 'px' );
+					syncNavOffset();
 				} );
 			}, { passive: true } );
 		}

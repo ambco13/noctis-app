@@ -581,10 +581,18 @@ body:has([data-ntb-steps]) {
 @media (min-width: 1025px) {
 	/* Sans top/right/left/bottom précisés, le navigateur garde la position
 	   "statique" (celle qu'aurait eu l'élément dans le flux normal) comme
-	   position fixe -- aucun saut visuel, aucun calcul JS nécessaire. */
+	   position fixe -- aucun saut visuel, aucun calcul JS nécessaire.
+	   Pastille de surface : le rail survole le contenu au scroll (fenêtres
+	   courtes, récap sans marge sticky) — sans fond, ça devient du texte
+	   sur du texte. */
 	.ntb-prog {
 		position: fixed;
 		z-index: 90;
+		padding: 7px 14px;
+		background: var(--ntb-surf);
+		border: 1px solid var(--ntb-line-soft);
+		border-radius: 999px;
+		box-shadow: var(--ntb-shadow-sm);
 	}
 }
 .ntb-prog-node { display: flex; align-items: center; gap: 8px; }
@@ -1070,10 +1078,10 @@ body:has([data-ntb-steps]) {
 .ntb-vc-ico { flex-shrink: 0; color: #6b7280; }
 
 /* étape 3 */
-/* stretch : formulaire et récap font exactement la même hauteur…
-   …sauf quand la zone de paiement est ouverte (.ntb-pay-open, posée en JS) */
-.ntb-step3-grid { display: grid; grid-template-columns: 1fr 440px; gap: 30px; align-items: stretch; }
-.ntb-step3-grid.ntb-pay-open { align-items: start; }
+/* Le récap garde sa hauteur naturelle (align-self: start sur .ntb-recap) :
+   étiré sur toute la colonne, son position:sticky n'aurait aucune marge de
+   déplacement et il glisserait sous le rail 2-3-4 (fixed) pendant le scroll. */
+.ntb-step3-grid { display: grid; grid-template-columns: 1fr 440px; gap: 30px; align-items: start; }
 @media (max-width: 1024px) { .ntb-step3-grid { grid-template-columns: 1fr; } }
 .ntb-step3-form {
 	/* minmax(0, 1fr) et pas juste 1fr : même piège que la grille parente,
@@ -1173,12 +1181,12 @@ body:has([data-ntb-steps]) {
 	border: 1px solid var(--ntb-line-soft); border-radius: var(--ntb-r-sm); padding: 24px;
 	display: flex;
 	flex-direction: column;
-	/* Quand le récap (auto) est plus court que le formulaire à côté (stretch),
-	   répartir titre/lignes/total sur la hauteur plutôt que de laisser un
-	   grand vide sous le total. */
-	justify-content: space-between;
+	align-self: start;
 	position: sticky;
-	top: 24px;
+	/* Même seuil que l'aside de l'étape 2 (nav + en-tête, mesurés en JS dans
+	   --ntb-nav-offset) : le rail 2-3-4 est fixed à cette hauteur, un top de
+	   24px seuls ferait glisser le récap dessous. */
+	top: calc(var(--ntb-nav-offset, 64px) + 24px);
 	/* Même garde-fou que .ntb-step3-form : ne jamais déborder de sa colonne. */
 	min-width: 0; max-width: 100%; box-sizing: border-box; overflow-wrap: break-word;
 	overflow: hidden;
@@ -1202,12 +1210,6 @@ body:has([data-ntb-steps]) {
 .ntb-recap-lines dt { color: var(--ntb-faint); margin: 0; flex: 0 0 auto; }
 .ntb-recap-lines dd { margin: 0; font-weight: 600; text-align: right; min-width: 0; }
 .ntb-recap-lines dt, .ntb-recap-lines dd { white-space: normal; word-break: break-word; }
-@media (max-width: 420px) {
-	/* Adresses longues (Départ/Arrivée) : la valeur passe sous le libellé
-	   plutôt que de se comprimer à côté sur les très petits écrans. */
-	.ntb-recap-lines > div { flex-direction: column; gap: 2px; }
-	.ntb-recap-lines dd { text-align: left; }
-}
 .ntb-recap-total { display: flex; justify-content: space-between; align-items: baseline; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--ntb-line-soft); }
 .ntb-recap-amount { font-size: var(--ntb-text-2xl); font-weight: 700; }
 

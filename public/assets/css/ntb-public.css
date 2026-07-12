@@ -28,6 +28,15 @@ body:has(.ntb-scope) .wp-block-group__inner-container,
 body:has(.ntb-scope) .entry-content > *,
 body:has(.ntb-scope) main { overflow: visible !important; }
 body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
+
+/* Page hero (page 1) : quand le calendrier (injecté dans <body> par flatpickr)
+   dépasse sous l'écran, il crée une barre de scroll page disgracieuse. On la
+   masque UNIQUEMENT sur le hero -- le défilement (molette/tactile/clavier)
+   reste fonctionnel, seule la barre visible disparaît, donc rien n'est perdu.
+   Les autres pages gardent leur barre normale. */
+html:has(.ntb-home), body:has(.ntb-home) { scrollbar-width: none; }
+html:has(.ntb-home)::-webkit-scrollbar,
+body:has(.ntb-home)::-webkit-scrollbar { display: none; }
 @media (max-width: 1024px) {
 	body:has(.ntb-scope) .ast-container { padding: 0 24px !important; }
 }

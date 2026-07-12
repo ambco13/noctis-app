@@ -1078,10 +1078,12 @@ body:has([data-ntb-steps]) {
 .ntb-vc-ico { flex-shrink: 0; color: #6b7280; }
 
 /* étape 3 */
-/* Le récap garde sa hauteur naturelle (align-self: start sur .ntb-recap) :
-   étiré sur toute la colonne, son position:sticky n'aurait aucune marge de
-   déplacement et il glisserait sous le rail 2-3-4 (fixed) pendant le scroll. */
-.ntb-step3-grid { display: grid; grid-template-columns: 1fr 440px; gap: 30px; align-items: start; }
+/* stretch : formulaire et récap font exactement la même hauteur…
+   …sauf quand la zone de paiement est ouverte (.ntb-pay-open, posée en JS) :
+   le formulaire devient bien plus haut, le récap reprend alors sa hauteur
+   naturelle et son sticky (marge de déplacement retrouvée) le garde visible. */
+.ntb-step3-grid { display: grid; grid-template-columns: 1fr 440px; gap: 30px; align-items: stretch; }
+.ntb-step3-grid.ntb-pay-open { align-items: start; }
 @media (max-width: 1024px) { .ntb-step3-grid { grid-template-columns: 1fr; } }
 .ntb-step3-form {
 	/* minmax(0, 1fr) et pas juste 1fr : même piège que la grille parente,
@@ -1181,7 +1183,9 @@ body:has([data-ntb-steps]) {
 	border: 1px solid var(--ntb-line-soft); border-radius: var(--ntb-r-sm); padding: 24px;
 	display: flex;
 	flex-direction: column;
-	align-self: start;
+	/* Étiré (stretch) plus court que le formulaire : répartir titre/lignes/total
+	   sur la hauteur plutôt que de laisser un grand vide sous le total. */
+	justify-content: space-between;
 	position: sticky;
 	/* Même seuil que l'aside de l'étape 2 (nav + en-tête, mesurés en JS dans
 	   --ntb-nav-offset) : le rail 2-3-4 est fixed à cette hauteur, un top de

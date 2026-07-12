@@ -742,6 +742,10 @@
 		els( '[data-pay-panel]', state.root ).forEach( function ( p ) {
 			p.hidden = p.getAttribute( 'data-pay-panel' ) !== method;
 		} );
+		// Zone de paiement ouverte : on annule l'égalisation des hauteurs
+		// formulaire/récap (le formulaire devient plus grand que le récap).
+		var grid = el( '.ntb-step3-grid', state.root );
+		if ( grid ) grid.classList.add( 'ntb-pay-open' );
 		if ( method === 'stripe' ) {
 			initStripeForm();
 		}

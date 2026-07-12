@@ -463,14 +463,25 @@
 			select( curH, curM, false );
 		}
 
+		function closePicker() {
+			picker.classList.remove( 'nc-open' );
+			updateHeroFocus();
+		}
+
 		/* Clics sur les items */
 		[ colH, colM ].forEach( function (col, idx) {
 			col.addEventListener( 'click', function (e) {
 				var el = e.target.closest( '.nc-ti' );
 				if ( ! el ) return;
-				if ( idx === 0 ) select( +el.dataset.v, curM < 0 ? 0 : curM, false );
-				else             select( curH < 0 ? 0 : curH, +el.dataset.v, false );
+				var v = +el.dataset.v;
+				/* Re-cliquer sur le nombre DÉJÀ sélectionné = confirmer -> ferme
+				   (ex. heure = 00:55, on reclique le 55 -> validé). Cliquer une
+				   autre valeur ne fait que la sélectionner. */
+				var already = ( idx === 0 ) ? ( v === curH ) : ( v === curM );
+				if ( idx === 0 ) select( v, curM < 0 ? 0 : curM, false );
+				else             select( curH < 0 ? 0 : curH, v, false );
 				scrollToActive( col );
+				if ( already ) { closePicker(); }
 			} );
 		} );
 
@@ -489,20 +500,21 @@
 			} );
 		} );
 
-		/* Ouverture au clic sur l'input */
-		display.addEventListener( 'click', function () {
-			var isOpen = picker.classList.contains( 'nc-open' );
+		/* Ouverture : sur focus ET clic (idempotent). Sur mobile, le focus fait
+		   monter le form (animation) et le champ bouge, ce qui peut « avaler » le
+		   clic -> il fallait retaper. Lier les deux garantit l'ouverture au 1er
+		   tap (si déjà ouvert, on ne fait rien : pas de toggle-fermeture). */
+		function openPicker() {
+			if ( picker.classList.contains( 'nc-open' ) ) return;
 			closeAll();
-			if ( ! isOpen ) {
-				picker.classList.add( 'nc-open' );
-				positionPopupVertically( field, picker );
-				var h0 = curH >= 0 ? curH : 0;
-				var m0 = curM >= 0 ? curM : 0;
-				scrollInstant( colH, h0 );
-				scrollInstant( colM, m0 / 5 );
-			}
+			picker.classList.add( 'nc-open' );
+			positionPopupVertically( field, picker );
+			scrollInstant( colH, curH >= 0 ? curH : 0 );
+			scrollInstant( colM, ( curM >= 0 ? curM : 0 ) / 5 );
 			updateHeroFocus();
-		} );
+		}
+		display.addEventListener( 'focus', openPicker );
+		display.addEventListener( 'click', openPicker );
 
 		/* Saisie clavier — auto-insère ":" après les 2 premiers chiffres */
 		display.addEventListener( 'input', function () {

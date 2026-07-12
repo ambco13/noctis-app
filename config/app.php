@@ -43,6 +43,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Iframe Embedding Override
+    |--------------------------------------------------------------------------
+    |
+    | Désactive l'anti-clickjacking (X-Frame-Options / frame-ancestors) même
+    | en production, pour autoriser les outils de test responsive à charger
+    | le site en iframe. À laisser à false une fois les tests terminés.
+    |
+    */
+
+    'allow_iframe_embedding' => (bool) env('ALLOW_IFRAME_EMBEDDING', false),
+
+    /*
+    |--------------------------------------------------------------------------
     | Application URL
     |--------------------------------------------------------------------------
     |

@@ -18,9 +18,11 @@ class SecurityHeaders
         $response = $next($request);
 
         // Anti-clickjacking (X-Frame-Options + frame-ancestors) limité à la
-        // production : hors production, on laisse le site s'afficher en iframe
-        // pour les outils de test responsive.
-        $antiClickjacking = app()->isProduction();
+        // production, et débrayable via ALLOW_IFRAME_EMBEDDING (ex. serveur de
+        // test Render, qui tourne en APP_ENV=production) pour laisser les
+        // outils de test responsive charger le site en iframe.
+        $antiClickjacking = app()->isProduction()
+            && ! config('app.allow_iframe_embedding');
 
         if ($antiClickjacking) {
             $response->headers->set('X-Frame-Options', 'DENY');

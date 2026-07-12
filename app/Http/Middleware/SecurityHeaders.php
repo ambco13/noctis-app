@@ -17,7 +17,14 @@ class SecurityHeaders
     {
         $response = $next($request);
 
-        $response->headers->set('X-Frame-Options', 'DENY');
+        // Anti-clickjacking (X-Frame-Options + frame-ancestors) limité à la
+        // production : hors production, on laisse le site s'afficher en iframe
+        // pour les outils de test responsive.
+        $antiClickjacking = app()->isProduction();
+
+        if ($antiClickjacking) {
+            $response->headers->set('X-Frame-Options', 'DENY');
+        }
         $response->headers->set('X-Content-Type-Options', 'nosniff');
         $response->headers->set('Referrer-Policy', 'strict-origin-when-cross-origin');
 
@@ -30,7 +37,7 @@ class SecurityHeaders
         // de bloquer l'injection inline, mais d'empêcher un script injecté de
         // CHARGER une ressource externe (exfiltration, payload distant, iframe
         // de phishing) -- seuls les domaines listés ci-dessous sont autorisés.
-        $response->headers->set('Content-Security-Policy', implode('; ', [
+        $csp = [
             "default-src 'self'",
             "script-src 'self' 'unsafe-inline' https://js.stripe.com",
             "style-src 'self' 'unsafe-inline'",
@@ -43,8 +50,13 @@ class SecurityHeaders
             "object-src 'none'",
             "base-uri 'self'",
             "form-action 'self'",
-            "frame-ancestors 'self'",
-        ]));
+        ];
+
+        if ($antiClickjacking) {
+            $csp[] = "frame-ancestors 'self'";
+        }
+
+        $response->headers->set('Content-Security-Policy', implode('; ', $csp));
 
         return $response;
     }

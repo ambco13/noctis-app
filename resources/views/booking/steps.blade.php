@@ -82,27 +82,77 @@
                     </div>
                     <div class="ntb-flow-error" data-ntb-error hidden></div>
 
-                    {{-- TEST STICKY — bloc temporaire pour vérifier le comportement sticky
-                         de la colonne droite avec une colonne gauche longue. À retirer une
-                         fois le test terminé. --}}
-                    <div class="ntb-test-filler">
-                        <div class="ntb-test-filler-block">
-                            <h3>Section de test 1</h3>
-                            <p>Contenu factice pour allonger la colonne gauche et vérifier que le sticky de la colonne droite fonctionne sur tout le scroll.</p>
+                    {{-- Réassurance sous le carrousel — remplace l'ancien bloc de test
+                         sticky : allonge la colonne gauche avec du vrai contenu. --}}
+                    <section class="ntb-included">
+                        <h3 class="ntb-sec-title">{{ __('Inclus dans chaque course') }}</h3>
+                        <p class="ntb-sec-sub">{{ __('Le même standard de service, quel que soit le véhicule choisi.') }}</p>
+                        <div class="ntb-perks-grid">
+                            <div class="ntb-perk">
+                                <span class="ntb-perk-ico" aria-hidden="true">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><polyline points="16 11 18 13 22 9"/></svg>
+                                </span>
+                                <h4>{{ __('Chauffeur professionnel') }}</h4>
+                                <p>{{ __('Chauffeurs expérimentés et véhicules récents, entretenus et assurés.') }}</p>
+                            </div>
+                            <div class="ntb-perk">
+                                <span class="ntb-perk-ico" aria-hidden="true">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+                                </span>
+                                <h4>{{ __('Prix fixe garanti') }}</h4>
+                                <p>{{ __('Le prix affiché est le prix payé — pas de compteur, pas de majoration surprise.') }}</p>
+                            </div>
+                            <div class="ntb-perk">
+                                <span class="ntb-perk-ico" aria-hidden="true">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></svg>
+                                </span>
+                                <h4>{{ __('Suivi de vol et de train') }}</h4>
+                                <p>{{ __('Votre chauffeur s\'adapte à l\'horaire réel de votre vol ou de votre train.') }}</p>
+                            </div>
+                            <div class="ntb-perk">
+                                <span class="ntb-perk-ico" aria-hidden="true">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+                                </span>
+                                <h4>{{ __('Confort à bord') }}</h4>
+                                <p>{{ __('Eau minérale et chargeurs à disposition dans tous nos véhicules.') }}</p>
+                            </div>
+                            <div class="ntb-perk">
+                                <span class="ntb-perk-ico" aria-hidden="true">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="10" y1="14" x2="14" y2="18"/><line x1="14" y1="14" x2="10" y2="18"/></svg>
+                                </span>
+                                <h4>{{ __('Annulation flexible') }}</h4>
+                                <p>{{ __('Un imprévu ? Contactez-nous : nous trouvons toujours une solution.') }}</p>
+                            </div>
+                            <div class="ntb-perk">
+                                <span class="ntb-perk-ico" aria-hidden="true">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+                                </span>
+                                <h4>{{ __('Paiement sécurisé') }}</h4>
+                                <p>{{ __('Carte, Apple Pay, Google Pay ou PayPal — transaction chiffrée de bout en bout.') }}</p>
+                            </div>
                         </div>
-                        <div class="ntb-test-filler-block">
-                            <h3>Section de test 2</h3>
-                            <p>Contenu factice — même objectif que ci-dessus.</p>
-                        </div>
-                        <div class="ntb-test-filler-block">
-                            <h3>Section de test 3</h3>
-                            <p>Contenu factice — même objectif que ci-dessus.</p>
-                        </div>
-                        <div class="ntb-test-filler-block">
-                            <h3>Section de test 4</h3>
-                            <p>Contenu factice — même objectif que ci-dessus.</p>
-                        </div>
-                    </div>
+                    </section>
+
+                    <section class="ntb-hiw">
+                        <h3 class="ntb-sec-title">{{ __('Et après votre réservation ?') }}</h3>
+                        <ol class="ntb-hiw-grid">
+                            <li>
+                                <span class="ntb-hiw-n" aria-hidden="true">1</span>
+                                <h4>{{ __('Confirmation immédiate') }}</h4>
+                                <p>{{ __('Vous recevez le récapitulatif complet de votre course par email dès le paiement.') }}</p>
+                            </li>
+                            <li>
+                                <span class="ntb-hiw-n" aria-hidden="true">2</span>
+                                <h4>{{ __('Votre chauffeur se présente') }}</h4>
+                                <p>{{ __('Nom du chauffeur et véhicule communiqués avant la prise en charge.') }}</p>
+                            </li>
+                            <li>
+                                <span class="ntb-hiw-n" aria-hidden="true">3</span>
+                                <h4>{{ __('Voyagez l\'esprit libre') }}</h4>
+                                <p>{{ __('Tout est réglé d\'avance — rien à payer à bord, aucune mauvaise surprise.') }}</p>
+                            </li>
+                        </ol>
+                    </section>
                 </div>
             </div>
 

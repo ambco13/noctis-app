@@ -592,7 +592,14 @@
 		mapEl.hidden = false;
 		mapEl.removeAttribute( 'aria-hidden' );
 
-		var isLight  = document.documentElement.classList.contains( 'nc-light' );
+		/* Thème effectif : attribut explicite s'il existe, sinon préférence système.
+		   (L'ancienne classe `nc-light` n'était posée nulle part : la carte restait
+		   toujours en tuiles sombres, puis un filtre CSS les inversait en thème
+		   sombre — rendu à l'envers dans les deux thèmes.) */
+		var themeAttr = document.documentElement.getAttribute( 'data-ntb-theme' );
+		var isLight   = themeAttr
+			? themeAttr === 'light'
+			: !! ( window.matchMedia && window.matchMedia( '(prefers-color-scheme: light)' ).matches );
 		var tileUrl  = isLight
 			? 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png'
 			: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png';
@@ -664,19 +671,40 @@
 	}
 
 	/* ---------- Étape 3 : récap + paiement ---------- */
+
+	/* "2026-07-13" → "13 juillet 2026" (rend la valeur telle quelle si le
+	   format n'est pas ISO, par sécurité). */
+	function frDate( iso ) {
+		var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec( iso || '' );
+		if ( ! m ) return iso || '';
+		var mois = [ 'janvier', 'février', 'mars', 'avril', 'mai', 'juin',
+			'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre' ];
+		return ( + m[3] ) + ' ' + mois[ + m[2] - 1 ] + ' ' + m[1];
+	}
+
 	function renderRecap() {
 		var box = el( '[data-ntb-recap]', state.root );
 		if ( ! box || ! state.selected ) return;
 		box.innerHTML =
 			'<h3 class="ntb-recap-title">' + ( 'Récapitulatif' ) + '</h3>' +
+			'<div class="ntb-recap-route">' +
+			'<span class="ntb-rr-rail" aria-hidden="true"><i class="ntb-rr-dot"></i><i class="ntb-rr-line"></i><i class="ntb-rr-pin"></i></span>' +
+			'<div class="ntb-rr-stops">' +
+			'<div class="ntb-rr-stop"><small>Départ</small><span></span></div>' +
+			'<div class="ntb-rr-stop"><small>Arrivée</small><span></span></div>' +
+			'</div>' +
+			'</div>' +
 			'<dl class="ntb-recap-lines">' +
-			line( 'Départ', state.pickup ) +
-			line( 'Arrivée', state.dropoff ) +
-			line( 'Date', state.date + ( state.time ? ' · ' + state.time : '' ) ) +
+			line( 'Date', frDate( state.date ) + ( state.time ? ' à ' + state.time : '' ) ) +
 			line( 'Véhicule', state.selected.name ) +
 			line( ( I.distance || 'Distance' ), state.distance + ' ' + ( I.kmUnit || 'km' ) ) +
+			line( ( I.duration || 'Durée estimée' ), Math.round( state.duration ) + ' ' + ( I.minUnit || 'min' ) ) +
 			'</dl>' +
 			'<div class="ntb-recap-total"><span>Total</span><span class="ntb-recap-amount">' + state.selected.price_formatted + '</span></div>';
+		/* Adresses via textContent : valeurs saisies par l'utilisateur. */
+		var stops = els( '.ntb-rr-stop span', box );
+		stops[0].textContent = state.pickup;
+		stops[1].textContent = state.dropoff;
 	}
 	function line( k, v ) {
 		var d = document.createElement( 'div' );
@@ -967,7 +995,7 @@
 			'<p class="ntb-confirm-ref">' + s.booking_ref + '</p>' +
 			'<dl class="ntb-recap-lines">' +
 			line( 'Trajet', s.pickup + ' → ' + s.dropoff ) +
-			line( 'Date', s.date + ( s.time ? ' · ' + s.time : '' ) ) +
+			line( 'Date', frDate( s.date ) + ( s.time ? ' à ' + s.time : '' ) ) +
 			line( 'Véhicule', s.vehicle ) +
 			line( 'Client', s.full_name ) +
 			'</dl>' +

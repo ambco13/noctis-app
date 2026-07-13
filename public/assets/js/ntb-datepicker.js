@@ -111,9 +111,11 @@
 						} )( start );
 					}
 				},
-				onClose: function () {
-					updateHeroFocus();
-				},
+				/* Pas d'updateHeroFocus à la fermeture : la fonction ne fait que
+				   MONTER le form, et onClose tourne pendant le mousedown du clic
+				   "dans le vide" (focus pas encore blur) -- elle relevait le form
+				   en pleine descente, avec une mesure faussée. La descente est
+				   gérée par le pointerdown global (ntb-public.js). */
 			} );
 		}
 
@@ -200,15 +202,20 @@
 				var heroRect = hero.getBoundingClientRect();
 				var innerRect = inner.getBoundingClientRect();
 				var formRect = form.getBoundingClientRect();
+				/* Le bloc peut être en plein glissement (transition sur bottom,
+				   ex. re-focus pendant la descente) : on raisonne sur la position
+				   de REPOS en neutralisant le décalage courant, sinon le lift
+				   figé serait faux (form arrêté sous le milieu). */
+				var curBottom = parseFloat( getComputedStyle( inner ).bottom ) || 0;
 				var heroCenter = heroRect.top + heroRect.height / 2;
-				var formCenter = formRect.top + formRect.height / 2;
+				var formCenter = formRect.top + formRect.height / 2 + curBottom;
 				var lift = Math.max( 0, formCenter - heroCenter );
 				/* Garde-fou : le haut du bloc (eyebrow « Paris & régions ») ne
 				   monte pas jusqu'à la nav (fixe, transparente sur le hero) --
 				   il s'arrête 8px sous son bord bas. */
 				var nav = document.querySelector( '.ntb-topnav' );
 				var navBottom = nav ? Math.max( 0, nav.getBoundingClientRect().bottom ) : 0;
-				lift = Math.min( lift, Math.max( 0, innerRect.top - navBottom - 8 ) );
+				lift = Math.min( lift, Math.max( 0, innerRect.top + curBottom - navBottom - 8 ) );
 				hero.style.setProperty( '--ntb-hero-lift', lift + 'px' );
 			}
 		}
@@ -497,7 +504,6 @@
 
 		function closePicker() {
 			picker.classList.remove( 'nc-open' );
-			updateHeroFocus();
 		}
 
 		/* Clics sur les items */
@@ -584,11 +590,11 @@
 			select( h2, snap5( m2 ), false );
 		} );
 
-		/* Fermeture hors clic */
+		/* Fermeture hors clic (la descente éventuelle du form est gérée par le
+		   pointerdown global de ntb-public.js, pas ici) */
 		document.addEventListener( 'click', function (e) {
 			if ( ! field.contains( e.target ) ) {
 				picker.classList.remove( 'nc-open' );
-				updateHeroFocus();
 			}
 		} );
 	}

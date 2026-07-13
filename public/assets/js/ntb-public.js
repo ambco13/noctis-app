@@ -87,6 +87,13 @@
 				if ( ! hero.classList.contains( 'ntb-form-focused' ) ) return;
 				if ( form.contains( e.target ) ) return;
 				if ( e.target.closest && e.target.closest( '.flatpickr-calendar' ) ) return;
+				/* Blur immédiat : le blur natif n'arrive qu'APRÈS les handlers
+				   mousedown -- un updateHeroFocus déclenché entre-temps (ex.
+				   fermeture d'un popup) verrait encore le focus dans le form et
+				   le ferait remonter en pleine descente. */
+				if ( form.contains( document.activeElement ) ) {
+					document.activeElement.blur();
+				}
 				hero.classList.remove( 'ntb-form-focused' );
 			} );
 		}
@@ -168,12 +175,16 @@
 		if ( ! input || ! list ) return;
 		var timer = null;
 
+		/* NB : les chemins de FERMETURE de popups n'appellent plus
+		   updateHeroFocus -- elle ne fait que monter le form (la descente est
+		   gérée par le pointerdown "dans le vide" ci-dessus), et un appel
+		   pendant la fermeture pouvait relever le form en pleine descente
+		   (focus pas encore blur au moment du mousedown). */
 		input.addEventListener( 'input', function () {
 			var q = input.value.trim();
 			clearTimeout( timer );
 			if ( q.length < 3 ) {
 				list.hidden = true;
-				updateHeroFocus();
 				return;
 			}
 			timer = setTimeout( function () {
@@ -186,7 +197,6 @@
 		document.addEventListener( 'click', function ( e ) {
 			if ( ! wrap.contains( e.target ) ) {
 				list.hidden = true;
-				updateHeroFocus();
 			}
 		} );
 	}
@@ -194,7 +204,6 @@
 	function renderPredictions( list, input, preds, placeEl ) {
 		if ( ! preds.length ) {
 			list.hidden = true;
-			updateHeroFocus();
 			return;
 		}
 		list.innerHTML = '';
@@ -209,7 +218,6 @@
 				input.value = p.full || ( p.main + ( p.secondary ? ', ' + p.secondary : '' ) );
 				if ( placeEl ) placeEl.value = p.id || '';
 				list.hidden = true;
-				updateHeroFocus();
 			} );
 			list.appendChild( b );
 		} );
@@ -247,15 +255,20 @@
 				var heroRect = hero.getBoundingClientRect();
 				var innerRect = inner.getBoundingClientRect();
 				var formRect = form.getBoundingClientRect();
+				/* Le bloc peut être en plein glissement (transition sur bottom,
+				   ex. re-focus pendant la descente) : on raisonne sur la position
+				   de REPOS en neutralisant le décalage courant, sinon le lift
+				   figé serait faux (form arrêté sous le milieu). */
+				var curBottom = parseFloat( getComputedStyle( inner ).bottom ) || 0;
 				var heroCenter = heroRect.top + heroRect.height / 2;
-				var formCenter = formRect.top + formRect.height / 2;
+				var formCenter = formRect.top + formRect.height / 2 + curBottom;
 				var lift = Math.max( 0, formCenter - heroCenter );
 				/* Garde-fou : le haut du bloc (eyebrow « Paris & régions ») ne
 				   monte pas jusqu'à la nav (fixe, transparente sur le hero) --
 				   il s'arrête 8px sous son bord bas. */
 				var nav = document.querySelector( '.ntb-topnav' );
 				var navBottom = nav ? Math.max( 0, nav.getBoundingClientRect().bottom ) : 0;
-				lift = Math.min( lift, Math.max( 0, innerRect.top - navBottom - 8 ) );
+				lift = Math.min( lift, Math.max( 0, innerRect.top + curBottom - navBottom - 8 ) );
 				hero.style.setProperty( '--ntb-hero-lift', lift + 'px' );
 			}
 		}

@@ -6,6 +6,24 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', config('app.name'))</title>
 
+    {{-- No-FOUC : pose data-ntb-theme sur <html> AVANT le premier rendu.
+         Mode forcé (dark/light) → appliqué tel quel ; auto → localStorage
+         ('ntb_theme') puis préférence système. Tout le thème clair du CSS
+         est conditionné à cet attribut. --}}
+    <script id="ntb2-theme-init">
+    (function () {
+        var a = @json(\App\Support\Design::themeMode());
+        var m;
+        if (a === 'auto') {
+            var s = null;
+            try { s = localStorage.getItem('ntb_theme'); } catch (e) {}
+            s = s || 'auto';
+            m = s === 'auto' ? (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark') : s;
+        } else { m = a; }
+        document.documentElement.setAttribute('data-ntb-theme', m);
+    })();
+    </script>
+
     <link rel="stylesheet" href="{{ asset('vendor/flatpickr/flatpickr.min.css') }}">
     <link rel="stylesheet" href="{{ asset('vendor/leaflet/leaflet.min.css') }}">
     {{-- ?v=mtime : casse le cache navigateur à chaque modif du CSS, sans quoi

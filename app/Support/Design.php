@@ -12,7 +12,32 @@ class Design
 {
     private const SETTING_KEY = 'design_settings';
 
-    private const CUSTOM_CSS_KEY = 'custom_css';
+    /**
+     * Polices proposées dans l'onglet Style (admin) et l'éditeur de styles
+     * par classe — mêmes choix que le plugin d'origine.
+     *
+     * @var array<string, string> valeur CSS => libellé
+     */
+    public const FONTS = [
+        "'Albert Sans', system-ui, sans-serif" => 'Albert Sans (défaut)',
+        "'Inter', system-ui, sans-serif" => 'Inter',
+        "'Plus Jakarta Sans', system-ui, sans-serif" => 'Plus Jakarta Sans',
+        "'Outfit', system-ui, sans-serif" => 'Outfit',
+        "'DM Sans', system-ui, sans-serif" => 'DM Sans',
+        'system-ui, sans-serif' => 'Police système',
+    ];
+
+    /**
+     * Présets de l'onglet Style — mêmes palettes que le plugin d'origine.
+     *
+     * @var array<string, array<string, string>>
+     */
+    public const PRESETS = [
+        'dark' => ['label' => 'Dark (défaut)', 'accent' => '#3b9fd4', 'bg' => '#1b1f27', 'text' => '#f4f5f8', 'danger' => '#dc4a38'],
+        'luxury' => ['label' => 'Luxury Gold', 'accent' => '#c8a96e', 'bg' => '#18160f', 'text' => '#f5f2ec', 'danger' => '#cf4037'],
+        'minimal' => ['label' => 'Minimal Light', 'accent' => '#2563eb', 'bg' => '#f8fafc', 'text' => '#0f172a', 'danger' => '#dc2626'],
+        'emerald' => ['label' => 'Émeraude', 'accent' => '#10b981', 'bg' => '#0f1a16', 'text' => '#ecfdf5', 'danger' => '#ef4444'],
+    ];
 
     /**
      * Valeurs par défaut — doivent correspondre au bloc .ntb-scope dans ntb-public.css.
@@ -52,6 +77,9 @@ class Design
         'ntb_glass_enabled' => '1',
         'ntb_glass_opacity' => '92',
         '--ntb-glass-blur' => 'blur(8px)',
+        /* Mode d'affichage : dark, light ou auto (préférence système).
+           'auto' par défaut = comportement historique du site (suit l'OS). */
+        'ntb_theme_mode' => 'auto',
         /* Transparence & flou par couleur */
         'ntb_trans_bg' => '0',
         'ntb_trans_surf' => '0',
@@ -104,23 +132,21 @@ class Design
     public static function reset(): void
     {
         Settings::set(self::SETTING_KEY, '');
-        Settings::set(self::CUSTOM_CSS_KEY, '');
     }
 
-    public static function customCss(): string
+    /** Mode d'affichage effectif : 'dark', 'light' ou 'auto'. */
+    public static function themeMode(): string
     {
-        return (string) Settings::get(self::CUSTOM_CSS_KEY, '');
-    }
+        $mode = self::tokens()['ntb_theme_mode'];
 
-    public static function saveCustomCss(string $css): void
-    {
-        // Neutralise toute fermeture de balise (le CSS est imprimé dans un <style>).
-        Settings::set(self::CUSTOM_CSS_KEY, str_ireplace('</style', '', $css));
+        return in_array($mode, ['dark', 'light', 'auto'], true) ? $mode : 'auto';
     }
 
     /**
-     * Bloc <style> complet à injecter dans le layout public
-     * (overrides + miroir :root pour Flatpickr + CSS personnalisé).
+     * Bloc <style> complet à injecter dans le layout public :
+     * overrides de tokens (+ miroir :root pour Flatpickr), puis styles
+     * personnalisés par sélecteur — les règles verrouillées en dernier
+     * pour primer sur tout le reste.
      */
     public static function styleBlock(): string
     {
@@ -131,9 +157,14 @@ class Design
             $out .= "<style id=\"ntb2-design-overrides\">\n{$css}</style>\n";
         }
 
-        $custom = trim(self::customCss());
-        if ($custom !== '') {
-            $out .= "<style id=\"ntb2-custom-css\">\n{$custom}\n</style>\n";
+        $custom = CustomStyles::generateCss(CustomStyles::get(), false);
+        if (trim($custom) !== '') {
+            $out .= "<style id=\"ntb2-custom-styles\">\n{$custom}</style>\n";
+        }
+
+        $locked = CustomStyles::generateCss(CustomStyles::get(), true);
+        if (trim($locked) !== '') {
+            $out .= "<style id=\"ntb2-locked-styles\">\n{$locked}</style>\n";
         }
 
         return $out;
@@ -261,6 +292,11 @@ class Design
         // Scope principal + miroir :root (Flatpickr et pickers hors .ntb-scope).
         $css = ".ntb-scope, .ntb-dashboard {\n".$block."}\n";
         $css .= ":root {\n".$block."}\n";
+        // Bloc renforcé : la palette du thème clair est émise sous
+        // html[data-ntb-theme="light"] .ntb-scope (spécificité supérieure à
+        // .ntb-scope) — sans lui, les couleurs admin seraient écrasées dès que
+        // le thème clair est actif. Même spécificité + ordre postérieur = win.
+        $css .= "html[data-ntb-theme] .ntb-scope, html[data-ntb-theme] .ntb-dashboard {\n".$block."}\n";
 
         // Règle directe sur les boutons (égalise la spécificité avec le CSS personnalisé).
         if ($btnDirect !== null) {

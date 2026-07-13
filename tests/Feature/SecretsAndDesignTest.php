@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\User;
+use App\Support\CustomStyles;
 use App\Support\Design;
 use App\Support\Secrets;
 use App\Support\Settings;
@@ -188,19 +189,29 @@ class SecretsAndDesignTest extends TestCase
         $this->assertStringContainsString('--ntb-glass-blur: none;', $css);
     }
 
-    public function test_reset_efface_tokens_et_css_perso(): void
+    public function test_reset_efface_tokens_et_styles_persos(): void
     {
         Design::save(['--ntb-accent' => '#fff']);
-        Design::saveCustomCss('.x { color: red; }');
+        CustomStyles::save(['rules' => [], 'raw' => '.ntb-scope .x { color: red; }']);
         Settings::flush();
 
+        // Reset des tokens : les styles personnalisés restent intacts.
         $this->actingAs($this->admin())->post('/admin/reglages', [
             '_tab' => 'style', '_action' => 'reset',
         ])->assertRedirect();
 
         Settings::flush();
         $this->assertSame('', Design::overridesCss());
-        $this->assertSame('', Design::customCss());
+        $this->assertStringContainsString('color: red', CustomStyles::get()['raw']);
+
+        // Reset des styles personnalisés (action séparée).
+        $this->actingAs($this->admin())->post('/admin/reglages', [
+            '_tab' => 'style', '_action' => 'reset_custom',
+        ])->assertRedirect();
+
+        Settings::flush();
+        $this->assertSame('', CustomStyles::get()['raw']);
+        $this->assertSame([], CustomStyles::get()['rules']);
     }
 
     public function test_style_injecte_dans_le_layout_public(): void
@@ -216,13 +227,51 @@ class SecretsAndDesignTest extends TestCase
 
     public function test_css_personnalise_injecte_et_style_echappe(): void
     {
-        Design::saveCustomCss('.ntb-recap { border-radius: 18px; }</style><script>alert(1)</script>');
+        CustomStyles::save(['rules' => [], 'raw' => '.ntb-recap { border-radius: 18px; }</style><script>alert(1)</script>']);
         Settings::flush();
 
         $response = $this->get('/reservation')->assertOk();
-        $response->assertSee('ntb2-custom-css', false);
+        $response->assertSee('ntb2-custom-styles', false);
         $response->assertSee('border-radius: 18px', false);
-        // La fermeture </style> injectée a été neutralisée.
+        // La fermeture </style> injectée a été neutralisée (les '<' sont retirés du CSS brut).
         $this->assertStringNotContainsString('</style><script>', $response->getContent());
+    }
+
+    public function test_onglet_style_saffiche(): void
+    {
+        $this->actingAs($this->admin())->get('/admin/reglages?tab=style')
+            ->assertOk()
+            ->assertSee('Présets')
+            ->assertSee('Thème UI')
+            ->assertSee('Couleurs avancées')
+            ->assertSee('Styles personnalisés (par classe)');
+    }
+
+    public function test_styles_par_selecteur_confines_et_verrouilles_en_dernier(): void
+    {
+        CustomStyles::save([
+            'rules' => [
+                ['selector' => '.ntb-btn-primary', 'props' => ['background-color' => '#c4a24d'], 'locked' => false],
+                ['selector' => '.ntb-vcard', 'props' => ['border-radius' => '20px'], 'locked' => true],
+            ],
+            'raw' => '',
+        ]);
+        Settings::flush();
+
+        $css = CustomStyles::generateCss(CustomStyles::get(), false);
+        // Confiné sous les deux conteneurs du tunnel, jamais global.
+        $this->assertStringContainsString('.ntb-scope .ntb-btn-primary, .ntb-dashboard .ntb-btn-primary', $css);
+        $this->assertStringNotContainsString('.ntb-vcard', $css);
+
+        $locked = CustomStyles::generateCss(CustomStyles::get(), true);
+        $this->assertStringContainsString('.ntb-scope .ntb-vcard', $locked);
+        $this->assertStringContainsString('border-radius: 20px', $locked);
+
+        // Le layout public émet le bloc verrouillé après le bloc normal.
+        $html = (string) $this->get('/reservation')->getContent();
+        $this->assertGreaterThan(
+            strpos($html, 'ntb2-custom-styles'),
+            strpos($html, 'ntb2-locked-styles')
+        );
     }
 }

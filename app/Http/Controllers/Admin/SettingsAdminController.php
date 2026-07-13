@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Services\GoogleMaps;
 use App\Services\PayPal;
 use App\Services\Stripe;
+use App\Support\CustomStyles;
 use App\Support\Design;
 use App\Support\Secrets;
 use App\Support\Settings;
@@ -75,7 +76,7 @@ class SettingsAdminController extends Controller
             'secrets' => $secrets,
             'design' => Design::tokens(),
             'designDefaults' => Design::defaults(),
-            'customCss' => Design::customCss(),
+            'customStyles' => CustomStyles::get(),
             'tab' => (string) $request->query('tab', 'general'),
         ]);
     }
@@ -84,17 +85,36 @@ class SettingsAdminController extends Controller
     {
         $tab = (string) $request->input('_tab', 'general');
 
-        // Onglet Style : tokens design + CSS personnalisé (ou réinitialisation).
+        // Onglet Style : tokens design, styles personnalisés par sélecteur,
+        // ou réinitialisation de l'un ou l'autre (formulaires séparés).
         if ($tab === 'style') {
-            if ($request->input('_action') === 'reset') {
+            $action = (string) $request->input('_action', 'save');
+
+            if ($action === 'reset') {
                 Design::reset();
 
                 return redirect()->route('admin.settings', ['tab' => 'style'])
                     ->with('ok', __('Style réinitialisé aux valeurs par défaut.'));
             }
 
+            if ($action === 'save_custom') {
+                CustomStyles::save([
+                    'rules' => (array) json_decode((string) $request->input('custom_styles_json', '[]'), true),
+                    'raw' => (string) $request->input('custom_styles_raw', ''),
+                ]);
+
+                return redirect()->route('admin.settings', ['tab' => 'style'])
+                    ->with('ok', __('Styles personnalisés enregistrés.'));
+            }
+
+            if ($action === 'reset_custom') {
+                CustomStyles::reset();
+
+                return redirect()->route('admin.settings', ['tab' => 'style'])
+                    ->with('ok', __('Styles personnalisés supprimés.'));
+            }
+
             Design::save((array) $request->input('design', []));
-            Design::saveCustomCss((string) $request->input('custom_css', ''));
 
             return redirect()->route('admin.settings', ['tab' => 'style'])
                 ->with('ok', __('Style enregistré.'));

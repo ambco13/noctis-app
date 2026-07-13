@@ -336,6 +336,11 @@ body:has([data-ntb-steps]) {
 	   layouts/app.blade.php), donc l'image doit couvrir tout le viewport,
 	   pas juste l'espace sous la nav. */
 	min-height: 100vh;
+	/* Navigateurs mobiles : 100vh inclut la zone masquée par la barre d'URL du
+	   navigateur -- le bas du formulaire (ancré en bas) passait derrière. dvh
+	   suit la hauteur réellement visible ; le 100vh au-dessus reste en fallback
+	   pour les navigateurs sans dvh. */
+	min-height: 100dvh;
 	/* .ntb-home porte aussi la classe .ntb-scope, qui fixe déjà
 	   flex-direction:column (règle générique partagée avec les étapes 2-4) --
 	   justify-content pilote donc l'axe VERTICAL ici, pas horizontal. Ancre
@@ -437,7 +442,7 @@ body:has([data-ntb-steps]) {
 	pointer-events: none;
 }
 @media (max-width: 640px) {
-	.ntb-hero-inner { gap: 28px; }
+	.ntb-hero-inner { gap: 28px; padding-top: 10px; }
 	.ntb-hero-eyebrow { font-size: 11px; margin-bottom: 14px; }
 	.ntb-hero-title { margin-bottom: 12px; }
 }
@@ -488,7 +493,7 @@ body:has([data-ntb-steps]) {
    fond donc vers le verre (--ntb-surf-glass, sombre dans les deux thèmes)
    pour que les bords épousent le fond du picker. */
 .ntb-home .nc-time-picker::after {
-	background: linear-gradient(to bottom, var(--ntb-surf-glass) 0%, transparent 30%, transparent 70%, var(--ntb-surf-glass) 100%);
+	background: linear-gradient(to bottom, transparent 0%, transparent 62%, var(--ntb-surf-glass) 100%);
 }
 .ntb-hf-grid { display: grid; gap: 11px; grid-template-columns: 1.3fr 1.3fr .9fr .8fr auto auto; align-items: end; }
 .ntb-hf-grid > * { min-width: 0; }
@@ -499,10 +504,12 @@ body:has([data-ntb-steps]) {
 	background: linear-gradient(to bottom, transparent, var(--ntb-line) 18%, var(--ntb-line) 82%, transparent);
 }
 @media (max-width: 1024px) {
-	.ntb-hf-grid { grid-template-columns: 1fr 1fr; }
-	.ntb-hf-grid .ntb-field:nth-child(1), .ntb-hf-grid .ntb-field:nth-child(2) { grid-column: 1 / -1; }
+	/* Une seule colonne : chaque champ (dont Date et Heure) occupe sa propre
+	   ligne, et les popups calendrier/heure -- calés sur la largeur de leur
+	   champ -- profitent ainsi de toute la largeur du formulaire. */
+	.ntb-hf-grid { grid-template-columns: 1fr; }
 	.ntb-hf-sep { display: none; }
-	.ntb-hf-go { grid-column: 1 / -1; width: 100%; }
+	.ntb-hf-go { width: 100%; }
 }
 
 /* Flou par couleur — backdrop-filter optionnel derrière les surfaces.
@@ -1173,6 +1180,13 @@ body:has([data-ntb-steps]) {
 	}
 	[data-ntb-screen="2"],
 	[data-ntb-screen="3"] { padding-bottom: 80px; }
+
+	/* Zone Stripe sans son encadré : sur mobile, la boîte (fond + bordure +
+	   padding) imbriquée dans la carte du formulaire faisait un « cadre dans
+	   le cadre » étriqué. Les champs Stripe posent directement sur la carte,
+	   avec plus d'air entre les blocs. */
+	#ntb-stripe-element { background: transparent; border: none; border-radius: 0; padding: 0; }
+	.ntb-pay-panel { margin-top: 18px; margin-bottom: 0; gap: 16px; }
 }
 
 /* récap / confirmation */
@@ -1383,6 +1397,16 @@ html[data-ntb-theme="light"] .ntb-ac-list {
 	.ntb-step3-right .ntb-prog { display: none !important; }
 	.ntb-step3-header { display: block !important; }
 	.ntb-scope .ntb-back-btn:not(.ntb-pay-back) { display: none !important; }
+}
+
+/* Téléphones : marges latérales réduites sur les étapes 2-3-4 (bords d'écran
+   et intérieur des cartes) — le contenu gagne en largeur utile. */
+@media (max-width: 640px) {
+	.ntb-step2-header { padding-left: 10px; padding-right: 10px; }
+	.ntb-step2-layout { padding-left: 10px; padding-right: 10px; }
+	.ntb-step3-form { padding: 18px 14px; }
+	.ntb-recap { padding: 18px 14px; }
+	.ntb-confirm-inner { padding: 24px 16px; }
 }
 
 /* ============================================================

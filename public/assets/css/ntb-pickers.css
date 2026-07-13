@@ -253,37 +253,39 @@ input.flatpickr-input.alt-input { cursor: pointer; caret-color: transparent; }
    vers le haut à la place -- classe posée par positionPopupVertically(). */
 .nc-time-picker.ntb-pop-up { top: auto; bottom: calc(100% + 6px); }
 
-/* Bande centrale de sélection */
+/* Bande de sélection : sur la PREMIÈRE ligne (la valeur choisie est en haut
+   du rouleau, pas au centre). */
 .nc-time-picker::before {
 	content: '';
 	position: absolute;
-	top: 50%; left: 8px; right: 8px;
+	top: 0; left: 8px; right: 8px;
 	height: var(--_item);
-	transform: translateY(-50%);
 	background: var(--ntb-accent-soft);
 	border-radius: var(--ntb-r-sm);
 	pointer-events: none;
 	z-index: 0;
 }
 
-/* Fondu haut/bas */
+/* Fondu bas uniquement (la sélection étant en haut, un fondu haut la voilerait) */
 .nc-time-picker::after {
 	content: '';
 	position: absolute;
 	inset: 0;
-	background: linear-gradient(to bottom, var(--ntb-surf) 0%, transparent 28%, transparent 72%, var(--ntb-surf) 100%);
+	background: linear-gradient(to bottom, transparent 0%, transparent 62%, var(--ntb-surf) 100%);
 	pointer-events: none;
 	z-index: 3;
 	border-radius: var(--ntb-r-sm);
 }
 
-/* Colonnes */
-.nc-time-col { flex: 1; min-width: 0; height: calc(var(--_item) * 3); overflow-y: scroll; scroll-snap-type: y mandatory; scrollbar-width: none; position: relative; z-index: 1; padding: var(--_item) 0; }
+/* Colonnes : 6 lignes visibles, la sélection s'aligne sur la première.
+   Le contenu est répété en JS (ntb-datepicker.js) pour un défilement en
+   boucle infinie -- aucun padding nécessaire pour atteindre les extrêmes. */
+.nc-time-col { flex: 1; min-width: 0; height: min(calc(var(--_item) * 6), 38vh); overflow-y: scroll; scroll-snap-type: y mandatory; scrollbar-width: none; position: relative; z-index: 1; padding: 0; }
 .nc-time-col::-webkit-scrollbar { display: none; }
 
-/* Séparateur : */
-.nc-time-sep { display: flex; align-items: center; justify-content: center; width: 20px; flex-shrink: 0; font-family: var(--ntb-mono); font-size: 16px; color: var(--ntb-accent); position: relative; z-index: 2; }
+/* Séparateur : aligné sur la ligne de sélection (en haut) */
+.nc-time-sep { display: flex; align-items: flex-start; justify-content: center; width: 20px; flex-shrink: 0; font-family: var(--ntb-mono); font-size: 16px; line-height: var(--_item); color: var(--ntb-accent); position: relative; z-index: 2; }
 
 /* Items */
-.nc-ti { height: var(--_item); line-height: var(--_item); padding: 0; scroll-snap-align: center; font-family: var(--ntb-mono); font-size: 14px; color: var(--ntb-muted); cursor: pointer; text-align: center; transition: color 150ms; position: relative; z-index: 2; user-select: none; }
+.nc-ti { height: var(--_item); line-height: var(--_item); padding: 0; scroll-snap-align: start; font-family: var(--ntb-mono); font-size: 14px; color: var(--ntb-muted); cursor: pointer; text-align: center; transition: color 150ms; position: relative; z-index: 2; user-select: none; }
 .nc-ti.nc-ti-on { color: var(--ntb-accent-hi); font-weight: 600; font-size: 15px; }

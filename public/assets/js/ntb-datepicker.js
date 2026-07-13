@@ -16,6 +16,13 @@
 	   sert à choisir. Sur desktop (pointeur fin) on garde la saisie clavier. */
 	var isCoarse = !! ( window.matchMedia && window.matchMedia( '(pointer: coarse)' ).matches );
 
+	/* Rouleau heure : hauteur d'un item (sync avec --_item du CSS), nombre de
+	   copies de chaque liste (défilement en boucle infinie) et index de la
+	   copie centrale, sur laquelle le scroll est recentré silencieusement. */
+	var ITEM_H = 36;
+	var REPEAT = 5;
+	var MID    = Math.floor( REPEAT / 2 );
+
 	document.addEventListener( 'DOMContentLoaded', function () {
 
 		/* ── Date — flatpickr (saisie clavier desktop uniquement) ──────── */
@@ -197,7 +204,10 @@
 				hero.style.setProperty( '--ntb-hero-lift', lift + 'px' );
 			}
 		}
-		hero.classList.toggle( 'ntb-form-focused', !! open );
+		/* Montée uniquement : la redescente ne suit plus la fermeture d'un
+		   popup ni la perte de focus, elle n'a lieu QUE sur un appui dans le
+		   vide (écouteur pointerdown posé dans initStep1, ntb-public.js). */
+		if ( open ) hero.classList.add( 'ntb-form-focused' );
 	}
 
 	/* ═══════════════════════════════════════════════════════════
@@ -450,12 +460,20 @@
 		}
 
 		function scrollToActive( col ) {
-			var a = col.querySelector( '.nc-ti-on' );
-			if ( a ) col.scrollTo( { top: a.offsetTop - col.clientHeight / 2 + a.clientHeight / 2, behavior: 'smooth' } );
+			/* Les items sont répétés (boucle infinie) : rejoindre la copie de la
+			   valeur active la plus PROCHE de la position actuelle, alignée sur
+			   la ligne de sélection (tout en haut du rouleau). */
+			var best = null, bestDist = Infinity;
+			col.querySelectorAll( '.nc-ti-on' ).forEach( function (a) {
+				var d = Math.abs( a.offsetTop - col.scrollTop );
+				if ( d < bestDist ) { bestDist = d; best = a; }
+			} );
+			if ( best ) col.scrollTo( { top: best.offsetTop, behavior: 'smooth' } );
 		}
 
 		function scrollInstant( col, idx ) {
-			col.scrollTop = idx * 36;
+			/* Copie centrale : marge maximale des deux côtés avant recentrage. */
+			col.scrollTop = ( MID * ( +col.dataset.count ) + idx ) * ITEM_H;
 		}
 
 		/* Afficher la valeur initiale si elle existe */
@@ -485,17 +503,24 @@
 			} );
 		} );
 
-		/* Auto-sélection au scroll */
+		/* Auto-sélection au scroll : l'item aligné sur la ligne du HAUT est la
+		   valeur choisie. La liste étant répétée REPEAT fois, l'index est
+		   ramené modulo `count`, puis le scroll est recentré sur la copie
+		   centrale -- toutes les copies étant identiques, le saut est
+		   invisible, d'où un défilement sans fin dans les deux sens. */
 		[ colH, colM ].forEach( function (col, idx) {
 			col.addEventListener( 'scroll', function () {
 				clearTimeout( col._st );
 				col._st = setTimeout( function () {
-					var itemH = 36;
-					var i   = Math.round( col.scrollTop / itemH );
-					var max = idx === 0 ? 23 : 11;
-					i = Math.max( 0, Math.min( i, max ) );
+					var count = +col.dataset.count;
+					var raw   = Math.round( col.scrollTop / ITEM_H );
+					var i     = ( ( raw % count ) + count ) % count;
 					if ( idx === 0 ) select( i, curM < 0 ? 0 : curM, false );
 					else             select( curH < 0 ? 0 : curH, i * 5, false );
+					var centered = MID * count + i;
+					if ( raw !== centered ) {
+						col.scrollTop = centered * ITEM_H + ( col.scrollTop - raw * ITEM_H );
+					}
 				}, 80 );
 			} );
 		} );
@@ -558,13 +583,18 @@
 		step = step || 1;
 		var col = document.createElement( 'div' );
 		col.className = 'nc-time-col';
-		for ( var i = 0; i < count; i++ ) {
-			var v  = i * step;
-			var el = document.createElement( 'div' );
-			el.className   = 'nc-ti';
-			el.textContent = pad( v );
-			el.dataset.v   = v;
-			col.appendChild( el );
+		col.dataset.count = count;
+		/* Liste répétée REPEAT fois pour la boucle infinie (voir le handler
+		   scroll : recentrage silencieux sur la copie centrale). */
+		for ( var r = 0; r < REPEAT; r++ ) {
+			for ( var i = 0; i < count; i++ ) {
+				var v  = i * step;
+				var el = document.createElement( 'div' );
+				el.className   = 'nc-ti';
+				el.textContent = pad( v );
+				el.dataset.v   = v;
+				col.appendChild( el );
+			}
 		}
 		return col;
 	}

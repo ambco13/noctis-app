@@ -348,6 +348,10 @@ html[data-ntb-theme="light"] body:has([data-ntb-steps]) {
    lui au lieu de coller le bord de l'écran. Plus spécifique que la règle
    @media desktop ci-dessous, donc l'emporte à toutes les largeurs. */
 .ntb-home.ntb-form-focused .ntb-hero-inner { gap: 28px; padding-top: 12px; }
+/* Mesure du lift (updateHeroFocus) : l'état focus est appliqué un instant,
+   transitions coupées, pour lire la géométrie repliée -- purement synchrone,
+   jamais peint à l'écran. */
+.ntb-home.ntb-measure, .ntb-home.ntb-measure * { transition: none !important; }
 .ntb-home.ntb-form-focused .ntb-hero-inner { bottom: var(--ntb-hero-lift, 0px); }
 @media (min-width: 1025px) {
 	.ntb-hero-inner { padding: 40px 48px 32px; gap: 56px; }
@@ -362,7 +366,13 @@ html[data-ntb-theme="light"] body:has([data-ntb-steps]) {
 	text-transform: uppercase; letter-spacing: .14em;
 	color: var(--ntb-accent-hi);
 	margin: 0 0 20px;
+	transition: opacity .25s var(--ntb-ease);
 }
+/* Au focus (form monté), l'eyebrow s'efface : le haut du bloc peut glisser
+   au niveau de la nav (le lift n'est plus plafonné pour que le form se
+   centre, y compris sur mobile) et « PARIS & RÉGIONS » ne doit pas venir
+   s'afficher collé à elle. */
+.ntb-home.ntb-form-focused .ntb-hero-eyebrow { opacity: 0; }
 .ntb-hero-eyebrow::before {
 	content: ''; width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
 	background: var(--ntb-accent-hi);

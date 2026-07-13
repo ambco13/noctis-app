@@ -199,23 +199,27 @@
 		if ( open && ! hero.classList.contains( 'ntb-form-focused' ) ) {
 			var inner = hero.querySelector( '.ntb-hero-inner' );
 			if ( inner && form ) {
+				/* Mesure sur la géométrie FOCUS (tagline repliée, lift à 0) :
+				   l'état est appliqué sans transitions (.ntb-measure) le temps
+				   du calcul, puis retiré -- tout est synchrone, rien n'est
+				   peint entre-temps. Mesurer la géométrie de repos plafonnait
+				   la montée à 0 sur mobile (bloc plein écran au repos, alors
+				   que le repli de la tagline libère la place nécessaire). */
+				hero.classList.add( 'ntb-measure', 'ntb-form-focused' );
+				hero.style.setProperty( '--ntb-hero-lift', '0px' );
 				var heroRect = hero.getBoundingClientRect();
 				var innerRect = inner.getBoundingClientRect();
 				var formRect = form.getBoundingClientRect();
-				/* Le bloc peut être en plein glissement (transition sur bottom,
-				   ex. re-focus pendant la descente) : on raisonne sur la position
-				   de REPOS en neutralisant le décalage courant, sinon le lift
-				   figé serait faux (form arrêté sous le milieu). */
-				var curBottom = parseFloat( getComputedStyle( inner ).bottom ) || 0;
 				var heroCenter = heroRect.top + heroRect.height / 2;
-				var formCenter = formRect.top + formRect.height / 2 + curBottom;
+				var formCenter = formRect.top + formRect.height / 2;
 				var lift = Math.max( 0, formCenter - heroCenter );
-				/* Garde-fou : le haut du bloc (eyebrow « Paris & régions ») ne
-				   monte pas jusqu'à la nav (fixe, transparente sur le hero) --
-				   il s'arrête 8px sous son bord bas. */
-				var nav = document.querySelector( '.ntb-topnav' );
-				var navBottom = nav ? Math.max( 0, nav.getBoundingClientRect().bottom ) : 0;
-				lift = Math.min( lift, Math.max( 0, innerRect.top + curBottom - navBottom - 8 ) );
+				/* Garde-fou : garder au moins 8px du bloc visibles en haut. Le
+				   titre peut glisser sous la nav (transparente sur le hero),
+				   c'est assumé ; l'eyebrow s'efface au focus (CSS). */
+				lift = Math.min( lift, Math.max( 0, innerRect.top - 8 ) );
+				hero.classList.remove( 'ntb-form-focused' );
+				void hero.offsetWidth; /* reflow avant de réactiver les transitions */
+				hero.classList.remove( 'ntb-measure' );
 				hero.style.setProperty( '--ntb-hero-lift', lift + 'px' );
 			}
 		}

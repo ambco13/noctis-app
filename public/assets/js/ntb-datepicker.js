@@ -70,13 +70,9 @@
 					function place() {
 						var dateRect = dateField.getBoundingClientRect();
 						var vw       = window.innerWidth;
-						/* Mobile (champs empilés, <=1024px) : pleine largeur du champ,
-						   comme les popups heure/adresses. Desktop : légèrement moins
-						   large (~8 %) pour un calendrier plus compact, sans descendre
-						   sous une largeur lisible. */
-						var newW     = vw <= 1024
-							? Math.round( dateRect.width )
-							: Math.max( Math.round( dateRect.width * 0.92 ), 208 );
+						/* Légèrement moins large que le champ (~8 %) pour un calendrier
+						   plus compact, sans descendre sous une largeur lisible. */
+						var newW     = Math.max( Math.round( dateRect.width * 0.92 ), 208 );
 						var leftPos  = Math.round( dateRect.left + window.scrollX );
 
 						if ( leftPos + newW > window.scrollX + vw - gap ) {

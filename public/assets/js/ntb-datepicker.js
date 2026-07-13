@@ -199,8 +199,12 @@
 				var heroCenter = heroRect.top + heroRect.height / 2;
 				var formCenter = formRect.top + formRect.height / 2;
 				var lift = Math.max( 0, formCenter - heroCenter );
-				// Garde-fou : garder au moins 8px du bloc visibles en haut.
-				lift = Math.min( lift, Math.max( 0, innerRect.top - 8 ) );
+				/* Garde-fou : le haut du bloc (eyebrow « Paris & régions ») ne
+				   monte pas jusqu'à la nav (fixe, transparente sur le hero) --
+				   il s'arrête 8px sous son bord bas. */
+				var nav = document.querySelector( '.ntb-topnav' );
+				var navBottom = nav ? Math.max( 0, nav.getBoundingClientRect().bottom ) : 0;
+				lift = Math.min( lift, Math.max( 0, innerRect.top - navBottom - 8 ) );
 				hero.style.setProperty( '--ntb-hero-lift', lift + 'px' );
 			}
 		}

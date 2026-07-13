@@ -399,7 +399,11 @@ html[data-ntb-theme="light"] body:has([data-ntb-steps]) {
 @media (max-width: 640px) {
 	.ntb-hero-inner { gap: 28px; padding-top: 20px; }
 	.ntb-hero-eyebrow { font-size: 11px; margin-bottom: 14px; }
-	.ntb-hero-title { margin-bottom: 12px; }
+	/* En 42px (plancher du clamp desktop), « Votre chauffeur vous » déborde
+	   la largeur d'un téléphone et « vous » passait à la ligne -> titre sur
+	   3 lignes. Plancher abaissé pour que la 1re ligne du <br> tienne, du
+	   320px au 640px. */
+	.ntb-hero-title { margin-bottom: 12px; font-size: clamp(28px, 9vw, 42px); }
 }
 .ntb-home .ntb-home-form {
 	position: relative;

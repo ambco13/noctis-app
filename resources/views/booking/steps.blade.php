@@ -222,8 +222,14 @@
                         <div class="ntb-flow-error" data-ntb-pay-error hidden></div>
                     </div>
 
-                    <!-- Récapitulatif -->
-                    <aside class="ntb-recap" data-ntb-recap></aside>
+                    {{-- Colonne droite : à l'étape 3, le rail 2-3-4 est déplacé
+                         ici par goToStep() (au-dessus du récap) pour que rail et
+                         récap restent visibles ENSEMBLE au scroll (sticky sur ce
+                         wrapper), sans que le récap doive se caler sous un rail
+                         flottant. --}}
+                    <div class="ntb-step3-side">
+                        <aside class="ntb-recap" data-ntb-recap></aside>
+                    </div>
                 </div>
             </section>
 

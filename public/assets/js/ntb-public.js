@@ -448,6 +448,20 @@
 				s.classList.add( 'ntb-anim' );
 			}
 		} );
+		/* Étape 3 : le rail 2-3-4 rejoint la colonne du récap (.ntb-step3-side)
+		   pour rester visible au scroll AVEC le récap (sticky commun), sans que
+		   le récap doive se caler sous un rail flottant. Ailleurs, il retourne
+		   à sa place dans l'en-tête. */
+		var prog = el( '.ntb-prog', state.root );
+		var side = el( '.ntb-step3-side', state.root );
+		var progHome = el( '.ntb-step3-right', state.root );
+		if ( prog && side && progHome ) {
+			if ( n === 3 && prog.parentElement !== side ) {
+				side.insertBefore( prog, side.firstChild );
+			} else if ( n !== 3 && prog.parentElement !== progHome ) {
+				progHome.appendChild( prog );
+			}
+		}
 		// Progression.
 		els( '.ntb-prog-node', state.root ).forEach( function ( node ) {
 			var step = parseInt( node.getAttribute( 'data-step' ), 10 );
@@ -856,7 +870,11 @@
 						spacingUnit:        '4px',
 					},
 					rules: {
-						'.Input':       { backgroundColor: cssColor( '--ntb-surf' ), border: '1px solid ' + cssColor( '--ntb-line' ), boxShadow: 'none' },
+						/* color explicite : ceinture en plus de variables.colorText
+						   (rejeté par Stripe s'il ne parse pas la valeur -> son texte
+						   noir par défaut, illisible sur nos champs sombres). */
+						'.Input':       { backgroundColor: cssColor( '--ntb-surf' ), border: '1px solid ' + cssColor( '--ntb-line' ), boxShadow: 'none', color: cssColor( '--ntb-text' ) },
+						'.Input::placeholder': { color: cssColor( '--ntb-faint' ) },
 						'.Input:focus': { border: '1px solid ' + cssColor( '--ntb-accent' ), boxShadow: 'none' },
 						'.Label':       { color: cssColor( '--ntb-muted' ) },
 						'.Block':       { backgroundColor: cssColor( '--ntb-bg2' ), border: '1px solid ' + cssColor( '--ntb-line' ) },

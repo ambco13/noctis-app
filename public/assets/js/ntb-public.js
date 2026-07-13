@@ -448,20 +448,6 @@
 				s.classList.add( 'ntb-anim' );
 			}
 		} );
-		/* Étape 3 : le rail 2-3-4 rejoint la colonne du récap (.ntb-step3-side)
-		   pour rester visible au scroll AVEC le récap (sticky commun), sans que
-		   le récap doive se caler sous un rail flottant. Ailleurs, il retourne
-		   à sa place dans l'en-tête. */
-		var prog = el( '.ntb-prog', state.root );
-		var side = el( '.ntb-step3-side', state.root );
-		var progHome = el( '.ntb-step3-right', state.root );
-		if ( prog && side && progHome ) {
-			if ( n === 3 && prog.parentElement !== side ) {
-				side.insertBefore( prog, side.firstChild );
-			} else if ( n !== 3 && prog.parentElement !== progHome ) {
-				progHome.appendChild( prog );
-			}
-		}
 		// Progression.
 		els( '.ntb-prog-node', state.root ).forEach( function ( node ) {
 			var step = parseInt( node.getAttribute( 'data-step' ), 10 );
@@ -796,7 +782,22 @@
 		// Zone de paiement ouverte : on annule l'égalisation des hauteurs
 		// formulaire/récap (le formulaire devient plus grand que le récap).
 		var grid = el( '.ntb-step3-grid', state.root );
-		if ( grid ) grid.classList.add( 'ntb-pay-open' );
+		if ( grid ) {
+			/* Mesure AVANT .ntb-pay-open (récap encore étiré, non déplacé) :
+			   sa position naturelle en coordonnées document. Le seuil sticky
+			   nav+24 peut la dépasser de quelques px, et un sticky dont le
+			   seuil dépasse la position de repos POUSSE l'élément vers le bas
+			   sans aucun scroll -- le min() CSS (voir .ntb-recap) le cale sur
+			   cette mesure pour garder form et récap alignés au repos. */
+			if ( ! grid.classList.contains( 'ntb-pay-open' ) ) {
+				var recapEl = el( '.ntb-recap', state.root );
+				if ( recapEl ) {
+					state.root.style.setProperty( '--ntb-recap-natural-top',
+						Math.round( recapEl.getBoundingClientRect().top + window.scrollY ) + 'px' );
+				}
+			}
+			grid.classList.add( 'ntb-pay-open' );
+		}
 		if ( method === 'stripe' ) {
 			initStripeForm();
 		}
@@ -1281,10 +1282,6 @@
 		}
 		function syncNavOffset() {
 			state.root.style.setProperty( '--ntb-nav-offset', stickyTop() + 'px' );
-			/* Bas du nav SEUL (sans l'en-tête) : seuil du récap étape 3, où le
-			   rail 2-3-4 n'est plus fixed (parité plugin d'origine) -- le récap
-			   se cale juste sous le nav au lieu de descendre sous le rail. */
-			state.root.style.setProperty( '--ntb-nav-bottom', getNavOffset() + 'px' );
 		}
 		syncNavOffset();
 

@@ -567,11 +567,6 @@ html[data-ntb-theme="light"] body:has([data-ntb-steps]) {
 		border-radius: 999px;
 		box-shadow: var(--ntb-shadow-sm);
 	}
-	/* Étapes 3-4 (.ntb-no-aside) : le rail défile avec l'en-tête (parité
-	   plugin d'origine) au lieu de flotter fixed au-dessus de la colonne du
-	   récap -- c'est lui qui forçait le récap à se caler très bas et créait
-	   un grand vide au-dessus du récap dès l'ouverture du paiement. */
-	.ntb-scope.ntb-no-aside .ntb-prog { position: static; }
 }
 .ntb-prog-node { display: flex; align-items: center; gap: 8px; }
 .ntb-prog-bub {
@@ -1171,33 +1166,20 @@ html[data-ntb-theme="light"] body:has([data-ntb-steps]) {
 	/* Étiré (stretch) plus court que le formulaire : répartir titre/lignes/total
 	   sur la hauteur plutôt que de laisser un grand vide sous le total. */
 	justify-content: space-between;
-	/* Le sticky est porté par le wrapper .ntb-step3-side (rail 2-3-4 + récap
-	   collent ensemble juste sous le nav -- rail visible au scroll sans que le
-	   récap doive descendre sous un rail flottant). */
+	position: sticky;
+	/* Même seuil que l'aside de l'étape 2 (nav + en-tête, mesurés en JS dans
+	   --ntb-nav-offset) : le rail 2-3-4 est fixed à cette hauteur, un top de
+	   24px seuls ferait glisser le récap dessous. Le min() avec la position
+	   NATURELLE du récap (mesurée dans selectPayMethod) est indispensable :
+	   un seuil au-dessus d'elle POUSSE un élément sticky vers le bas même
+	   sans scroll -- c'était le décalage form/récap de ~8px qui apparaissait
+	   dès l'ouverture de la zone de paiement. */
+	top: min(calc(var(--ntb-nav-offset, 64px) + 24px), var(--ntb-recap-natural-top, 9999px));
 	/* Même garde-fou que .ntb-step3-form : ne jamais déborder de sa colonne. */
 	min-width: 0; max-width: 100%; box-sizing: border-box; overflow-wrap: break-word;
 	overflow: hidden;
 }
-/* Colonne droite étape 3 : rail (injecté par goToStep) au-dessus du récap. */
-.ntb-step3-side { min-width: 0; display: flex; flex-direction: column; }
-@media (min-width: 1025px) {
-	.ntb-step3-side {
-		position: sticky;
-		top: calc(var(--ntb-nav-bottom, 64px) + 16px);
-	}
-	/* Dans la colonne, le rail redevient un bloc normal (annule le fixed du
-	   bloc .ntb-prog desktop), aligné à droite au-dessus du récap. */
-	.ntb-step3-side .ntb-prog { position: static; margin: 0 0 12px auto; }
-	/* Le récap occupe le reste de la colonne (hauteur égalisée avec le
-	   formulaire tant que la zone de paiement n'est pas ouverte). */
-	.ntb-step3-side .ntb-recap { flex: 1; }
-}
-@media (max-width: 1024px) {
-	/* Le wrapper s'efface : le récap redevient un item direct de la grille
-	   (son order:-1 le place au-dessus du formulaire). */
-	.ntb-step3-side { display: contents; }
-	.ntb-recap { position: static; order: -1; }
-}
+@media (max-width: 1024px) { .ntb-recap { position: static; order: -1; } }
 .ntb-confirm-inner { background: var(--ntb-surf); border: 1px solid var(--ntb-line-soft); border-radius: var(--ntb-r-sm); padding: var(--ntb-sp-xl); box-shadow: var(--ntb-shadow-card); }
 .ntb-recap-title { font-family: var(--ntb-serif); font-weight: 400; font-size: 20px; margin: 0 0 14px; }
 /* Bloc trajet du récap : rail vertical départ → arrivée */
@@ -1388,9 +1370,6 @@ html[data-ntb-theme="light"] .ntb-ac-list {
 	top: 75px;
 	z-index: 90;
 }
-/* Étapes 3-4 : le rail et sa cellule défilent avec l'en-tête (voir
-   .ntb-no-aside .ntb-prog plus haut -- parité plugin d'origine). */
-.ntb-scope.ntb-no-aside .ntb-step3-right { position: static !important; }
 .ntb-step3-right .ntb-prog {
 	display: flex !important;
 	flex-direction: row !important;

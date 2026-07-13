@@ -267,8 +267,8 @@
 				var formCenter = formRect.top + formRect.height / 2;
 				var lift = Math.max( 0, formCenter - heroCenter );
 				/* Garde-fou : garder au moins 8px du bloc visibles en haut. Le
-				   titre peut glisser sous la nav (transparente sur le hero),
-				   c'est assumé ; l'eyebrow s'efface au focus (CSS). */
+				   haut du bloc (eyebrow, titre) peut glisser au niveau de la
+				   nav (transparente sur le hero), c'est assumé. */
 				lift = Math.min( lift, Math.max( 0, innerRect.top - 8 ) );
 				hero.classList.remove( 'ntb-form-focused' );
 				void hero.offsetWidth; /* reflow avant de réactiver les transitions */

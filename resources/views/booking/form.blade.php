@@ -7,7 +7,11 @@
   <div class="ntb-hero-inner">
     <div class="ntb-hero-text">
         <p class="ntb-hero-eyebrow">{{ __('Paris & régions') }}</p>
-        <h1 class="ntb-hero-title">{!! __('Votre chauffeur<br>vous attend.') !!}</h1>
+        {{-- Deux <br> exclusifs (CSS) : coupure après « vous » sur grand écran,
+             avant « vous » sur téléphone (≤640px), où la 1re ligne longue ne
+             tient pas. Les espaces autour des <br> assurent le mot joint quand
+             l'un des deux est masqué (l'espace en début de ligne est ignoré). --}}
+        <h1 class="ntb-hero-title">{!! __('Votre chauffeur<br class="ntb-br-m"> vous <br class="ntb-br-d">attend.') !!}</h1>
         <p class="ntb-hero-tagline">{!! __("Prix tout compris connu d'avance.<br>Réservation en moins d'une minute, paiement sécurisé.") !!}</p>
     </div>
     <form class="ntb-home-form" method="post" action="{{ route('booking.step1') }}" data-ntb-step1>

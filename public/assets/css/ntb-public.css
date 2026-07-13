@@ -376,6 +376,10 @@ html[data-ntb-theme="light"] body:has([data-ntb-steps]) {
 	margin: 0 0 18px; color: #fff;
 	text-shadow: 0 2px 28px rgba(0,0,0,.4);
 }
+/* Coupure du titre : après « vous » sur grand écran (.ntb-br-d), avant
+   « vous » sur téléphone (.ntb-br-m, activée dans le bloc @media 640px) --
+   la 1re ligne longue ne tient pas en 42px sur un écran étroit. */
+.ntb-hero-title .ntb-br-m { display: none; }
 .ntb-hero-tagline {
 	font-family: var(--ntb-sans); font-weight: 300;
 	font-size: clamp(15px, 2vw, 17px); line-height: 1.65;
@@ -399,10 +403,14 @@ html[data-ntb-theme="light"] body:has([data-ntb-steps]) {
 @media (max-width: 640px) {
 	.ntb-hero-inner { gap: 28px; padding-top: 20px; }
 	.ntb-hero-eyebrow { font-size: 11px; margin-bottom: 14px; }
-	/* La 1re ligne du <br> (« Votre chauffeur ») tient en 42px dès ~380px de
+	/* La 1re ligne mobile (« Votre chauffeur ») tient en 42px dès ~380px de
 	   large ; sous ce seuil le titre rétrécit pour ne jamais casser sur une
 	   3e ligne (320px : ~35px). */
 	.ntb-hero-title { margin-bottom: 12px; font-size: clamp(30px, 11vw, 42px); }
+	/* Coupure mobile : avant « vous » (la coupure desktop, après « vous »,
+	   est masquée -- voir .ntb-br-d/.ntb-br-m sous ÉTAPE 1). */
+	.ntb-hero-title .ntb-br-m { display: inline; }
+	.ntb-hero-title .ntb-br-d { display: none; }
 }
 .ntb-home .ntb-home-form {
 	position: relative;

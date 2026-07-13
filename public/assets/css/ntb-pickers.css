@@ -247,6 +247,9 @@ input.flatpickr-input.alt-input { cursor: pointer; caret-color: transparent; }
 	box-shadow: 0 8px 24px oklch(0.12 0.010 240 / .35), inset 0 1px 0 oklch(1 0 0 / .05);
 	overflow: hidden;
 	--_item: 36px;
+	/* Respiration au-dessus de la 1re ligne : la ligne de sélection ne colle
+	   pas le bord haut du popup (le ::before suit avec le même décalage). */
+	padding-top: 8px;
 }
 .nc-time-picker.nc-open { display: flex; align-items: stretch; }
 /* Pas assez de place en dessous (champ proche du bas de l'écran) : ouvre
@@ -258,7 +261,7 @@ input.flatpickr-input.alt-input { cursor: pointer; caret-color: transparent; }
 .nc-time-picker::before {
 	content: '';
 	position: absolute;
-	top: 0; left: 8px; right: 8px;
+	top: 8px; left: 8px; right: 8px;
 	height: var(--_item);
 	background: var(--ntb-accent-soft);
 	border-radius: var(--ntb-r-sm);
@@ -283,8 +286,11 @@ input.flatpickr-input.alt-input { cursor: pointer; caret-color: transparent; }
 .nc-time-col { flex: 1; min-width: 0; height: min(calc(var(--_item) * 6), 38vh); overflow-y: scroll; scroll-snap-type: y mandatory; scrollbar-width: none; position: relative; z-index: 1; padding: 0; }
 .nc-time-col::-webkit-scrollbar { display: none; }
 
-/* Séparateur : aligné sur la ligne de sélection (en haut) */
-.nc-time-sep { display: flex; align-items: flex-start; justify-content: center; width: 20px; flex-shrink: 0; font-family: var(--ntb-mono); font-size: 16px; line-height: var(--_item); color: var(--ntb-accent); position: relative; z-index: 2; }
+/* Séparateur : un ":" par ligne visible (spans créés en JS), celui de la
+   ligne de sélection (1re) en accent, les autres discrets comme les items. */
+.nc-time-sep { display: flex; flex-direction: column; align-items: center; width: 20px; flex-shrink: 0; font-family: var(--ntb-mono); font-size: 16px; color: var(--ntb-muted); position: relative; z-index: 2; }
+.nc-time-sep span { display: block; height: var(--_item); line-height: var(--_item); }
+.nc-time-sep span:first-child { color: var(--ntb-accent); }
 
 /* Items */
 .nc-ti { height: var(--_item); line-height: var(--_item); padding: 0; scroll-snap-align: start; font-family: var(--ntb-mono); font-size: 14px; color: var(--ntb-muted); cursor: pointer; text-align: center; transition: color 150ms; position: relative; z-index: 2; user-select: none; }

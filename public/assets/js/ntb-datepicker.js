@@ -419,8 +419,14 @@
 
 		var colH = makeCol( 24 );
 		var sep  = document.createElement( 'div' );
-		sep.className   = 'nc-time-sep';
-		sep.textContent = ':';
+		sep.className = 'nc-time-sep';
+		/* Un ":" par ligne visible (6 au plus, cf. hauteur du rouleau en CSS) --
+		   le surplus est simplement rogné sur les écrans très courts. */
+		for ( var s = 0; s < 6; s++ ) {
+			var si = document.createElement( 'span' );
+			si.textContent = ':';
+			sep.appendChild( si );
+		}
 		var colM = makeCol( 12, 5 );
 
 		picker.appendChild( colH );

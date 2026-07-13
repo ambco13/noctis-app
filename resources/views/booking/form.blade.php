@@ -7,7 +7,7 @@
   <div class="ntb-hero-inner">
     <div class="ntb-hero-text">
         <p class="ntb-hero-eyebrow">{{ __('Paris & régions') }}</p>
-        <h1 class="ntb-hero-title">{!! __('Votre chauffeur vous<br>attend.') !!}</h1>
+        <h1 class="ntb-hero-title">{!! __('Votre chauffeur<br>vous attend.') !!}</h1>
         <p class="ntb-hero-tagline">{!! __("Prix tout compris connu d'avance.<br>Réservation en moins d'une minute, paiement sécurisé.") !!}</p>
     </div>
     <form class="ntb-home-form" method="post" action="{{ route('booking.step1') }}" data-ntb-step1>

@@ -152,7 +152,14 @@
         };
     </script>
     @if (\App\Support\Secrets::stripeKey() !== '')
-        <script src="https://js.stripe.com/v3/"></script>
+        {{-- async (et non defer) : Stripe ne sert qu'à l'étape paiement, mais
+             placé avant les scripts locaux il bloquait leur exécution — sur un
+             réseau lent, les pickers de la page 1 attendaient js.stripe.com
+             plusieurs secondes. defer ne suffirait pas : les scripts locaux
+             s'initialisent sur DOMContentLoaded, que defer retarde aussi.
+             Si le paiement est atteint avant l'arrivée du script, le JS
+             l'attend (waitForStripe dans ntb-public.js). --}}
+        <script async src="https://js.stripe.com/v3/"></script>
     @endif
     <script src="{{ asset('vendor/flatpickr/flatpickr.min.js') }}"></script>
     <script src="{{ asset('vendor/flatpickr/fr.js') }}"></script>

@@ -784,13 +784,28 @@
 		}
 	}
 
+	/* js.stripe.com est chargé en async (voir layout) : sur un réseau lent il
+	   peut ne pas être arrivé quand l'utilisateur atteint le paiement — on
+	   l'attend (borné) au lieu d'échouer sur une ReferenceError. */
+	function waitForStripe() {
+		if ( typeof Stripe !== 'undefined' ) return Promise.resolve();
+		return new Promise( function ( resolve, reject ) {
+			var t0 = Date.now();
+			( function poll() {
+				if ( typeof Stripe !== 'undefined' ) return resolve();
+				if ( Date.now() - t0 > 15000 ) return reject( new Error( I.paymentError ) );
+				setTimeout( poll, 200 );
+			} )();
+		} );
+	}
+
 	function initStripeForm() {
 		if ( state.stripeElements ) return Promise.resolve();
 		if ( ! validateCustomer() ) return Promise.reject( new Error( 'Validation failed' ) );
 		var errBox = el( '[data-ntb-pay-error]', state.root );
 		clearErr( errBox );
 
-		return createBooking().then( function ( res ) {
+		return waitForStripe().then( createBooking ).then( function ( res ) {
 			if ( ! res.success ) {
 				throw new Error( res.message || I.paymentError );
 			}

@@ -75,13 +75,19 @@
 		   montaient qu'à l'apparition des suggestions (après 3 lettres), alors
 		   que Date/Heure montent dès le clic -- incohérent. Le focusin bulle,
 		   donc un seul écouteur sur le form suffit pour tous les champs. */
-		if ( form.closest( '.ntb-home' ) ) {
+		var hero = form.closest( '.ntb-home' );
+		if ( hero ) {
 			form.addEventListener( 'focusin', updateHeroFocus );
-			form.addEventListener( 'focusout', function () {
-				/* rAF : laisser le focus (et l'état des popups) se stabiliser
-				   avant de décider de redescendre, pour ne pas retomber en
-				   passant d'un champ à l'autre. */
-				requestAnimationFrame( updateHeroFocus );
+			/* La redescente ne suit plus la perte de focus (appuyer dans le
+			   form, fermer un popup ou le clavier ne renvoie plus le bloc en
+			   bas) : elle n'a lieu QUE sur un appui dans le vide -- hors du
+			   formulaire et hors du calendrier flatpickr (qui vit dans <body>,
+			   donc hors du form ; les autres popups, eux, sont dans le form). */
+			document.addEventListener( 'pointerdown', function ( e ) {
+				if ( ! hero.classList.contains( 'ntb-form-focused' ) ) return;
+				if ( form.contains( e.target ) ) return;
+				if ( e.target.closest && e.target.closest( '.flatpickr-calendar' ) ) return;
+				hero.classList.remove( 'ntb-form-focused' );
 			} );
 		}
 
@@ -89,9 +95,33 @@
 
 		var submitDiv = el( '[data-ntb-step1-submit]', form );
 		if ( submitDiv ) {
-			submitDiv.addEventListener( 'click', function () {
+			var submitNow = function () {
 				try { sessionStorage.removeItem( 'ntb2_confirm_html' ); } catch(e) {}
 				if ( form.requestSubmit ) { form.requestSubmit(); } else { form.dispatchEvent( new Event( 'submit', { bubbles: true, cancelable: true } ) ); if ( form.checkValidity() ) { form.submit(); } }
+			};
+			/* Appuyer sur le bouton fait monter le form (transition .45s) : le
+			   bouton glisse sous le doigt/curseur entre l'appui et le relâché et
+			   le navigateur annule le click (cibles différentes) -- il fallait
+			   appuyer deux fois quand le form était en bas. La capture du
+			   pointeur garde le bouton comme cible du relâché : on soumet dès le
+			   1er appui, sur pointerup. Un geste de scroll amorcé sur le bouton
+			   déclenche pointercancel (jamais pointerup) : pas de faux départ. */
+			var pointerHandledAt = 0;
+			submitDiv.addEventListener( 'pointerdown', function ( e ) {
+				if ( submitDiv.setPointerCapture ) {
+					try { submitDiv.setPointerCapture( e.pointerId ); } catch ( err ) {}
+				}
+			} );
+			submitDiv.addEventListener( 'pointerup', function () {
+				pointerHandledAt = Date.now();
+				submitNow();
+			} );
+			/* click conservé pour le clavier (Enter/espace via keydown) et les
+			   navigateurs sans Pointer Events ; ignoré s'il double un pointerup
+			   déjà traité. */
+			submitDiv.addEventListener( 'click', function () {
+				if ( Date.now() - pointerHandledAt < 600 ) return;
+				submitNow();
 			} );
 			submitDiv.addEventListener( 'keydown', function ( e ) {
 				if ( e.key === 'Enter' || e.key === ' ' ) { e.preventDefault(); submitDiv.click(); }
@@ -225,7 +255,10 @@
 				hero.style.setProperty( '--ntb-hero-lift', lift + 'px' );
 			}
 		}
-		hero.classList.toggle( 'ntb-form-focused', !! open );
+		/* Montée uniquement : la redescente ne suit plus la fermeture d'un
+		   popup ni la perte de focus, elle n'a lieu QUE sur un appui dans le
+		   vide (écouteur pointerdown posé dans initStep1). */
+		if ( open ) hero.classList.add( 'ntb-form-focused' );
 	}
 
 	/* Ouvre vers le haut (classe .ntb-pop-up) si la place manque en dessous

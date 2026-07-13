@@ -341,11 +341,13 @@ html[data-ntb-theme="light"] body:has([data-ntb-steps]) {
 	bottom: 0;
 	transition: bottom .45s var(--ntb-ease), gap .45s var(--ntb-ease), padding-top .45s var(--ntb-ease);
 }
-/* Au focus, on resserre le bloc : gap texte↔form et padding-haut à 0 (tous
-   deux AU-DESSUS du form ancré en bas, donc les annuler ne bouge pas le form
-   -- le centrage reste exact). Plus spécifique que la règle @media desktop
-   ci-dessous, donc l'emporte à toutes les largeurs. */
-.ntb-home.ntb-form-focused .ntb-hero-inner { gap: 28px; padding-top: 0; }
+/* Au focus, on resserre le bloc : gap réduit et padding-haut minimal (tous
+   deux AU-DESSUS du form ancré en bas, donc les réduire ne bouge pas le form
+   -- le centrage reste exact). 12px et non 0 : combinés aux ≥8px du garde-fou
+   JS (updateHeroFocus), le titre garde toujours un peu de vide au-dessus de
+   lui au lieu de coller le bord de l'écran. Plus spécifique que la règle
+   @media desktop ci-dessous, donc l'emporte à toutes les largeurs. */
+.ntb-home.ntb-form-focused .ntb-hero-inner { gap: 28px; padding-top: 12px; }
 .ntb-home.ntb-form-focused .ntb-hero-inner { bottom: var(--ntb-hero-lift, 0px); }
 @media (min-width: 1025px) {
 	.ntb-hero-inner { padding: 40px 48px 32px; gap: 56px; }

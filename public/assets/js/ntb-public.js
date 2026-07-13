@@ -821,12 +821,22 @@
 			state.stripe = Stripe( res.stripe_publishable );
 			// Couleurs héritées du parent : on résout les variables CSS du design
 			// system (--ntb-*) en valeurs concrètes pour l'appearance Stripe.
+			// Normalisation canvas obligatoire : le thème est en oklch(), que
+			// Chrome sérialise tel quel -- l'appearance Stripe REJETTE ces
+			// valeurs pour ses `variables` (colorText...) et retombe sur son
+			// noir par défaut : texte illisible en thème sombre. Le canvas
+			// re-sérialise en hex/rgba, toujours acceptés.
+			var canvasCtx = document.createElement( 'canvas' ).getContext( '2d' );
 			var cssColor = function ( varName ) {
 				var probe = document.createElement( 'div' );
 				probe.style.cssText = 'display:none;color:var(' + varName + ')';
 				state.root.appendChild( probe );
 				var c = getComputedStyle( probe ).color;
 				probe.remove();
+				if ( canvasCtx ) {
+					canvasCtx.fillStyle = c;
+					c = canvasCtx.fillStyle;
+				}
 				return c;
 			};
 			var rootCS = getComputedStyle( state.root );
@@ -1253,6 +1263,10 @@
 		}
 		function syncNavOffset() {
 			state.root.style.setProperty( '--ntb-nav-offset', stickyTop() + 'px' );
+			/* Bas du nav SEUL (sans l'en-tête) : seuil du récap étape 3, où le
+			   rail 2-3-4 n'est plus fixed (parité plugin d'origine) -- le récap
+			   se cale juste sous le nav au lieu de descendre sous le rail. */
+			state.root.style.setProperty( '--ntb-nav-bottom', getNavOffset() + 'px' );
 		}
 		syncNavOffset();
 

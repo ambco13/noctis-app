@@ -567,6 +567,11 @@ html[data-ntb-theme="light"] body:has([data-ntb-steps]) {
 		border-radius: 999px;
 		box-shadow: var(--ntb-shadow-sm);
 	}
+	/* Étapes 3-4 (.ntb-no-aside) : le rail défile avec l'en-tête (parité
+	   plugin d'origine) au lieu de flotter fixed au-dessus de la colonne du
+	   récap -- c'est lui qui forçait le récap à se caler très bas et créait
+	   un grand vide au-dessus du récap dès l'ouverture du paiement. */
+	.ntb-scope.ntb-no-aside .ntb-prog { position: static; }
 }
 .ntb-prog-node { display: flex; align-items: center; gap: 8px; }
 .ntb-prog-bub {
@@ -1167,10 +1172,11 @@ html[data-ntb-theme="light"] body:has([data-ntb-steps]) {
 	   sur la hauteur plutôt que de laisser un grand vide sous le total. */
 	justify-content: space-between;
 	position: sticky;
-	/* Même seuil que l'aside de l'étape 2 (nav + en-tête, mesurés en JS dans
-	   --ntb-nav-offset) : le rail 2-3-4 est fixed à cette hauteur, un top de
-	   24px seuls ferait glisser le récap dessous. */
-	top: calc(var(--ntb-nav-offset, 64px) + 24px);
+	/* Juste sous le nav (mesuré en JS dans --ntb-nav-bottom) : le rail 2-3-4
+	   n'est plus fixed aux étapes 3-4 (parité plugin d'origine, top: 24px chez
+	   lui), le récap n'a donc plus à descendre sous lui -- il reste aligné
+	   avec le formulaire jusqu'à ce que le scroll l'amène au nav. */
+	top: calc(var(--ntb-nav-bottom, 64px) + 16px);
 	/* Même garde-fou que .ntb-step3-form : ne jamais déborder de sa colonne. */
 	min-width: 0; max-width: 100%; box-sizing: border-box; overflow-wrap: break-word;
 	overflow: hidden;
@@ -1366,6 +1372,9 @@ html[data-ntb-theme="light"] .ntb-ac-list {
 	top: 75px;
 	z-index: 90;
 }
+/* Étapes 3-4 : le rail et sa cellule défilent avec l'en-tête (voir
+   .ntb-no-aside .ntb-prog plus haut -- parité plugin d'origine). */
+.ntb-scope.ntb-no-aside .ntb-step3-right { position: static !important; }
 .ntb-step3-right .ntb-prog {
 	display: flex !important;
 	flex-direction: row !important;

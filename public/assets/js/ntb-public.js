@@ -345,6 +345,173 @@
 		}
 	}
 
+	// Note « un compte sera créé » : révélée seulement si l'email saisi n'a
+	// pas encore de compte (invité uniquement). Un compte connecté ou déjà
+	// existant ne doit pas voir ce message.
+	function initAccountNote() {
+		if ( D.currentUser ) return;
+		var note = el( '[data-ntb-account-note]', state.root );
+		var emailInput = el( '#ntb-email', state.root );
+		if ( ! note || ! emailInput ) return;
+
+		var lastChecked = '';
+		emailInput.addEventListener( 'blur', function () {
+			var email = ( emailInput.value || '' ).trim();
+			if ( email === lastChecked ) return;
+			if ( ! /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test( email ) ) {
+				note.hidden = true;
+				return;
+			}
+			lastChecked = email;
+			api( '/auth/check', 'POST', { email: email } ).then( function ( res ) {
+				note.hidden = ! ( res && res.exists === false );
+			} ).catch( function () {
+				note.hidden = true;
+			} );
+		} );
+	}
+
+	/* ============================================================
+	 * Sélecteur d'indicatif pays (champ téléphone) — checkout + profil.
+	 * Le champ caché porte la valeur combinée « +indicatif + national »
+	 * (lue par le reste du code). Le panneau est déplacé dans <body> et
+	 * positionné en fixed à l'ouverture, pour échapper aux conteneurs en
+	 * overflow:hidden (ex. la carte .ntb-step3-form).
+	 * ========================================================== */
+	function initPhoneInputs() {
+		els( '[data-ntb-tel]' ).forEach( initOnePhone );
+	}
+
+	function initOnePhone( root ) {
+		var hidden = el( 'input[type="hidden"]', root );
+		var btn    = el( '[data-ntb-tel-btn]', root );
+		var flag   = el( '[data-ntb-tel-flag]', root );
+		var dialEl = el( '[data-ntb-tel-dial]', root );
+		var numIn  = el( '[data-ntb-tel-num]', root );
+		var panel  = el( '[data-ntb-tel-panel]', root );
+		var search = el( '[data-ntb-tel-search]', root );
+		var list   = el( '[data-ntb-tel-list]', root );
+		if ( ! hidden || ! btn || ! numIn || ! panel || ! list ) return;
+
+		var opts = els( '.ntb-tel-opt', list );
+		// Pour parser une valeur existante : indicatifs les plus longs d'abord.
+		var byDialLen = opts.slice().sort( function ( a, b ) {
+			return b.getAttribute( 'data-dial' ).length - a.getAttribute( 'data-dial' ).length;
+		} );
+		var flagBase = flag.getAttribute( 'src' ).replace( /[a-z]{2}\.svg$/, '' );
+		var current = null;
+		var open = false;
+
+		var phFallback = root.getAttribute( 'data-ph-fallback' ) || '';
+
+		function select( opt ) {
+			if ( ! opt ) return;
+			current = opt;
+			flag.setAttribute( 'src', flagBase + opt.getAttribute( 'data-iso' ) + '.svg' );
+			dialEl.textContent = opt.getAttribute( 'data-dial' );
+			// Placeholder = exemple du pays (longueur/format), ou repli générique.
+			numIn.setAttribute( 'placeholder', opt.getAttribute( 'data-ex' ) || phFallback );
+			opts.forEach( function ( o ) { o.classList.toggle( 'is-active', o === opt ); } );
+			sync();
+		}
+
+		// Recompose la valeur combinée + notifie le champ caché (maybeAutoPay, etc.).
+		function sync() {
+			var dial = current ? current.getAttribute( 'data-dial' ) : ( root.getAttribute( 'data-default-dial' ) || '' );
+			var digits = ( numIn.value || '' ).replace( /\D/g, '' );
+			hidden.value = digits ? dial + digits : '';
+			hidden.dispatchEvent( new Event( 'input', { bubbles: true } ) );
+		}
+
+		function initValue() {
+			var raw = ( hidden.value || '' ).trim();
+			var defDial = root.getAttribute( 'data-default-dial' ) || '+33';
+			if ( raw.charAt( 0 ) === '+' ) {
+				var match = null;
+				for ( var i = 0; i < byDialLen.length; i++ ) {
+					if ( raw.indexOf( byDialLen[i].getAttribute( 'data-dial' ) ) === 0 ) { match = byDialLen[i]; break; }
+				}
+				if ( match ) {
+					numIn.value = raw.slice( match.getAttribute( 'data-dial' ).length ).replace( /\D/g, '' );
+					select( match );
+					return;
+				}
+				numIn.value = raw.replace( /\D/g, '' );
+			} else if ( raw ) {
+				numIn.value = raw.replace( /\D/g, '' );
+			}
+			var def = null;
+			opts.forEach( function ( o ) { if ( ! def && o.getAttribute( 'data-dial' ) === defDial ) def = o; } );
+			select( def || opts[0] );
+		}
+
+		function position() {
+			var r = btn.getBoundingClientRect();
+			var w = Math.max( 260, root.getBoundingClientRect().width );
+			var vw = document.documentElement.clientWidth;
+			var left = Math.min( r.left, vw - w - 8 );
+			panel.style.width = w + 'px';
+			panel.style.left = Math.max( 8, left ) + 'px';
+			var below = window.innerHeight - r.bottom;
+			var ph = panel.offsetHeight || 320;
+			panel.style.top = ( below < ph + 8 && r.top > below ? r.top - ph - 6 : r.bottom + 6 ) + 'px';
+		}
+
+		function onOutside( e ) {
+			if ( panel.contains( e.target ) || btn.contains( e.target ) ) return;
+			closePanel();
+		}
+		function onKey( e ) { if ( e.key === 'Escape' ) { closePanel(); btn.focus(); } }
+
+		function openPanel() {
+			if ( open ) return;
+			open = true;
+			document.body.appendChild( panel );
+			panel.hidden = false;
+			filter( '' );
+			search.value = '';
+			position();
+			btn.setAttribute( 'aria-expanded', 'true' );
+			setTimeout( function () { search.focus(); }, 0 );
+			if ( current ) current.scrollIntoView( { block: 'nearest' } );
+			document.addEventListener( 'mousedown', onOutside, true );
+			document.addEventListener( 'keydown', onKey, true );
+			window.addEventListener( 'resize', position );
+			window.addEventListener( 'scroll', position, true );
+		}
+		function closePanel() {
+			if ( ! open ) return;
+			open = false;
+			panel.hidden = true;
+			root.appendChild( panel );
+			btn.setAttribute( 'aria-expanded', 'false' );
+			document.removeEventListener( 'mousedown', onOutside, true );
+			document.removeEventListener( 'keydown', onKey, true );
+			window.removeEventListener( 'resize', position );
+			window.removeEventListener( 'scroll', position, true );
+		}
+
+		function filter( q ) {
+			q = ( q || '' ).trim().toLowerCase();
+			opts.forEach( function ( o ) {
+				o.hidden = !! q && o.getAttribute( 'data-search' ).indexOf( q ) === -1;
+			} );
+		}
+
+		btn.addEventListener( 'click', function () { open ? closePanel() : openPanel(); } );
+		search.addEventListener( 'input', function () { filter( search.value ); } );
+		list.addEventListener( 'click', function ( e ) {
+			var opt = e.target.closest( '.ntb-tel-opt' );
+			if ( ! opt ) return;
+			select( opt );
+			closePanel();
+			numIn.focus();
+		} );
+		numIn.addEventListener( 'input', sync );
+
+		initValue();
+	}
+
 
 	function initFlow() {
 		var root = el( '[data-ntb-steps]' );
@@ -436,6 +603,7 @@
 			sBtn.onclick = payWithStripe;
 		}
 
+		initAccountNote();
 		loadQuotes();
 
 		// Re-render la carte quand on bascule light ↔ dark.
@@ -1379,6 +1547,7 @@
 	document.addEventListener( 'DOMContentLoaded', function () {
 		initStep1();
 		initFlow();
+		initPhoneInputs();
 		// requestAnimationFrame guarantees theme JS (sticky headers) has run before we measure nav height
 		requestAnimationFrame( function() {
 			initAside();

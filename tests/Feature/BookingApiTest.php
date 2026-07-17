@@ -3,6 +3,8 @@
 namespace Tests\Feature;
 
 use App\Models\Booking;
+use App\Models\Customer;
+use App\Models\User;
 use App\Models\Vehicle;
 use App\Services\GoogleMaps;
 use App\Support\Settings;
@@ -88,6 +90,33 @@ class BookingApiTest extends TestCase
         $this->assertSame(35.0, $booking->price);
         $this->assertStringStartsWith('NTB-', $booking->booking_ref);
         $this->assertNotNull($booking->customer_id);
+    }
+
+    public function test_booking_ne_modifie_pas_le_nom_dun_compte_configure(): void
+    {
+        $vehicle = $this->vehicle();
+
+        $user = User::factory()->create(['email' => 'amir@example.com', 'name' => 'Nom Configuré']);
+        $user->forceFill(['account_status' => 'active'])->save();
+        Customer::create(['email' => 'amir@example.com', 'full_name' => 'Nom Configuré', 'phone' => '+33600000000']);
+
+        $this->postJson('/api/v1/booking', [
+            'vehicle_id' => $vehicle->id,
+            'full_name' => 'Nom Différent',
+            'email' => 'amir@example.com',
+            'phone' => '+33699999999',
+            'pickup_address' => 'Paris, France',
+            'dropoff_address' => 'Versailles, France',
+            'ride_date' => now()->addDay()->format('Y-m-d'),
+            'ride_time' => '14:30',
+        ])->assertOk();
+
+        // La fiche contact garde le nom/téléphone configurés par le propriétaire du compte.
+        $this->assertDatabaseHas('customers', [
+            'email' => 'amir@example.com',
+            'full_name' => 'Nom Configuré',
+            'phone' => '+33600000000',
+        ]);
     }
 
     public function test_booking_refuse_un_vehicule_inconnu(): void

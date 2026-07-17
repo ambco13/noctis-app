@@ -33,8 +33,8 @@
         </div>
 
         <div class="ntb-form-group">
-            <label for="ntb-profile-phone">{{ __('Téléphone') }}</label>
-            <input type="tel" id="ntb-profile-phone" name="phone" value="{{ $user->phone }}" />
+            <label for="ntb-profile-phone-num">{{ __('Téléphone') }}</label>
+            @include('partials.phone-input', ['id' => 'ntb-profile-phone', 'name' => 'phone', 'value' => $user->phone])
         </div>
 
         <div class="ntb-form-actions ntb-form-actions--sep">

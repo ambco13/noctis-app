@@ -1409,8 +1409,10 @@ html[data-ntb-theme="light"] .ntb-ac-list {
 /* Téléphones : marges latérales réduites sur les étapes 2-3-4 (bords d'écran
    et intérieur des cartes) — le contenu gagne en largeur utile. */
 @media (max-width: 640px) {
-	.ntb-step2-header { padding-left: 6px; padding-right: 6px; }
-	.ntb-step2-layout { padding-left: 6px; padding-right: 6px; }
+	/* Padding de PAGE (marge d'écran gauche/droite) réduit pour gagner en
+	   largeur utile. Les cartes gardent leur padding intérieur d'origine. */
+	.ntb-step2-header { padding-left: 2px; padding-right: 2px; }
+	.ntb-step2-layout { padding-left: 2px; padding-right: 2px; }
 	.ntb-step3-form { padding: 18px 10px; }
 	.ntb-recap { padding: 18px 10px; }
 	.ntb-confirm-inner { padding: 24px 12px; }
@@ -1535,3 +1537,84 @@ html[data-ntb-theme="light"] .ntb-ac-list {
 	color: var(--ntb-accent);
 	font-size: 13px;
 }
+
+/* Note « un compte sera créé » (invité sans compte existant) — au-dessus du paiement. */
+.ntb-account-note {
+	margin: 0 0 12px 0;
+	font-size: 13px;
+	line-height: 1.5;
+	color: var(--ntb-muted);
+}
+.ntb-account-note-star {
+	color: var(--ntb-accent);
+	font-weight: 700;
+	margin-right: 2px;
+}
+
+/* ===== Sélecteur d'indicatif pays (champ téléphone) — checkout + profil ===== */
+.ntb-tel {
+	position: relative; display: flex; align-items: center; gap: 8px;
+	background: var(--ntb-surf); border: 0.5px solid var(--ntb-line);
+	border-radius: var(--ntb-r-sm); padding: 0 6px 0 8px; min-height: 44px;
+	max-width: 100%; box-sizing: border-box;
+}
+.ntb-tel-btn {
+	display: inline-flex; align-items: center; gap: 6px; flex: 0 0 auto;
+	background: transparent; border: 0; border-right: 1px solid var(--ntb-line-soft, var(--ntb-line));
+	border-radius: 0; padding: 6px 9px 6px 2px; margin: 0; cursor: pointer;
+	font: inherit; color: var(--ntb-text); transition: opacity var(--ntb-dur);
+}
+.ntb-tel-btn:hover { opacity: .8; }
+.ntb-tel-flag {
+	width: 20px; height: 15px; object-fit: cover; border-radius: 2px; display: block;
+	box-shadow: 0 0 0 0.5px rgba(0, 0, 0, .1);
+}
+.ntb-tel-dial { font-size: 14px; font-weight: 500; white-space: nowrap; }
+.ntb-tel-caret { color: var(--ntb-muted); flex: 0 0 auto; }
+.ntb-tel-num {
+	flex: 1; min-width: 0; background: none; border: 0; outline: none;
+	font: inherit; font-size: 14px; color: var(--ntb-text); padding: 10px 4px;
+}
+.ntb-tel-num::placeholder { color: var(--ntb-faint); }
+
+/* Panneau : déplacé dans <body> et positionné en fixed par le JS. */
+.ntb-tel-panel {
+	position: fixed; z-index: 9999; display: flex; flex-direction: column;
+	width: 280px; max-height: 320px; overflow: hidden;
+	background: var(--ntb-surf); border: 1px solid var(--ntb-line);
+	border-radius: var(--ntb-r-sm); box-shadow: 0 10px 34px rgba(0, 0, 0, .22);
+}
+/* display:flex ci-dessus écrase le [hidden] de l'UA — on force l'état masqué. */
+.ntb-tel-panel[hidden] { display: none; }
+.ntb-tel-search-wrap { position: relative; padding: 8px; border-bottom: 1px solid var(--ntb-line-soft, var(--ntb-line)); }
+.ntb-tel-search-icon { position: absolute; left: 19px; top: 50%; transform: translateY(-50%); color: var(--ntb-faint); pointer-events: none; }
+.ntb-tel-search {
+	width: 100%; box-sizing: border-box; padding: 8px 10px 8px 34px;
+	border: 0.5px solid var(--ntb-line); border-radius: var(--ntb-r-sm);
+	background: var(--ntb-bg2, var(--ntb-surf)); font: inherit; font-size: 14px;
+	color: var(--ntb-text); outline: none;
+}
+.ntb-tel-search:focus { border-color: var(--ntb-accent-line); }
+.ntb-tel-list { list-style: none; margin: 0; padding: 4px; overflow-y: auto; flex: 1 1 auto; }
+.ntb-tel-opt {
+	display: flex; align-items: center; gap: 10px; padding: 8px 10px;
+	cursor: pointer; border-radius: 6px;
+}
+.ntb-tel-opt:hover, .ntb-tel-opt.is-active { background: var(--ntb-accent-soft); }
+.ntb-tel-opt[hidden] { display: none; }
+.ntb-tel-opt-name { flex: 1 1 auto; min-width: 0; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ntb-tel-opt-dial { flex: 0 0 auto; font-size: 13px; color: var(--ntb-muted); }
+
+/* Souligné des champs du checkout : le repli d'origine (#fff) est invisible sur
+   le fond blanc de la carte — on définit une vraie couleur de trait, héritée par
+   TOUS les champs (Nom, Tél., Email, Message) pour un souligné visible et cohérent.
+   Scopé à la carte : le formulaire du hero garde son trait blanc sur l'image. */
+.ntb-step3-form { --ntb-field-line: var(--ntb-line); }
+
+/* Checkout (.ntb-field) : même style « souligné » que les autres champs. */
+.ntb-field .ntb-tel {
+	background: transparent; border: 0; border-bottom: 1px solid var(--ntb-field-line, #fff);
+	border-radius: 0; padding: 0;
+}
+.ntb-field .ntb-tel-num { font-size: var(--ntb-text-lg); padding: 8px 0; }
+.ntb-field.has-error .ntb-tel { border-bottom-color: var(--ntb-danger); }

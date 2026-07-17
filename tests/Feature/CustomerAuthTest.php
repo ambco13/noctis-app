@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Booking;
+use App\Models\Customer;
 use App\Models\User;
 use App\Services\MagicLink;
 use App\Support\Settings;
@@ -263,5 +264,16 @@ class CustomerAuthTest extends TestCase
         $this->assertSame('', $booking->email);
         $this->assertSame('Compte supprimé', $booking->full_name);
         $this->assertDatabaseMissing('email_history', ['email' => 'amir@example.com']);
+    }
+
+    public function test_suppression_compte_purge_la_fiche_contact(): void
+    {
+        $user = $this->user();
+        Customer::create(['email' => 'amir@example.com', 'full_name' => 'Amir Cohen', 'phone' => '+33612345678']);
+
+        $this->actingAs($user)->postJson('/api/v1/customer/me/delete')->assertOk();
+
+        // La fiche contact (PII pure) est supprimée définitivement, pas anonymisée.
+        $this->assertDatabaseMissing('customers', ['email' => 'amir@example.com']);
     }
 }

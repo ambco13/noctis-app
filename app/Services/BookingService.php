@@ -82,10 +82,17 @@ class BookingService
         ];
         $price = Pricing::calculate($vehicle, $route['distance_km'], $route['duration_min'], $context);
 
-        $customer = Customer::updateOrCreate(
-            ['email' => $input['email']],
-            ['full_name' => $input['full_name'], 'phone' => $input['phone']]
-        );
+        // Fiche contact : on tient nom/téléphone à jour, SAUF si un compte déjà
+        // configuré (active) possède cet email — son propriétaire garde son nom.
+        $owner = CustomerService::resolveUserByEmail($input['email']);
+        $configured = $owner && $owner->account_status === CustomerService::STATUS_ACTIVE;
+
+        $customer = Customer::firstOrNew(['email' => $input['email']]);
+        if (! $customer->exists || ! $configured) {
+            $customer->full_name = $input['full_name'];
+            $customer->phone = $input['phone'];
+        }
+        $customer->save();
 
         $booking = Booking::create([
             'booking_ref' => self::generateRef(),
@@ -140,9 +147,16 @@ class BookingService
             'transaction_id' => $transactionId,
         ]);
 
+        // Réservation invité (non connecté) : on garantit un compte client
+        // rattaché. Un compte fraîchement créé est signalé dans l'e-mail.
+        $accountCreated = false;
+        if ($booking->user_id === null && $booking->email) {
+            $accountCreated = CustomerService::ensureAccountForBooking($booking)['created'];
+        }
+
         session()->forget(self::SESSION_PENDING);
 
-        BookingConfirmed::dispatch($booking);
+        BookingConfirmed::dispatch($booking, $accountCreated);
 
         return $booking;
     }

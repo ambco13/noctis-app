@@ -20,8 +20,11 @@ class Notifications
 {
     /**
      * Envoie toutes les notifications activées pour une réservation confirmée.
+     *
+     * @param  bool  $accountCreated  Un compte client vient d'être créé pour cette
+     *                                réservation : le signaler dans l'e-mail client.
      */
-    public static function sendForBooking(Booking $booking): void
+    public static function sendForBooking(Booking $booking, bool $accountCreated = false): void
     {
         $tags = self::buildTags($booking);
 
@@ -30,7 +33,8 @@ class Notifications
                 $booking->email,
                 self::render((string) Settings::get('tpl_email_customer_subject'), $tags),
                 self::render((string) Settings::get('tpl_email_customer_body'), $tags),
-                $booking
+                $booking,
+                $accountCreated
             );
         }
 
@@ -90,10 +94,10 @@ class Notifications
         return strtr($template, $tags);
     }
 
-    private static function sendEmail(string $to, string $subject, string $body, Booking $booking): void
+    private static function sendEmail(string $to, string $subject, string $body, Booking $booking, bool $accountCreated = false): void
     {
         try {
-            Mail::to($to)->send(new BookingNotification($subject, $body, $booking));
+            Mail::to($to)->send(new BookingNotification($subject, $body, $booking, $accountCreated));
         } catch (\Throwable $e) {
             // Une notification qui échoue ne doit jamais casser le flux de réservation.
             Log::error("Email réservation {$booking->booking_ref} vers {$to} : ".$e->getMessage());

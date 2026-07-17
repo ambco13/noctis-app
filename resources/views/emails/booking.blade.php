@@ -9,6 +9,10 @@
     $dateStr = $booking->ride_date ? $booking->ride_date->format($dateFmt) : '';
     $timeStr = $booking->ride_time ? date($timeFmt, strtotime($booking->ride_time)) : '';
 
+    // Bloc "compte créé" : optionnel (mail client uniquement après création silencieuse).
+    $accountCreated = $accountCreated ?? false;
+    $accountUrl = $accountUrl ?? '';
+
     $rows = [
         __('Référence') => $booking->booking_ref,
         __('Départ') => $booking->pickup_address,
@@ -49,6 +53,19 @@
                 <p style="margin:0 0 14px 0;color:#444444;font-size:15px;line-height:1.6;">{!! nl2br(e(trim($p))) !!}</p>
             @endif
         @endforeach
+
+        @if ($accountCreated && $accountUrl !== '')
+        <!-- Compte client créé silencieusement lors de cette réservation -->
+        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;background:#f4f8fc;border:1px solid #d6e4f0;border-radius:8px;margin:20px 0;">
+          <tr>
+            <td style="padding:18px 20px;">
+              <p style="margin:0 0 6px 0;color:#222222;font-size:15px;font-weight:600;">{{ __('Un compte a été créé pour vous') }}</p>
+              <p style="margin:0 0 14px 0;color:#555555;font-size:14px;line-height:1.6;">{{ __('Retrouvez et gérez vos réservations depuis votre espace client. Connectez-vous pour le configurer.') }}</p>
+              <a href="{{ $accountUrl }}" style="display:inline-block;background:{{ $accent }};color:#ffffff;font-size:14px;font-weight:600;text-decoration:none;padding:11px 22px;border-radius:6px;">{{ __('Configurer mon compte') }}</a>
+            </td>
+          </tr>
+        </table>
+        @endif
 
         <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;border:1px solid #e0e0e0;border-radius:6px;overflow:hidden;margin:20px 0;">
           <tbody>

@@ -21,6 +21,7 @@ class BookingNotification extends Mailable
         public string $emailSubject,
         public string $body,
         public Booking $booking,
+        public bool $accountCreated = false,
     ) {}
 
     public function envelope(): Envelope
@@ -35,6 +36,8 @@ class BookingNotification extends Mailable
             with: [
                 'paragraphs' => preg_split('/\n{2,}/', trim($this->body)) ?: [],
                 'booking' => $this->booking,
+                'accountCreated' => $this->accountCreated,
+                'accountUrl' => route('account'),
             ],
         );
     }

@@ -18,6 +18,6 @@ class SendBookingNotifications implements ShouldQueue
 
     public function handle(BookingConfirmed $event): void
     {
-        Notifications::sendForBooking($event->booking);
+        Notifications::sendForBooking($event->booking, $event->accountCreated);
     }
 }

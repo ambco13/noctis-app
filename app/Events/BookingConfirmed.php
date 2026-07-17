@@ -14,5 +14,8 @@ class BookingConfirmed
 {
     use Dispatchable;
 
-    public function __construct(public Booking $booking) {}
+    public function __construct(
+        public Booking $booking,
+        public bool $accountCreated = false,
+    ) {}
 }

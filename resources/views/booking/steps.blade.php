@@ -168,12 +168,8 @@
                             <div class="ntb-field-err" hidden></div>
                         </div>
                         <div class="ntb-field">
-                            <label for="ntb-phone">{{ __('Téléphone') }}</label>
-                            <div class="ntb-field-input">
-                                <input type="tel" id="ntb-phone" name="ntb_phone" autocomplete="tel"
-                                    placeholder="{{ \App\Support\Settings::get('default_country_code', '+33') }} 6 12 34 56 78"
-                                    required />
-                            </div>
+                            <label for="ntb-phone-num">{{ __('Téléphone') }}</label>
+                            @include('partials.phone-input', ['id' => 'ntb-phone', 'name' => 'ntb_phone', 'value' => '', 'required' => true])
                             <div class="ntb-field-err" hidden></div>
                         </div>
                         <div class="ntb-field">
@@ -202,6 +198,15 @@
                                 </button>
                             </div>
                         @endif
+
+                        @guest
+                            <!-- Signale la création automatique d'un compte (invité sans compte existant).
+                                 Masqué par défaut ; révélé en JS si l'email saisi n'a pas encore de compte. -->
+                            <p class="ntb-account-note" data-ntb-account-note hidden>
+                                <span class="ntb-account-note-star" aria-hidden="true">*</span>
+                                {{ __('Un compte sera créé pour suivre vos réservations.') }}
+                            </p>
+                        @endguest
 
                         <div class="ntb-pay-panel" data-pay-panel="stripe" hidden>
                             <div id="ntb-stripe-element"></div>

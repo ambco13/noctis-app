@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Booking;
+use App\Models\Customer;
 use App\Models\User;
 use App\Support\Settings;
 use Illuminate\Support\Facades\DB;
@@ -52,6 +53,59 @@ class CustomerService
         MagicLink::send($user, MagicLink::TYPE_LOGIN);
 
         return $user;
+    }
+
+    /**
+     * Garantit un compte client rattaché à une réservation payée (flux invité).
+     *
+     * Appelé après paiement confirmé : si l'email n'a aucun compte, en crée un
+     * silencieusement (statut pending, sans mot de passe ni magic link — l'info
+     * de création part dans l'e-mail de réservation, pas dans un e-mail séparé).
+     * Si un compte existe déjà, rattache la réservation et ne met à jour le
+     * profil (nom/téléphone) QUE si le compte n'est pas encore configuré : un
+     * compte actif garde le nom saisi par son propriétaire.
+     *
+     * @return array{user: User, created: bool}
+     */
+    public static function ensureAccountForBooking(Booking $booking): array
+    {
+        $email = strtolower(trim((string) $booking->email));
+
+        $user = self::resolveUserByEmail($email);
+
+        if ($user) {
+            // Compte non configuré : on tient le contact à jour. Configuré : on n'y touche pas.
+            if ($user->account_status !== self::STATUS_ACTIVE) {
+                $user->forceFill([
+                    'name' => $booking->full_name ?: $user->name,
+                    'phone' => $booking->phone ?: $user->phone,
+                ])->save();
+            }
+
+            if ($booking->user_id === null) {
+                $booking->forceFill(['user_id' => $user->id])->save();
+            }
+
+            return ['user' => $user, 'created' => false];
+        }
+
+        // account_status : non fillable, prend son défaut 'pending' en base.
+        $user = User::create([
+            'name' => $booking->full_name ?: $email,
+            'first_name' => '',
+            'last_name' => '',
+            'phone' => (string) $booking->phone,
+            'email' => $email,
+            'password' => null,
+        ]);
+
+        self::addEmailHistory($user->id, $email, true);
+
+        // Rattache cette réservation ET les éventuelles réservations invité passées.
+        Booking::where('email', $email)->whereNull('user_id')->update(['user_id' => $user->id]);
+        $booking->user_id = $user->id; // Reflète le rattachement sur l'instance en mémoire.
+
+        return ['user' => $user, 'created' => true];
     }
 
     /**
@@ -264,6 +318,10 @@ class CustomerService
         }
 
         DB::transaction(function () use ($user) {
+            // Emails connus du compte (courant + anciens) : sert à purger les fiches contact.
+            $emails = DB::table('email_history')->where('user_id', $user->id)->pluck('email')->all();
+            $emails[] = $user->email;
+
             // Anonymisation : la réservation reste (comptabilité) sans données personnelles.
             Booking::where('user_id', $user->id)->orWhere('email', $user->email)->update([
                 'user_id' => null,
@@ -272,6 +330,10 @@ class CustomerService
                 'phone' => '',
                 'customer_message' => null,
             ]);
+
+            // Fiche contact = PII pure, aucune valeur comptable (registre tenu par Stripe/PayPal)
+            // → suppression définitive, pas d'anonymisation.
+            Customer::whereIn('email', array_unique($emails))->delete();
 
             $user->delete(); // email_history, magic_link_tokens, name_aliases : FK cascade.
         });

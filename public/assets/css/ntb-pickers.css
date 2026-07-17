@@ -281,9 +281,9 @@ input.flatpickr-input.alt-input { cursor: pointer; caret-color: transparent; }
 }
 
 /* Colonnes : 6 lignes visibles, la sélection s'aligne sur la première.
-   Le contenu est répété en JS (ntb-datepicker.js) pour un défilement en
-   boucle infinie -- aucun padding nécessaire pour atteindre les extrêmes. */
-.nc-time-col { flex: 1; min-width: 0; height: min(calc(var(--_item) * 6), 38vh); overflow-y: scroll; scroll-snap-type: y mandatory; scrollbar-width: none; position: relative; z-index: 1; padding: 0; }
+   Une seule passe (pas de boucle) : le padding-bas = hauteur - 1 ligne, pour
+   que la dernière valeur (23 / 55) puisse remonter jusqu'à la ligne du haut. */
+.nc-time-col { flex: 1; min-width: 0; height: min(calc(var(--_item) * 6), 38vh); overflow-y: scroll; scroll-snap-type: y mandatory; scrollbar-width: none; position: relative; z-index: 1; padding: 0 0 calc(min(var(--_item) * 6, 38vh) - var(--_item)) 0; }
 .nc-time-col::-webkit-scrollbar { display: none; }
 
 /* Séparateur : un ":" par ligne visible (spans créés en JS), celui de la

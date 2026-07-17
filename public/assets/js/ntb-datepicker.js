@@ -16,12 +16,9 @@
 	   sert à choisir. Sur desktop (pointeur fin) on garde la saisie clavier. */
 	var isCoarse = !! ( window.matchMedia && window.matchMedia( '(pointer: coarse)' ).matches );
 
-	/* Rouleau heure : hauteur d'un item (sync avec --_item du CSS), nombre de
-	   copies de chaque liste (défilement en boucle infinie) et index de la
-	   copie centrale, sur laquelle le scroll est recentré silencieusement. */
+	/* Rouleau heure : hauteur d'un item (sync avec --_item du CSS). Une seule
+	   passe par colonne (heures 00→23, minutes 00→55), sans boucle infinie. */
 	var ITEM_H = 36;
-	var REPEAT = 5;
-	var MID    = Math.floor( REPEAT / 2 );
 
 	document.addEventListener( 'DOMContentLoaded', function () {
 
@@ -485,9 +482,7 @@
 		}
 
 		function scrollToActive( col ) {
-			/* Les items sont répétés (boucle infinie) : rejoindre la copie de la
-			   valeur active la plus PROCHE de la position actuelle, alignée sur
-			   la ligne de sélection (tout en haut du rouleau). */
+			/* Aligne la valeur active sur la ligne de sélection (tout en haut). */
 			var best = null, bestDist = Infinity;
 			col.querySelectorAll( '.nc-ti-on' ).forEach( function (a) {
 				var d = Math.abs( a.offsetTop - col.scrollTop );
@@ -497,8 +492,7 @@
 		}
 
 		function scrollInstant( col, idx ) {
-			/* Copie centrale : marge maximale des deux côtés avant recentrage. */
-			col.scrollTop = ( MID * ( +col.dataset.count ) + idx ) * ITEM_H;
+			col.scrollTop = idx * ITEM_H;
 		}
 
 		/* Afficher la valeur initiale si elle existe */
@@ -528,23 +522,15 @@
 		} );
 
 		/* Auto-sélection au scroll : l'item aligné sur la ligne du HAUT est la
-		   valeur choisie. La liste étant répétée REPEAT fois, l'index est
-		   ramené modulo `count`, puis le scroll est recentré sur la copie
-		   centrale -- toutes les copies étant identiques, le saut est
-		   invisible, d'où un défilement sans fin dans les deux sens. */
+		   valeur choisie (une seule passe, index borné à [0, count-1]). */
 		[ colH, colM ].forEach( function (col, idx) {
 			col.addEventListener( 'scroll', function () {
 				clearTimeout( col._st );
 				col._st = setTimeout( function () {
 					var count = +col.dataset.count;
-					var raw   = Math.round( col.scrollTop / ITEM_H );
-					var i     = ( ( raw % count ) + count ) % count;
+					var i = Math.max( 0, Math.min( count - 1, Math.round( col.scrollTop / ITEM_H ) ) );
 					if ( idx === 0 ) select( i, curM < 0 ? 0 : curM, false );
 					else             select( curH < 0 ? 0 : curH, i * 5, false );
-					var centered = MID * count + i;
-					if ( raw !== centered ) {
-						col.scrollTop = centered * ITEM_H + ( col.scrollTop - raw * ITEM_H );
-					}
 				}, 80 );
 			} );
 		} );
@@ -608,17 +594,14 @@
 		var col = document.createElement( 'div' );
 		col.className = 'nc-time-col';
 		col.dataset.count = count;
-		/* Liste répétée REPEAT fois pour la boucle infinie (voir le handler
-		   scroll : recentrage silencieux sur la copie centrale). */
-		for ( var r = 0; r < REPEAT; r++ ) {
-			for ( var i = 0; i < count; i++ ) {
-				var v  = i * step;
-				var el = document.createElement( 'div' );
-				el.className   = 'nc-ti';
-				el.textContent = pad( v );
-				el.dataset.v   = v;
-				col.appendChild( el );
-			}
+		/* Une seule passe (00 → count-1) : pas de répétition, pas de boucle. */
+		for ( var i = 0; i < count; i++ ) {
+			var v  = i * step;
+			var el = document.createElement( 'div' );
+			el.className   = 'nc-ti';
+			el.textContent = pad( v );
+			el.dataset.v   = v;
+			col.appendChild( el );
 		}
 		return col;
 	}

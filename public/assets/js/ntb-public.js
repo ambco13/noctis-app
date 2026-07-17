@@ -401,6 +401,10 @@
 		var flagBase = flag.getAttribute( 'src' ).replace( /[a-z]{2}\.svg$/, '' );
 		var current = null;
 		var open = false;
+		/* Le panneau est "porté" hors de la carte (overflow:hidden) à l'ouverture,
+		   mais vers l'ancêtre thémé (.ntb-scope / .ntb-dashboard) et non <body> :
+		   sinon il perd les variables --ntb-* et le texte reste noir en mode sombre. */
+		var scopeRoot = root.closest( '.ntb-scope, .ntb-dashboard' ) || document.body;
 
 		var phFallback = root.getAttribute( 'data-ph-fallback' ) || '';
 
@@ -466,7 +470,7 @@
 		function openPanel() {
 			if ( open ) return;
 			open = true;
-			document.body.appendChild( panel );
+			scopeRoot.appendChild( panel );
 			panel.hidden = false;
 			filter( '' );
 			search.value = '';

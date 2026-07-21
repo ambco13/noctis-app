@@ -1,6 +1,7 @@
 @php($navServices = config('marketing.services'))
 @php($isSvc = request()->routeIs('marketing.service'))
-<header style="position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:0 44px;height:60px;background:color-mix(in oklch, var(--ntb-bg) 72%, transparent);backdrop-filter:blur(18px) saturate(1.4);-webkit-backdrop-filter:blur(18px) saturate(1.4);border-bottom:1px solid color-mix(in oklch, var(--ntb-line) 60%, transparent)">
+@php($heroNav = request()->routeIs('marketing.home'))
+<header id="mkt-header" @if ($heroNav) data-hero-nav @endif style="position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:0 44px;height:60px;background:color-mix(in oklch, var(--ntb-bg) 72%, transparent);backdrop-filter:blur(18px) saturate(1.4);-webkit-backdrop-filter:blur(18px) saturate(1.4);border-bottom:1px solid color-mix(in oklch, var(--ntb-line) 60%, transparent)">
     <a href="{{ route('marketing.home') }}" style="display:flex;align-items:center;gap:10px;font-family:var(--font-serif);font-size:22px;letter-spacing:.06em;color:var(--ntb-text)">
         <span style="width:7px;height:7px;border-radius:50%;background:var(--ntb-accent)"></span>NOCTIS
     </a>

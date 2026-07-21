@@ -14,34 +14,24 @@
     $photo = fn ($url, $pos = 'center') => "background-image:url('{$url}'),linear-gradient(160deg,var(--ntb-surf2),var(--ntb-bg2));background-size:cover;background-position:{$pos}";
 @endphp
 
+@push('styles')
+    {{-- Assets du tunnel : le hero de la home EST le vrai formulaire de réservation. --}}
+    <link rel="stylesheet" href="{{ asset('vendor/flatpickr/flatpickr.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('vendor/leaflet/leaflet.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/ntb-public.css') }}?v={{ filemtime(public_path('assets/css/ntb-public.css')) }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/ntb-pickers.css') }}?v={{ filemtime(public_path('assets/css/ntb-pickers.css')) }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/ntb-booking-hero.css') }}?v={{ filemtime(public_path('assets/css/ntb-booking-hero.css')) }}">
+    {{-- Personnalisation admin (accent, styles) — le hero EST le tunnel. --}}
+    {!! \App\Support\Design::styleBlock() !!}
+@endpush
+
+@push('scripts')
+    @include('partials.booking-runtime')
+@endpush
+
 @section('content')
-    {{-- ── HERO ── --}}
-    <section class="grain" style="position:relative;min-height:100vh;box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;gap:clamp(40px,6vh,72px);padding:110px 24px 48px;overflow:hidden;background-image:linear-gradient(to bottom, rgba(8,12,20,.36) 0%, rgba(8,12,20,.10) 42%, rgba(8,12,20,.60) 100%), url('{{ $img['hero'] }}');background-size:cover;background-position:center">
-        <div class="rise" style="text-align:center;color:#fff;max-width:960px;margin:0 auto">
-            <p style="font-family:var(--font-mono);font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:.3em;color:rgba(255,255,255,.82);margin-bottom:26px">Paris &amp; Europe</p>
-            <h1 style="font-family:var(--font-serif);font-weight:400;font-size:clamp(46px,8.5vw,112px);line-height:.96;letter-spacing:-.015em;margin:0 0 24px">Your chauffeur<br>is waiting.</h1>
-            <p style="font-family:var(--font-sans);font-weight:300;font-size:clamp(16px,2vw,20px);line-height:1.55;color:rgba(255,255,255,.88);max-width:560px;margin:0 auto">Private airport transfers in Paris — CDG, Orly &amp; Beauvais. Fixed price known in advance, professional chauffeur, secure payment.</p>
-        </div>
-        <div class="rise rise-2" style="width:100%;max-width:1080px;margin:0 auto;background:color-mix(in oklch, var(--ntb-surf) 90%, transparent);backdrop-filter:blur(24px) saturate(1.5);-webkit-backdrop-filter:blur(24px) saturate(1.5);border:1px solid rgba(255,255,255,.5);border-radius:20px;padding:18px 22px;box-shadow:0 40px 90px -40px rgba(8,14,28,.6)">
-            <div class="hero-form" style="gap:22px;align-items:end">
-                @foreach (['Departure' => 'Pickup address', 'Arrival' => 'Drop-off address'] as $label => $ph)
-                    <div>
-                        <label style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ntb-faint)">{{ $label }}</label>
-                        <div class="field-line" style="display:flex;align-items:center;gap:10px;padding:9px 0"><x-mk-icon name="pin" :size="17" color="var(--ntb-accent)" style="flex:0 0 auto" /><input placeholder="{{ $ph }}" style="background:none;border:none;outline:none;color:var(--ntb-text);font-size:16px;width:100%;font-family:var(--font-sans)"></div>
-                    </div>
-                @endforeach
-                <div>
-                    <label style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ntb-faint)">Date</label>
-                    <div style="display:flex;align-items:center;gap:10px;border-bottom:1.5px solid var(--ntb-line);padding:9px 0"><x-mk-icon name="calendar" :size="16" color="var(--ntb-faint)" style="flex:0 0 auto" /><span style="color:var(--ntb-faint);font-size:15px">dd/mm/yy</span></div>
-                </div>
-                <div>
-                    <label style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ntb-faint)">Time</label>
-                    <div style="display:flex;align-items:center;gap:10px;border-bottom:1.5px solid var(--ntb-line);padding:9px 0"><x-mk-icon name="clock" :size="16" color="var(--ntb-faint)" style="flex:0 0 auto" /><span style="color:var(--ntb-faint);font-size:15px">--:--</span></div>
-                </div>
-                <a class="cta" href="{{ $book }}" style="display:flex;align-items:center;justify-content:center;gap:9px;background:var(--ntb-accent);color:#fff;font-weight:700;font-size:15px;padding:15px 26px;border-radius:999px;white-space:nowrap"><x-mk-icon name="car" :size="19" color="#fff" />Estimate my ride</a>
-            </div>
-        </div>
-    </section>
+    {{-- ── HERO = FORMULAIRE DE RÉSERVATION (étape 1) ── --}}
+    @include('partials.booking-hero-form')
 
     {{-- ── DESTINATIONS MARQUEE ── --}}
     <section style="background:var(--ntb-bg);padding:28px 0;overflow:hidden">

@@ -16,22 +16,20 @@ class BookingPagesTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_la_racine_affiche_le_site_vitrine(): void
+    public function test_la_racine_porte_le_formulaire_de_reservation(): void
     {
-        // La racine sert l'accueil du site vitrine (marketing) ; le tunnel
-        // reste sur /reservation, et les CTA pointent vers lui.
+        // La home EST l'étape 1 : son hero porte le vrai formulaire de réservation.
         $this->get('/')
             ->assertOk()
-            ->assertSee('Your chauffeur')
-            ->assertSee(route('booking.form', ['new' => 1]), false);
-    }
-
-    public function test_le_formulaire_etape_1_saffiche(): void
-    {
-        $this->get('/reservation')
-            ->assertOk()
+            ->assertSee('Votre chauffeur')
             ->assertSee('Estimer ma course')
             ->assertSee('ntb-home-form', false);
+    }
+
+    public function test_reservation_redirige_vers_la_home(): void
+    {
+        // /reservation n'est plus une page distincte : elle redirige vers /.
+        $this->get('/reservation')->assertRedirect('/');
     }
 
     public function test_etapes_sans_trajet_affiche_le_flux_vide(): void

@@ -18,7 +18,14 @@ class MarketingController extends Controller
 {
     public function home(): View
     {
-        return view('marketing.home');
+        // Le hero de l'accueil EST l'étape 1 du tunnel : on lui fournit le
+        // pré-remplissage éventuel (retour arrière depuis les étapes 2-4).
+        return view('marketing.home', [
+            'prefill' => array_merge(
+                BookingPageController::EMPTY_STEP1,
+                (array) session(BookingPageController::SESSION_STEP1, []),
+            ),
+        ]);
     }
 
     public function service(string $slug): View

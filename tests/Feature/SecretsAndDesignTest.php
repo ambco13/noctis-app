@@ -219,7 +219,7 @@ class SecretsAndDesignTest extends TestCase
         Design::save(['--ntb-accent' => '#c4a24d']);
         Settings::flush();
 
-        $this->get('/reservation')
+        $this->get('/')
             ->assertOk()
             ->assertSee('ntb2-design-overrides', false)
             ->assertSee('--ntb-accent: #c4a24d;', false);
@@ -230,7 +230,7 @@ class SecretsAndDesignTest extends TestCase
         CustomStyles::save(['rules' => [], 'raw' => '.ntb-recap { border-radius: 18px; }</style><script>alert(1)</script>']);
         Settings::flush();
 
-        $response = $this->get('/reservation')->assertOk();
+        $response = $this->get('/')->assertOk();
         $response->assertSee('ntb2-custom-styles', false);
         $response->assertSee('border-radius: 18px', false);
         // La fermeture </style> injectée a été neutralisée (les '<' sont retirés du CSS brut).
@@ -268,7 +268,7 @@ class SecretsAndDesignTest extends TestCase
         $this->assertStringContainsString('border-radius: 20px', $locked);
 
         // Le layout public émet le bloc verrouillé après le bloc normal.
-        $html = (string) $this->get('/reservation')->getContent();
+        $html = (string) $this->get('/')->getContent();
         $this->assertGreaterThan(
             strpos($html, 'ntb2-custom-styles'),
             strpos($html, 'ntb2-locked-styles')

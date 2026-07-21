@@ -27,4 +27,21 @@
     if (document.readyState !== 'loading') scan();
     else document.addEventListener('DOMContentLoaded', scan);
     setTimeout(revealAll, 1600);
+
+    /* Header transparent sur la home : devient solide (.is-scrolled) une fois
+       le hero dépassé. Sans hero transparent (autres pages), no-op. */
+    function heroNav() {
+        var h = document.getElementById('mkt-header');
+        if (!h || !h.hasAttribute('data-hero-nav')) return;
+        var hero = document.querySelector('.ntb-home');
+        function update() {
+            var trigger = hero ? hero.offsetHeight - 70 : window.innerHeight * 0.7;
+            h.classList.toggle('is-scrolled', window.scrollY > trigger);
+        }
+        update();
+        window.addEventListener('scroll', update, { passive: true });
+        window.addEventListener('resize', update);
+    }
+    if (document.readyState !== 'loading') heroNav();
+    else document.addEventListener('DOMContentLoaded', heroNav);
 })();

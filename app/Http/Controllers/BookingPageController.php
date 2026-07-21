@@ -13,9 +13,9 @@ use Illuminate\View\View;
  */
 class BookingPageController extends Controller
 {
-    private const SESSION_STEP1 = 'booking_step1';
+    public const SESSION_STEP1 = 'booking_step1';
 
-    private const EMPTY_STEP1 = [
+    public const EMPTY_STEP1 = [
         'pickup_address' => '',
         'dropoff_address' => '',
         'ride_date' => '',
@@ -24,15 +24,18 @@ class BookingPageController extends Controller
         'dropoff_place_id' => '',
     ];
 
-    public function showForm(Request $request): View
+    /**
+     * L'étape 1 vit désormais dans le hero de la home (/) : cette route ne fait
+     * que rediriger vers l'accueil, en réinitialisant le tunnel si ?new=1
+     * (« Nouvelle réservation »). Conserve la compat des anciens liens.
+     */
+    public function showForm(Request $request): RedirectResponse
     {
         if ($request->query('new')) {
             $request->session()->forget(self::SESSION_STEP1);
         }
 
-        return view('booking.form', [
-            'prefill' => array_merge(self::EMPTY_STEP1, (array) session(self::SESSION_STEP1, [])),
-        ]);
+        return redirect('/');
     }
 
     public function submitStep1(Request $request): RedirectResponse

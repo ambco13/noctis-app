@@ -1,0 +1,49 @@
+/**
+ * Habillage « nouveau design » du hero de réservation (page 1, /reservation).
+ * Scopé sous .ntb-hero-v2 pour ne rien changer au reste du tunnel.
+ *
+ * On garde le verre SOMBRE (les popups adresses/heure du plugin y sont ajustés)
+ * mais on adopte les détails du nouveau design : carte plus arrondie, blur
+ * renforcé, bord clair, labels en mono capitales, icônes accent, bouton pill.
+ */
+
+/* Carte du formulaire : rayon 20, bord clair, ombre profonde, blur renforcé. */
+.ntb-hero-v2 .ntb-home-form {
+    border-radius: 20px !important;
+    border-color: rgba(255, 255, 255, .5) !important;
+    box-shadow: 0 40px 90px -40px rgba(8, 14, 28, .6) !important;
+    padding: 18px 22px !important;
+}
+.ntb-hero-v2 .ntb-home-form::before {
+    backdrop-filter: blur(22px) saturate(1.5) !important;
+    -webkit-backdrop-filter: blur(22px) saturate(1.5) !important;
+}
+
+/* Labels : mono, capitales, interlettrage — comme le hero du site vitrine. */
+.ntb-hero-v2 .ntb-field > label {
+    font-family: var(--font-mono, 'Spline Sans Mono', monospace);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, .78) !important;
+    margin-bottom: 2px;
+}
+
+/* Icônes des champs en accent (au lieu de gris). */
+.ntb-hero-v2 .ntb-field-icon { color: var(--ntb-accent) !important; }
+
+/* Trait sous les champs, un poil plus marqué. */
+.ntb-hero-v2 .ntb-field-input { border-bottom-width: 1.5px; }
+
+/* Bouton « Estimer ma course » : pill + icône. */
+.ntb-hero-v2 .ntb-hf-go {
+    border-radius: 999px !important;
+    padding: 13px 24px !important;
+    gap: 9px;
+    font-weight: 700;
+}
+.ntb-hero-v2 .ntb-hf-go svg { flex: 0 0 auto; }
+
+/* Le header vitrine (60px) est au-dessus : évite un léger débordement vertical. */
+.ntb-hero-v2.ntb-home { min-height: calc(100dvh - 60px); }

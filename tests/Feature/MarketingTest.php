@@ -2,21 +2,32 @@
 
 namespace Tests\Feature;
 
+use App\Support\Settings;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class MarketingTest extends TestCase
 {
-    // Le site vitrine ne lit que config/ (aucune requête DB) → pas de RefreshDatabase.
+    // L'accueil porte désormais le vrai formulaire de réservation (NTB2_DATA lit
+    // Settings/Secrets en base) → RefreshDatabase requis.
+    use RefreshDatabase;
+
+    protected function tearDown(): void
+    {
+        Settings::flush();
+        parent::tearDown();
+    }
 
     public function test_accueil_nouveau_design(): void
     {
         $this->get(route('marketing.home'))
             ->assertOk()
-            ->assertSee('Your chauffeur')             // hero
+            ->assertSee('Votre chauffeur')            // hero = étape 1 du tunnel
+            ->assertSee('ntb-home-form', false)       // vrai formulaire de réservation
             ->assertSee('Effortless travel')          // section « promise »
             ->assertSee('Borders, handled.')          // panneau Europe
             ->assertSee('Trusted by travelers worldwide.') // témoignages
-            ->assertSee('Estimate my ride');          // CTA
+            ->assertSee('Estimate my ride');          // CTA de clôture
     }
 
     public function test_accueil_cta_pointe_vers_le_tunnel(): void

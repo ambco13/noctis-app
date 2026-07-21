@@ -136,3 +136,23 @@ html { scroll-behavior: smooth; }
     .mkt section { padding-left: 22px !important; padding-right: 22px !important; }
     .mkt header { padding-left: 20px !important; padding-right: 20px !important; }
 }
+
+/* ── Nav transparent sur la home (hero plein écran sombre) ──
+   Le header flotte sur la photo du hero : fond transparent, liens blancs.
+   Dès qu'on quitte le hero (défilement), le JS ajoute .is-scrolled et le
+   header retrouve son look clair par défaut (styles inline du partial). */
+#mkt-header { transition: background .3s ease, border-color .3s ease; }
+/* Sur la home, le header se pose PAR-DESSUS le hero (photo plein écran) au lieu
+   d'être dans le flux (qui laissait une bande claire de 60px en haut). */
+#mkt-header[data-hero-nav] { position: fixed !important; left: 0; right: 0; top: 0; }
+#mkt-header[data-hero-nav]:not(.is-scrolled) {
+    background: transparent !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    border-bottom-color: transparent !important;
+}
+#mkt-header[data-hero-nav]:not(.is-scrolled) a,
+#mkt-header[data-hero-nav]:not(.is-scrolled) .nav-link,
+#mkt-header[data-hero-nav]:not(.is-scrolled) svg { color: #fff !important; }
+/* Le CTA « Get a Quote » garde son fond accent (déjà lisible sur le sombre). */
+#mkt-header[data-hero-nav]:not(.is-scrolled) .cta { color: #fff !important; }

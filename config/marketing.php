@@ -22,16 +22,18 @@ return [
         'availability' => 'Available 24/7',
     ],
 
-    // Images (hotlink, comme le design). hero = photo actuelle de l'app ;
-    // les autres = Unsplash. photoBg() ajoute un dégradé de repli.
+    // Images du design Noctis (Claude Design) — hébergées en local pour un
+    // rendu fiable (les hotlinks Unsplash/Blacklane laissaient du vide en cas
+    // de chargement lent/bloqué). Chemins racine-relatifs (indépendants du
+    // host). photoBg() ajoute un dégradé de repli sous l'image.
     'images' => [
-        'hero' => 'https://static.blacklane.com/web-funnel/assets/bg-_pAuXnDn.jpg',
-        'airport' => 'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=1600&q=80',
-        'city' => 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=1600&q=80',
-        'road' => 'https://images.unsplash.com/photo-1502920917128-1aa500764cbd?auto=format&fit=crop&w=1600&q=80',
-        'interior' => 'https://images.unsplash.com/photo-1493238792000-8113da705763?auto=format&fit=crop&w=1600&q=80',
-        'carNight' => 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?auto=format&fit=crop&w=1600&q=80',
-        'suit' => 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=1600&q=80',
+        'hero' => '/assets/images/marketing/hero.jpg',
+        'airport' => '/assets/images/marketing/airport.jpg',
+        'city' => '/assets/images/marketing/city.jpg',
+        'road' => '/assets/images/marketing/road.jpg',
+        'interior' => '/assets/images/marketing/interior.jpg',
+        'carNight' => '/assets/images/marketing/carNight.jpg',
+        'suit' => '/assets/images/marketing/suit.jpg',
     ],
 
     // Marquee de destinations (accueil).

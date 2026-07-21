@@ -13,10 +13,18 @@ use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\PlacesController;
 use App\Http\Controllers\Api\QuoteController;
 use App\Http\Controllers\BookingPageController;
+use App\Http\Controllers\MarketingController;
 use App\Http\Middleware\EnsureAdmin;
 use Illuminate\Support\Facades\Route;
 
-Route::redirect('/', '/reservation');
+// Site vitrine public (marketing). L'accueil embarque le vrai formulaire de
+// réservation ; le tunnel lui-même reste sur /reservation, inchangé.
+Route::get('/', [MarketingController::class, 'home'])->name('marketing.home');
+Route::get('/services/{slug}', [MarketingController::class, 'service'])->name('marketing.service');
+Route::get('/flotte', [MarketingController::class, 'fleet'])->name('marketing.fleet');
+Route::get('/a-propos', [MarketingController::class, 'about'])->name('marketing.about');
+Route::get('/contact', [MarketingController::class, 'contact'])->name('marketing.contact');
+Route::post('/contact', [MarketingController::class, 'contactSubmit'])->name('marketing.contact.submit');
 
 // Tunnel de réservation.
 Route::get('/reservation', [BookingPageController::class, 'showForm'])->name('booking.form');

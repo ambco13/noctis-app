@@ -16,9 +16,16 @@ class BookingPagesTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_la_racine_redirige_vers_le_formulaire(): void
+    public function test_la_racine_affiche_le_site_vitrine_avec_le_vrai_hero(): void
     {
-        $this->get('/')->assertRedirect('/reservation');
+        // La racine sert l'accueil marketing, qui embarque le VRAI formulaire
+        // de réservation (même partial + runtime que /reservation).
+        $this->get('/')
+            ->assertOk()
+            ->assertSee('Our Competences')          // section marketing
+            ->assertSee('Estimer ma course')        // bouton du hero réel
+            ->assertSee('data-ntb-step1', false)    // formulaire câblé au tunnel
+            ->assertSee('NTB2_DATA', false);        // runtime de réservation chargé
     }
 
     public function test_le_formulaire_etape_1_saffiche(): void

@@ -1,0 +1,238 @@
+/**
+ * NOCTIS — site vitrine (marketing).
+ * Réutilise les tokens --ntb-* définis par .ntb-scope (ntb-public.css).
+ * Tout est préfixé .ntb-market pour rester isolé du tunnel de réservation.
+ *
+ * L'accueil réutilise le VRAI hero de réservation (.ntb-home) : voir plus bas
+ * l'override du masquage de scrollbar (le hero le masque globalement, mais la
+ * page vitrine a du contenu sous le hero et doit pouvoir défiler visiblement).
+ */
+
+.ntb-market {
+    font-family: var(--ntb-sans);
+    color: var(--ntb-text);
+    background: var(--ntb-bg);
+}
+.ntb-market *,
+.ntb-market *::before,
+.ntb-market *::after { box-sizing: border-box; }
+.ntb-market img { max-width: 100%; display: block; }
+.ntb-market a { color: inherit; text-decoration: none; }
+
+/* ── Hero réutilisé (.ntb-home) sur la page vitrine ────────────────────────
+   1) Restaurer la barre de défilement : ntb-public.css la masque partout où
+      .ntb-home existe (page 1 = plein écran sans contenu dessous). Ici il y a
+      des sections sous le hero, la barre doit rester visible.
+      Sélecteur plus spécifique (.ntb-mk-page + .ntb-home) → l'emporte, chargé après.
+   2) Laisser les cartes teaser « dépasser » un peu sous le hero. */
+html:has(.ntb-mk-page .ntb-home),
+body.ntb-mk-page:has(.ntb-home) { scrollbar-width: auto !important; }
+html:has(.ntb-mk-page .ntb-home)::-webkit-scrollbar,
+body.ntb-mk-page:has(.ntb-home)::-webkit-scrollbar { display: initial !important; }
+.ntb-market .ntb-home { min-height: 88vh; }
+@media (max-width: 720px) { .ntb-market .ntb-home { min-height: 92vh; } }
+
+/* Conteneur centré standard. */
+.ntb-mk-wrap { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
+.ntb-mk-wrap--narrow { max-width: 1000px; }
+
+.ntb-mk-section { padding: 56px 0; }
+.ntb-mk-section--alt { background: var(--ntb-bg2); }
+.ntb-mk-section--tight { padding: 48px 0; }
+
+/* ─────────────────────────── Header ─────────────────────────── */
+.ntb-mk-header {
+    position: sticky; top: 0; z-index: 40;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    padding: 16px 40px;
+    background: var(--ntb-bg2);
+    border-bottom: 1px solid var(--ntb-line-soft);
+}
+.ntb-mk-brand {
+    display: flex; align-items: center; gap: 9px;
+    font-family: var(--ntb-serif); font-size: 20px; color: var(--ntb-text);
+}
+.ntb-mk-brand-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--ntb-accent-hi); box-shadow: 0 0 8px var(--ntb-accent-hi);
+}
+.ntb-mk-brand-sub { color: var(--ntb-accent-hi); font-weight: 400; font-size: 15px; }
+.ntb-mk-nav { display: flex; align-items: center; gap: 26px; }
+.ntb-mk-nav-link {
+    font-size: 14px; font-weight: 600; color: var(--ntb-muted);
+    cursor: pointer; transition: color var(--ntb-dur, 220ms) var(--ntb-ease, ease);
+    background: none; border: none; font-family: inherit; padding: 0;
+}
+.ntb-mk-nav-link:hover,
+.ntb-mk-nav-link.is-active { color: var(--ntb-accent-hi); }
+
+/* Dropdown Services. */
+.ntb-mk-drop { position: relative; }
+.ntb-mk-drop-toggle::after { content: " ▾"; }
+.ntb-mk-drop-menu {
+    position: absolute; top: 150%; left: 0;
+    background: var(--ntb-surf); border: 1px solid var(--ntb-line);
+    border-radius: var(--ntb-r); box-shadow: var(--ntb-shadow-pop);
+    padding: 8px; min-width: 230px;
+    display: flex; flex-direction: column;
+    opacity: 0; visibility: hidden; transform: translateY(-4px);
+    transition: opacity 160ms, transform 160ms, visibility 160ms;
+}
+.ntb-mk-drop:hover .ntb-mk-drop-menu,
+.ntb-mk-drop:focus-within .ntb-mk-drop-menu {
+    opacity: 1; visibility: visible; transform: translateY(0);
+}
+.ntb-mk-drop-menu a {
+    padding: 8px 12px; font-size: 13px; color: var(--ntb-text);
+    border-radius: 6px; transition: background 140ms;
+}
+.ntb-mk-drop-menu a:hover { background: var(--ntb-surf2); }
+
+.ntb-mk-account {
+    display: flex; align-items: center; justify-content: center;
+    width: 34px; height: 34px; border-radius: 50%;
+    background: var(--ntb-surf2); color: var(--ntb-muted);
+    transition: color 160ms, background 160ms;
+}
+.ntb-mk-account:hover { color: var(--ntb-accent-hi); background: var(--ntb-accent-soft); }
+
+/* ─────────────────────────── Boutons ─────────────────────────── */
+.ntb-mk-btn {
+    display: inline-block; text-align: center;
+    background: var(--ntb-accent); color: #fff;
+    font-family: var(--ntb-sans); font-weight: 700; font-size: 15px;
+    padding: 13px 26px; border: none; border-radius: 999px; cursor: pointer;
+    transition: transform var(--ntb-dur, 220ms) var(--ntb-ease, ease), filter var(--ntb-dur, 220ms);
+}
+.ntb-mk-btn:hover { transform: translateY(-1px); filter: brightness(1.08); }
+.ntb-mk-btn:focus-visible { outline: 2px solid var(--ntb-accent); outline-offset: 3px; }
+.ntb-mk-btn--sm { padding: 10px 20px; font-size: 14px; font-weight: 600; }
+.ntb-mk-link {
+    font-size: 13px; font-weight: 700; color: var(--ntb-accent-hi); cursor: pointer;
+}
+.ntb-mk-link:hover { text-decoration: underline; }
+
+/* ─────────────────────────── Typo ─────────────────────────── */
+.ntb-mk-eyebrow {
+    font-family: var(--ntb-mono); font-size: 12px; font-weight: 500;
+    text-transform: uppercase; letter-spacing: .14em; color: var(--ntb-accent-hi);
+}
+.ntb-mk-h1 { font-family: var(--ntb-serif); font-weight: 400; font-size: clamp(30px, 4vw, 44px); line-height: 1.15; color: var(--ntb-text); }
+.ntb-mk-h2 { font-family: var(--ntb-serif); font-weight: 400; font-size: 26px; line-height: 1.25; color: var(--ntb-text); }
+.ntb-mk-h3 { font-family: var(--ntb-serif); font-weight: 400; font-size: 22px; color: var(--ntb-text); }
+.ntb-mk-lead { font-size: 16px; line-height: 1.7; color: var(--ntb-muted); }
+.ntb-mk-body { font-size: 14px; line-height: 1.6; color: var(--ntb-muted); }
+.ntb-mk-stack { display: flex; flex-direction: column; gap: 22px; }
+
+/* Liste « — item » (tirets accent). */
+.ntb-mk-dashlist { display: flex; flex-direction: column; gap: 10px; padding: 0; margin: 0; }
+.ntb-mk-dashlist > li { display: flex; gap: 10px; align-items: flex-start; font-size: 14px; color: var(--ntb-text); list-style: none; }
+.ntb-mk-dashlist > li::before { content: "—"; color: var(--ntb-accent-hi); }
+
+/* ─────────────────────────── Cartes ─────────────────────────── */
+.ntb-mk-card {
+    padding: 24px; background: var(--ntb-surf);
+    border: 1px solid var(--ntb-line-soft); border-radius: var(--ntb-r);
+}
+.ntb-mk-card-title { font-size: 15px; font-weight: 700; letter-spacing: .02em; color: var(--ntb-text); margin: 0 0 10px; }
+.ntb-mk-card-eyebrow { font-size: 14px; font-weight: 700; letter-spacing: .04em; color: var(--ntb-accent-hi); margin: 0 0 10px; }
+.ntb-mk-chip { padding: 20px 16px; text-align: center; transition: border-color 160ms, transform 160ms; }
+.ntb-mk-chip:hover { border-color: var(--ntb-accent-line); transform: translateY(-1px); }
+.ntb-mk-chip-label { font-size: 13px; font-weight: 650; color: var(--ntb-text); }
+
+/* Grilles. */
+.ntb-mk-grid { display: grid; gap: 20px; }
+.ntb-mk-grid--3 { grid-template-columns: repeat(3, 1fr); }
+.ntb-mk-grid--2 { grid-template-columns: repeat(2, 1fr); }
+.ntb-mk-grid--6 { grid-template-columns: repeat(6, 1fr); gap: 16px; }
+.ntb-mk-grid > * { min-width: 0; } /* évite les débordements grid (cf. CLAUDE.md) */
+
+/* Placeholder photo (aucune photographie réelle fournie — cf. design system). */
+.ntb-mk-photo {
+    background: linear-gradient(160deg, var(--ntb-surf2), var(--ntb-bg2));
+    border: 1px solid var(--ntb-line-soft); border-radius: var(--ntb-r);
+    display: flex; align-items: center; justify-content: center; min-height: 200px;
+}
+.ntb-mk-photo span {
+    font-family: var(--ntb-mono); font-size: 11px; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--ntb-faint); text-align: center; padding: 12px;
+}
+
+/* ─────────────────────────── Service page ─────────────────────────── */
+.ntb-mk-tabs { display: flex; gap: 22px; flex-wrap: wrap; margin-bottom: 28px; font-size: 13px; font-weight: 600; }
+.ntb-mk-tab { color: var(--ntb-muted); padding-bottom: 6px; border-bottom: 2px solid transparent; cursor: pointer; }
+.ntb-mk-tab:hover { color: var(--ntb-text); }
+.ntb-mk-tab.is-active { color: var(--ntb-accent-hi); border-bottom-color: var(--ntb-accent-hi); }
+.ntb-mk-bullets { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 24px; padding: 0; margin: 0; }
+.ntb-mk-bullets > li { list-style: none; display: flex; gap: 8px; align-items: flex-start; font-size: 14px; color: var(--ntb-text); }
+.ntb-mk-bullets > li::before { content: "—"; color: var(--ntb-accent-hi); }
+.ntb-mk-split { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
+.ntb-mk-split > * { min-width: 0; }
+
+/* ─────────────────────────── Fleet ─────────────────────────── */
+.ntb-mk-filters { display: flex; gap: 16px; margin-bottom: 32px; flex-wrap: wrap; }
+.ntb-mk-select {
+    background: var(--ntb-surf); color: var(--ntb-text);
+    border: 1px solid var(--ntb-line); border-radius: var(--ntb-r);
+    padding: 10px 14px; font-size: 14px; font-family: inherit;
+}
+.ntb-mk-vehicle { background: var(--ntb-surf); border: 1px solid var(--ntb-line); border-radius: var(--ntb-r); overflow: hidden; }
+.ntb-mk-vehicle .ntb-mk-photo { border: none; border-radius: 0; min-height: 170px; }
+.ntb-mk-vehicle-body { padding: 16px 18px 20px; }
+.ntb-mk-vehicle-name { font-family: var(--ntb-serif); font-size: 19px; color: var(--ntb-text); }
+.ntb-mk-vehicle-sub { font-size: 12.5px; color: var(--ntb-muted); margin-bottom: 12px; }
+.ntb-mk-vehicle-meta { display: flex; gap: 16px; font-size: 13px; color: var(--ntb-muted); }
+
+/* ─────────────────────────── Contact ─────────────────────────── */
+.ntb-mk-contact { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
+.ntb-mk-contact > * { min-width: 0; }
+.ntb-mk-form { display: flex; flex-direction: column; gap: 20px; }
+.ntb-mk-form label { display: block; font-size: 13px; font-weight: 600; color: var(--ntb-muted); margin-bottom: 2px; }
+.ntb-mk-form-line { border-bottom: 1px solid var(--ntb-line); padding: 8px 0; }
+.ntb-mk-form-line input,
+.ntb-mk-form-line textarea {
+    background: none; border: none; outline: none; width: 100%;
+    color: var(--ntb-text); font-size: 15px; font-family: inherit; resize: none;
+}
+.ntb-mk-notice {
+    background: var(--ntb-accent-soft); border: 1px solid var(--ntb-accent-line);
+    color: var(--ntb-text); border-radius: var(--ntb-r); padding: 12px 16px;
+    font-size: 14px; margin-bottom: 20px;
+}
+.ntb-mk-field-err { color: var(--ntb-danger); font-size: 12.5px; margin-top: 4px; }
+.ntb-mk-contact-info { font-size: 14px; color: var(--ntb-text); line-height: 2; }
+
+/* ─────────────────────────── Footer ─────────────────────────── */
+.ntb-mk-footer {
+    background: var(--ntb-bg2); border-top: 1px solid var(--ntb-line-soft);
+    padding: 48px 40px 24px; color: var(--ntb-muted);
+}
+.ntb-mk-footer-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 40px; max-width: 1200px; margin: 0 auto; }
+.ntb-mk-footer-grid > * { min-width: 0; }
+.ntb-mk-footer-brand { font-family: var(--ntb-serif); font-size: 19px; color: var(--ntb-text); margin-bottom: 12px; }
+.ntb-mk-footer p { font-size: 14px; line-height: 1.6; max-width: 340px; margin: 0; }
+.ntb-mk-footer-head { font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--ntb-text); margin-bottom: 14px; }
+.ntb-mk-footer-links { display: flex; flex-direction: column; gap: 8px; }
+.ntb-mk-footer-links a { font-size: 14px; }
+.ntb-mk-footer-links a:hover { color: var(--ntb-accent-hi); }
+.ntb-mk-footer-contact { font-size: 14px; line-height: 1.9; }
+.ntb-mk-footer-bottom {
+    max-width: 1200px; margin: 32px auto 0; padding-top: 16px;
+    border-top: 1px solid var(--ntb-line-soft); font-size: 12px;
+    display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+}
+.ntb-mk-footer-bottom .mono { font-family: var(--ntb-mono); }
+
+/* ─────────────────────────── Responsive ─────────────────────────── */
+@media (max-width: 1024px) {
+    .ntb-mk-wrap, .ntb-mk-header, .ntb-mk-footer { padding-left: 24px; padding-right: 24px; }
+    .ntb-mk-grid--6 { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 720px) {
+    .ntb-mk-header { padding: 12px 20px; }
+    .ntb-mk-nav { gap: 16px; }
+    .ntb-mk-brand-sub { display: none; }
+    .ntb-mk-grid--3, .ntb-mk-grid--2, .ntb-mk-grid--6,
+    .ntb-mk-split, .ntb-mk-contact, .ntb-mk-footer-grid,
+    .ntb-mk-bullets { grid-template-columns: 1fr; }
+}

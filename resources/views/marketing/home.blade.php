@@ -70,7 +70,7 @@
                     <h2 style="font-family:var(--font-serif);font-weight:400;font-size:clamp(38px,6.2vw,80px);line-height:.98;letter-spacing:-.02em;margin:0 0 24px">Your Seamless Paris Airport Transfer.</h2>
                     <a class="alink" style="color:#fff" href="{{ $book }}">Book a transfer <i>→</i></a>
                 </div>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;padding-top:14px">
+                <div class="feat-cols" style="display:grid;grid-template-columns:1fr 1fr;gap:32px;padding-top:14px">
                     <div>
                         <div style="font-family:var(--font-serif);font-size:19px;color:#fff;margin-bottom:12px;line-height:1.2">High-Quality Airport Taxi Service</div>
                         <p style="font-size:15px;line-height:1.65;color:rgba(255,255,255,.72);margin:0">Everything is arranged for you before you arrive. Our airport taxi and private transfer service offers professional drivers, clean vehicles and punctual pickups.</p>

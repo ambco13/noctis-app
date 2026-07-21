@@ -135,11 +135,20 @@ html { scroll-behavior: smooth; }
 
 @media (max-width: 960px) {
     .g-3, .g-4 { grid-template-columns: repeat(2, 1fr); }
+    /* Cartes 2×2 : les icônes flottantes (translateY(-50%)) mordaient sur la
+       rangée du dessus → plus d'espace vertical entre les rangées. */
+    .g-4 { row-gap: 42px !important; }
     .g-2, .feat-grid { grid-template-columns: 1fr; }
     .feat-grid > * { order: 0 !important; }
     .hero-form { grid-template-columns: 1fr 1fr; }
     .routes-grid { grid-template-columns: 1fr 1fr; }
     .mkt section { padding-top: 80px; padding-bottom: 80px; }
+}
+/* Sous 540px : on empile tout en une seule colonne (les paragraphes du
+   feature et les petites cartes ne tiennent plus côte à côte lisiblement). */
+@media (max-width: 540px) {
+    .g-4 { grid-template-columns: 1fr !important; }
+    .feat-cols { grid-template-columns: 1fr !important; }
 }
 @media (max-width: 900px) { .svc-bento { grid-template-columns: 1fr; } }
 @media (max-width: 600px) {

@@ -455,8 +455,15 @@ html[data-ntb-theme="light"] body:has([data-ntb-steps]) {
 	backdrop-filter: var(--ntb-glass-blur, blur(8px));
 }
 /* Liste d'adresses du hero : barre de défilement masquée (on scrolle sans
-   barre visible, façon Blacklane), pour un rendu épuré sur le verre. */
-.ntb-home .ntb-ac-list { scrollbar-width: none; }
+   barre visible, façon Blacklane), pour un rendu épuré sur le verre. Un fondu
+   en bas (mask, solidaire de l'élément — le contenu défile dessous) évite la
+   coupure nette du dernier résultat quand la liste dépasse : ça devient un
+   dégradé qui signale « défiler pour voir la suite ». */
+.ntb-home .ntb-ac-list {
+	scrollbar-width: none;
+	-webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 26px), transparent);
+	        mask-image: linear-gradient(to bottom, #000 calc(100% - 26px), transparent);
+}
 .ntb-home .ntb-ac-list::-webkit-scrollbar { display: none; }
 /* Mobile : ~2 suggestions visibles, on scrolle pour les suivantes (façon
    Blacklane). Sinon, clavier ouvert, une longue liste recouvrirait tout

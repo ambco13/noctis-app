@@ -293,7 +293,19 @@
 		   la place en dessous : on force l'ouverture vers le bas. Sans ça, la
 		   mesure se ferait pendant que le form est encore en bas (montée en
 		   cours) et basculerait le popup vers le haut, par-dessus le titre. */
-		if ( anchor.closest( '.ntb-home' ) ) return;
+		var hero = anchor.closest( '.ntb-home' );
+		if ( hero ) {
+			/* .ntb-home a overflow:hidden : un popup qui dépasse le bas du hero
+			   est coupé net à la frontière de la section suivante (le marquee
+			   "passe par-dessus"). On plafonne donc sa hauteur à la place
+			   réellement disponible jusqu'au bas du hero -- il scrolle en
+			   interne (fondu bas) au lieu d'être tronqué par la section d'après.
+			   Sans descendre sous le défaut voulu (≈2 items mobile). */
+			var maxDefault = window.innerWidth <= 640 ? 150 : 280;
+			var avail = hero.getBoundingClientRect().bottom - anchor.getBoundingClientRect().bottom - 16;
+			popup.style.maxHeight = Math.max( 120, Math.min( maxDefault, avail ) ) + 'px';
+			return;
+		}
 		var rect = anchor.getBoundingClientRect();
 		var popupHeight = popup.offsetHeight;
 		var spaceBelow = window.innerHeight - rect.bottom;

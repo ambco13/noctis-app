@@ -147,19 +147,34 @@ html { scroll-behavior: smooth; }
 #mkt-header[data-hero-nav] { position: fixed !important; left: 0; right: 0; top: 0; }
 /* .is-open (menu mobile déroulé) exclu : le panneau devient opaque, liens sombres. */
 #mkt-header[data-hero-nav]:not(.is-scrolled):not(.is-open) {
-    /* Voile dégradé (pas de barre pleine) : garde le look flottant tout en
-       assurant la lisibilité des liens/burger blancs sur les zones claires
-       de la photo (ex. plafond de l'habitacle en haut à droite). */
-    background: linear-gradient(to bottom, rgba(8,12,20,.34), transparent) !important;
+    /* Totalement transparent : aucun fond, aucune bordure (une barre/voile
+       créait un liseré indésirable sur la photo du hero). La lisibilité des
+       liens blancs est assurée par une ombre portée, pas par un fond. */
+    background: transparent !important;
     -webkit-backdrop-filter: none !important;
     backdrop-filter: none !important;
     border-bottom-color: transparent !important;
+    border-bottom-width: 0 !important;
 }
 #mkt-header[data-hero-nav]:not(.is-scrolled):not(.is-open) a,
-#mkt-header[data-hero-nav]:not(.is-scrolled):not(.is-open) .nav-link,
-#mkt-header[data-hero-nav]:not(.is-scrolled):not(.is-open) svg { color: #fff !important; }
+#mkt-header[data-hero-nav]:not(.is-scrolled):not(.is-open) .nav-link {
+    color: #fff !important;
+    text-shadow: 0 1px 10px rgba(8,12,20,.5);
+}
+#mkt-header[data-hero-nav]:not(.is-scrolled):not(.is-open) svg {
+    color: #fff !important;
+    filter: drop-shadow(0 1px 3px rgba(8,12,20,.55));
+}
 /* Le CTA « Get a Quote » garde son fond accent (déjà lisible sur le sombre). */
-#mkt-header[data-hero-nav]:not(.is-scrolled):not(.is-open) .cta { color: #fff !important; }
+#mkt-header[data-hero-nav]:not(.is-scrolled):not(.is-open) .cta {
+    color: #fff !important; text-shadow: none !important;
+}
+/* Menu Services déroulé sur le hero : fond clair → texte SOMBRE (la règle
+   blanche ci-dessus le rendait invisible, blanc sur blanc). Même rendu que
+   sur les autres pages. */
+#mkt-header[data-hero-nav]:not(.is-scrolled):not(.is-open) .mk-drop-menu a {
+    color: var(--ntb-text) !important; text-shadow: none !important;
+}
 
 /* ── Menu mobile (burger) ──
    Bouton burger caché sur desktop ; sous 860px la barre de liens devient un

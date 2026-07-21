@@ -2,37 +2,28 @@
 
 namespace Tests\Feature;
 
-use App\Support\Settings;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class MarketingTest extends TestCase
 {
-    // L'accueil embarque le hero de réservation, qui lit Settings/Secrets en base.
-    use RefreshDatabase;
+    // Le site vitrine ne lit que config/ (aucune requête DB) → pas de RefreshDatabase.
 
-    protected function tearDown(): void
-    {
-        Settings::flush();
-        parent::tearDown();
-    }
-
-    public function test_accueil_affiche_hero_reel_et_sections(): void
+    public function test_accueil_nouveau_design(): void
     {
         $this->get(route('marketing.home'))
             ->assertOk()
-            ->assertSee('Our Competences')              // section marketing
-            ->assertSee('AIRPORT TRANSFER')             // teaser marketing
-            ->assertSee('Estimer ma course')            // hero réel (FR)
-            ->assertSee('data-ntb-autocomplete', false); // autocomplétion câblée
+            ->assertSee('Your chauffeur')             // hero
+            ->assertSee('Effortless travel')          // section « promise »
+            ->assertSee('Borders, handled.')          // panneau Europe
+            ->assertSee('Trusted by travelers worldwide.') // témoignages
+            ->assertSee('Estimate my ride');          // CTA
     }
 
-    public function test_hero_accueil_poste_dans_le_tunnel(): void
+    public function test_accueil_cta_pointe_vers_le_tunnel(): void
     {
-        // Le formulaire du hero pointe bien vers l'étape 1 du tunnel existant.
         $this->get(route('marketing.home'))
             ->assertOk()
-            ->assertSee(route('booking.step1'), false);
+            ->assertSee(route('booking.form', ['new' => 1]), false);
     }
 
     public function test_page_service_valide(): void
@@ -42,17 +33,18 @@ class MarketingTest extends TestCase
             ->assertSee('Premium Paris Airport Transfer Service — Available 24/7');
     }
 
-    public function test_slug_service_inconnu_donne_404(): void
+    public function test_service_retire_donne_404(): void
     {
-        $this->get(route('marketing.service', ['slug' => 'inexistant']))
-            ->assertNotFound();
+        // « Special Event Limousine » a été retiré du nouveau design.
+        $this->get(route('marketing.service', ['slug' => 'special-event-limousine']))->assertNotFound();
+        $this->get(route('marketing.service', ['slug' => 'inexistant']))->assertNotFound();
     }
 
     public function test_pages_flotte_apropos_contact(): void
     {
-        $this->get(route('marketing.fleet'))->assertOk()->assertSee('Our Fleet');
-        $this->get(route('marketing.about'))->assertOk()->assertSee('About Us');
-        $this->get(route('marketing.contact'))->assertOk()->assertSee('Contact Us');
+        $this->get(route('marketing.fleet'))->assertOk()->assertSee('Chosen for comfort.');
+        $this->get(route('marketing.about'))->assertOk()->assertSee('Refined mobility');
+        $this->get(route('marketing.contact'))->assertOk()->assertSee("Let's talk.", false);
     }
 
     public function test_soumission_contact_valide_et_flash(): void

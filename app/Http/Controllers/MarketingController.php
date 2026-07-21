@@ -7,40 +7,18 @@ use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 /**
- * Site vitrine public (marketing) : accueil, pages service, flotte, à propos,
- * contact. Registre visuel partagé (dark navy .ntb-scope) mais layout, header
- * et footer propres (layouts.marketing).
+ * Site vitrine public (marketing) — nouveau design Noctis (registre clair,
+ * éditorial). Accueil, pages service, flotte, à propos, contact.
  *
- * L'accueil embarque le VRAI formulaire de réservation (partial booking._hero)
- * + son runtime JS : autocomplétion, pickers et soumission passent par le
- * tunnel existant, sans le dupliquer ni le modifier.
- *
+ * Distinct du tunnel de réservation : tous les CTA (« Get a Quote »,
+ * « Estimate my ride ») renvoient vers /reservation, qui reste inchangé.
  * Contenu dans config/marketing.php.
  */
 class MarketingController extends Controller
 {
-    /** Trajet vide pour le hero (même forme que BookingPageController::EMPTY_STEP1). */
-    private const EMPTY_STEP1 = [
-        'pickup_address' => '',
-        'dropoff_address' => '',
-        'ride_date' => '',
-        'ride_time' => '',
-        'pickup_place_id' => '',
-        'dropoff_place_id' => '',
-    ];
-
-    public function home(Request $request): View
+    public function home(): View
     {
-        // Le hero réutilise la session étape 1 si elle existe (retour depuis le
-        // tunnel), sinon un trajet vide — même logique que la page /reservation.
-        $prefill = array_merge(self::EMPTY_STEP1, (array) $request->session()->get('booking_step1', []));
-
-        return view('marketing.home', [
-            'prefill' => $prefill,
-            'services' => config('marketing.services'),
-            'competences' => config('marketing.competences'),
-            'whyChoose' => config('marketing.why_choose'),
-        ]);
+        return view('marketing.home');
     }
 
     public function service(string $slug): View
@@ -51,33 +29,22 @@ class MarketingController extends Controller
         return view('marketing.service', [
             'slug' => $slug,
             'service' => $services[$slug],
-            'services' => $services,
         ]);
     }
 
     public function fleet(): View
     {
-        return view('marketing.fleet', [
-            'services' => config('marketing.services'),
-            'fleet' => config('marketing.fleet'),
-        ]);
+        return view('marketing.fleet');
     }
 
     public function about(): View
     {
-        return view('marketing.about', [
-            'services' => config('marketing.services'),
-            'competences' => config('marketing.competences'),
-            'whyChoose' => config('marketing.why_choose'),
-        ]);
+        return view('marketing.about');
     }
 
     public function contact(): View
     {
-        return view('marketing.contact', [
-            'services' => config('marketing.services'),
-            'contact' => config('marketing.contact'),
-        ]);
+        return view('marketing.contact');
     }
 
     /**

@@ -2,41 +2,53 @@
 
 @section('title', 'Our Fleet — Noctis')
 
+@php
+    $img = config('marketing.images');
+    $book = route('booking.form', ['new' => 1]);
+    $photo = fn ($url, $pos = 'center') => "background-image:url('{$url}'),linear-gradient(160deg,var(--ntb-surf2),var(--ntb-bg2));background-size:cover;background-position:{$pos}";
+    $sel = 'background:var(--ntb-surf);color:var(--ntb-text);border:1px solid var(--ntb-line);border-radius:12px;padding:12px 18px;font-size:14px;font-family:var(--font-sans);cursor:pointer';
+@endphp
+
 @section('content')
-    <section class="ntb-mk-section" style="min-height:70vh">
-        <div class="ntb-mk-wrap">
-            <h1 class="ntb-mk-h1" style="font-size:36px;margin:0 0 28px">Our Fleet</h1>
-
-            {{-- Filtres décoratifs (parité design) : la sélection réelle du
-                 véhicule se fait dans le tunnel de réservation selon le trajet. --}}
-            <div class="ntb-mk-filters">
-                <select class="ntb-mk-select" aria-label="Vehicle type">
-                    <option>Any Type</option><option>Sedan</option><option>Berline</option><option>Van</option>
-                </select>
-                <select class="ntb-mk-select" aria-label="Make">
-                    <option>Any Make</option><option>Mercedes-Benz</option><option>BMW</option>
-                </select>
+    <div style="background:var(--ntb-bg)">
+        <section style="padding:72px 44px 40px">
+            <div data-reveal style="max-width:1180px;margin:0 auto">
+                <p class="eyb" style="margin-bottom:20px">The Fleet</p>
+                <h1 style="font-family:var(--font-serif);font-weight:400;font-size:clamp(38px,6vw,84px);line-height:1;letter-spacing:-.02em;color:var(--ntb-text);margin:0 0 22px">Chosen for comfort.</h1>
+                <p style="font-size:18px;line-height:1.7;color:var(--ntb-muted);max-width:600px;margin:0">Modern, well-maintained vehicles selected for comfort, reliability and airport-travel efficiency — each presented to an impeccable standard.</p>
             </div>
+        </section>
 
-            <div class="ntb-mk-grid ntb-mk-grid--3" style="gap:24px">
-                @foreach ($fleet as $v)
-                    <div class="ntb-mk-vehicle">
-                        <div class="ntb-mk-photo"><span>{{ $v['name'] }} photo</span></div>
-                        <div class="ntb-mk-vehicle-body">
-                            <div class="ntb-mk-vehicle-name">{{ $v['name'] }}</div>
-                            <div class="ntb-mk-vehicle-sub">{{ $v['sub'] }}</div>
-                            <div class="ntb-mk-vehicle-meta">
-                                <span>{{ $v['pax'] }} passengers</span>
-                                <span>{{ $v['bags'] }} bags</span>
+        <section style="padding:0 44px 110px">
+            <div style="max-width:1180px;margin:0 auto">
+                <div style="display:flex;gap:12px;margin-bottom:36px;flex-wrap:wrap">
+                    <select style="{{ $sel }}"><option>Any Type</option><option>Sedan</option><option>Berline</option><option>Van</option></select>
+                    <select style="{{ $sel }}"><option>Any Make</option><option>BMW</option><option>Mercedes-Benz</option></select>
+                </div>
+                <div data-reveal class="g-3" style="gap:22px">
+                    @foreach (config('marketing.fleet') as $v)
+                        <div class="lift" style="background:var(--ntb-surf);border:1px solid var(--ntb-line-soft);border-radius:20px;overflow:hidden;box-shadow:0 1px 2px rgba(20,30,50,.04)">
+                            <div style="height:210px;position:relative;{{ $photo($img[$v['img']], $v['pos']) }}">
+                                <span style="position:absolute;top:14px;left:14px;font-family:var(--font-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;padding:5px 11px;border-radius:999px;background:rgba(255,255,255,.9);color:oklch(0.5 0.115 236)">{{ $v['tier'] }}</span>
+                            </div>
+                            <div style="padding:22px 24px 24px">
+                                <div style="font-family:var(--font-serif);font-size:24px;color:var(--ntb-text);line-height:1.1">{{ $v['name'] }}</div>
+                                <div style="font-size:13px;color:var(--ntb-muted);margin-bottom:18px">{{ $v['sub'] }}</div>
+                                <div style="display:flex;gap:24px;font-size:13.5px;color:var(--ntb-muted);border-top:1px solid var(--ntb-line-soft);padding-top:16px">
+                                    <span style="display:inline-flex;align-items:center;gap:7px"><x-mk-icon name="users" :size="17" color="var(--ntb-accent)" />{{ $v['pax'] }} passengers</span><span style="display:inline-flex;align-items:center;gap:7px"><x-mk-icon name="bag" :size="17" color="var(--ntb-accent)" />{{ $v['bags'] }} bags</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                @endforeach
+                    @endforeach
+                </div>
             </div>
+        </section>
 
-            <div style="margin-top:40px">
-                <a href="{{ route('booking.form', ['new' => 1]) }}" class="ntb-mk-btn">Book Now</a>
+        <section style="padding:120px 24px;text-align:center;background:oklch(0.96 0.025 236)">
+            <div data-reveal>
+                <h2 style="font-family:var(--font-serif);font-weight:400;font-size:clamp(30px,5vw,62px);color:oklch(0.22 0.02 245);margin:0 0 30px;line-height:1.04;letter-spacing:-.01em">Find your vehicle.</h2>
+                <a class="cta" href="{{ $book }}" style="display:inline-block;background:var(--ntb-accent);color:#fff;font-weight:700;font-size:16px;padding:17px 44px;border-radius:999px;box-shadow:0 20px 40px -20px rgba(8,14,28,.25)">Estimate my ride</a>
             </div>
-        </div>
-    </section>
+        </section>
+    </div>
 @endsection

@@ -2,47 +2,87 @@
 
 /*
 |--------------------------------------------------------------------------
-| Contenu du site vitrine (marketing)
+| Contenu du site vitrine (marketing) — nouveau design Noctis
 |--------------------------------------------------------------------------
-| Porté depuis le design system Noctis (ui_kits/marketing-site). Contenu
-| volontairement en anglais : le site vitrine reprend la copie de
-| testevtc.online, distincte du tunnel de réservation (français). Ne pas
-| traduire l'un dans l'autre — cf. README du design system.
+| Porté depuis le design system Noctis (ui_kits/marketing-site). Contenu en
+| anglais (repris de testevtc.online). Le site vitrine est distinct du tunnel
+| de réservation (français) : ne pas traduire l'un dans l'autre.
 |
-| Le contact (adresse / téléphone / email) reste à renseigner : sur le site
-| source ce bloc était du contenu de démo WordPress non édité, pas les vraies
-| coordonnées. À remplacer par les infos réelles du client.
+| Coordonnées de contact = placeholders (le site source affichait encore la
+| démo WordPress) : à remplacer par les vraies infos du client.
 */
 
 return [
 
     'contact' => [
-        'address' => '[Adresse à renseigner]',
+        'address' => '[Address to be provided]',
         'city' => 'Paris',
-        'phone' => '[Téléphone à renseigner]',
-        'email' => '[Email à renseigner]',
+        'phone' => '[to be provided]',
+        'email' => '[to be provided]',
         'availability' => 'Available 24/7',
     ],
 
-    'competences' => [
-        ['PROFESSIONALISM', 'Our carefully selected chauffeurs are trained to deliver structured and discreet service at every stage of your journey. We operate modern, well-maintained vehicles to ensure safety, comfort and consistent reliability across all transfers.'],
-        ['COMMITMENT', 'With 24/7 availability and simplified booking management, we streamline every stage of your transportation planning. Transparency, responsiveness and operational efficiency remain central to our service standards.'],
+    // Images (hotlink, comme le design). hero = photo actuelle de l'app ;
+    // les autres = Unsplash. photoBg() ajoute un dégradé de repli.
+    'images' => [
+        'hero' => 'https://static.blacklane.com/web-funnel/assets/bg-_pAuXnDn.jpg',
+        'airport' => 'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=1600&q=80',
+        'city' => 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=1600&q=80',
+        'road' => 'https://images.unsplash.com/photo-1502920917128-1aa500764cbd?auto=format&fit=crop&w=1600&q=80',
+        'interior' => 'https://images.unsplash.com/photo-1493238792000-8113da705763?auto=format&fit=crop&w=1600&q=80',
+        'carNight' => 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?auto=format&fit=crop&w=1600&q=80',
+        'suit' => 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=1600&q=80',
     ],
 
-    'why_choose' => [
-        'Premium Airport Transfers in Paris',
-        'Structured European Long-Distance Travel',
-        '24/7 Private Chauffeur Availability',
-        'Fixed & Transparent Pricing',
-        'Modern High-End Fleet',
+    // Marquee de destinations (accueil).
+    'destinations' => ['Charles de Gaulle', 'Orly', 'Beauvais', 'London', 'Geneva', 'Brussels', 'Amsterdam', 'Luxembourg', 'Frankfurt'],
+
+    // Routes Europe (panneau « Borders, handled »).
+    'routes' => [['Paris', 'London'], ['Paris', 'Geneva'], ['Paris', 'Brussels'], ['Paris', 'Amsterdam']],
+
+    // Stats (accueil). [valeur, libellé, icône]
+    'stats' => [
+        ['24/7', 'Availability, every day of the year', 'clock'],
+        ['Fixed', 'Fares confirmed before departure', 'euro'],
+        ['< 1 min', 'To book your ride online', 'sparkle'],
+        ['Europe', 'Cross-border reach from Paris', 'globe'],
     ],
 
+    // « Why choose us » (accueil) — copie réelle testevtc.online. [titre, texte, icône]
+    'why' => [
+        ['Meet & Greet Service', 'Your professional, English-speaking driver waits in the arrivals hall with a personalized sign, ready to assist with your luggage.', 'greet'],
+        ['24/7 Flight Monitoring', 'We track your flight in real time. If it is delayed, your Paris airport transfer is adjusted automatically at no extra cost.', 'plane'],
+        ['Fixed, All-Inclusive Rates', 'No hidden fees, no luggage surcharges, no meter anxiety — the price you see is the price you pay.', 'euro'],
+        ['Family-Friendly Transfers', 'Traveling with children? Child seats are available on request, for a safe, comfortable ride for the whole family.', 'baby'],
+    ],
+
+    // Témoignages (accueil). [citation, prénom, pays]
+    'testimonials' => [
+        ['Easy booking, fixed price and no stress after a long flight. The perfect airport transfer.', 'Claire', 'France'],
+        ['Very punctual and professional. The driver was waiting for us at the airport and the car was very clean. Highly recommended!', 'James', 'United Kingdom'],
+        ['Friendly driver, comfortable ride and excellent communication on WhatsApp. I will definitely book again.', 'Markus', 'Germany'],
+    ],
+
+    // Flotte (page /flotte). [name, tier, sub, pax, bags, image-key, position]
     'fleet' => [
-        ['name' => 'Sedan', 'sub' => 'C-HR or similar', 'pax' => 4, 'bags' => 3],
-        ['name' => 'Berline', 'sub' => 'S / E-Class or similar (Mercedes-Benz)', 'pax' => 4, 'bags' => 4],
-        ['name' => 'Van', 'sub' => 'V-Class or similar', 'pax' => 6, 'bags' => 6],
+        ['name' => 'Sedan', 'tier' => 'Essential', 'sub' => 'CHR or similar', 'pax' => 4, 'bags' => 3, 'img' => 'carNight', 'pos' => 'center 60%'],
+        ['name' => 'Berline', 'tier' => 'Signature', 'sub' => 'Classe E — Mercedes-Benz', 'pax' => 4, 'bags' => 4, 'img' => 'interior', 'pos' => 'center 45%'],
+        ['name' => 'Van', 'tier' => 'Group', 'sub' => 'Classe V or similar', 'pax' => 6, 'bags' => 6, 'img' => 'road', 'pos' => 'center 55%'],
     ],
 
+    // Icône par service (bento + ailleurs).
+    'service_icons' => [
+        'airport-transfer' => 'plane',
+        'worldwide-transportation' => 'globe',
+        'corporate-travel' => 'briefcase',
+        'charter-service' => 'key',
+        'medical-transport' => 'medical',
+    ],
+
+    /*
+     | Pages service (5 — « Special Event Limousine » retiré dans le nouveau
+     | design). Clé = slug d'URL.
+     */
     'services' => [
         'airport-transfer' => [
             'nav' => 'Airport Transfer',
@@ -62,8 +102,8 @@ return [
             ],
         ],
         'worldwide-transportation' => [
-            'nav' => 'Europe-Wide Transfer',
-            'title' => 'Europe-Wide Transfer',
+            'nav' => 'International Transportation',
+            'title' => 'International Transportation',
             'hero_title' => 'Executive Europe-Wide Transfers from Paris & Private Long-Distance Services',
             'intro' => 'Travel across Europe with complete confidence. From Paris airports to major European cities, every long-distance journey is managed with discretion, precision and a consistently refined standard of service. Each transfer is carefully coordinated to ensure punctual departures, efficient routing and extended travel comfort throughout your journey.',
             'sub' => 'Dedicated Chauffeur Travel Across Major European Cities',
@@ -127,23 +167,6 @@ return [
                 ['24/7 Availability & Premium Support', 'Round-the-clock service ensuring flexible transfers aligned with flight arrivals and medical appointments.'],
                 ['Thoughtfully Equipped Vehicles', 'Spacious interiors designed to provide physical ease and a smooth ride following long-distance travel.'],
                 ['Respectful & Attentive Service', 'A considerate approach focused on comfort, reassurance and individual needs.'],
-            ],
-        ],
-        'special-event-limousine' => [
-            'nav' => 'Special Event Limousine',
-            'title' => 'Special Event Limousine',
-            'hero_title' => 'Chauffeured Limousine Service for Weddings, Galas & Private Events in Paris',
-            'intro' => 'For weddings, galas, premieres and private celebrations, a chauffeured arrival sets the tone for the evening. Our special event service pairs an immaculately presented vehicle with a discreet, punctual chauffeur, so every guest arrives and departs exactly on schedule.',
-            'sub' => 'An Elevated Arrival for Every Occasion',
-            'sub_text' => 'From a single evening booking to full coordination across a wedding party or corporate gala, we structure vehicle availability and routing around your event timeline — including waiting time between the ceremony, photos and reception.',
-            'bullets' => ['Weddings, Galas & Private Celebrations', 'Immaculately Presented Vehicles', 'Flexible Waiting & Multi-Stop Routing', 'Coordinated Multi-Vehicle Bookings', 'Formal, Discreet Chauffeur Service', 'Fixed Pricing Agreed in Advance'],
-            'why' => [
-                ['Occasion-Ready Presentation', 'Vehicles prepared to an impeccable standard for photographs and formal arrivals.'],
-                ['Flexible Timing', 'Waiting time built into the booking for ceremonies, photo sessions and receptions.'],
-                ['Multi-Vehicle Coordination', 'Structured scheduling for wedding parties, galas and group celebrations.'],
-                ['Formal Chauffeur Etiquette', 'Chauffeurs trained for the discretion and formality that special occasions require.'],
-                ['Fixed Event Pricing', 'Rates agreed before the day — no surprises once the celebration begins.'],
-                ['Dedicated Event Support', 'A single point of contact to coordinate timing changes on the day itself.'],
             ],
         ],
     ],

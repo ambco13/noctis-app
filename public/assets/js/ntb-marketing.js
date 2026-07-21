@@ -44,4 +44,24 @@
     }
     if (document.readyState !== 'loading') heroNav();
     else document.addEventListener('DOMContentLoaded', heroNav);
+
+    /* Menu mobile : le burger ouvre/ferme le panneau de navigation. */
+    function burger() {
+        var h = document.getElementById('mkt-header');
+        var b = h && h.querySelector('.mk-burger');
+        if (!b) return;
+        b.addEventListener('click', function () {
+            var open = h.classList.toggle('is-open');
+            b.setAttribute('aria-expanded', open ? 'true' : 'false');
+        });
+        /* Fermer après un clic sur un lien du menu. */
+        h.querySelectorAll('.mk-nav a').forEach(function (a) {
+            a.addEventListener('click', function () {
+                h.classList.remove('is-open');
+                b.setAttribute('aria-expanded', 'false');
+            });
+        });
+    }
+    if (document.readyState !== 'loading') burger();
+    else document.addEventListener('DOMContentLoaded', burger);
 })();

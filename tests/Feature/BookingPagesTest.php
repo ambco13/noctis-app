@@ -21,8 +21,8 @@ class BookingPagesTest extends TestCase
         // La home EST l'étape 1 : son hero porte le vrai formulaire de réservation.
         $this->get('/')
             ->assertOk()
-            ->assertSee('Votre chauffeur')
-            ->assertSee('Estimer ma course')
+            ->assertSee('Your chauffeur')
+            ->assertSee('Estimate my ride')
             ->assertSee('ntb-home-form', false);
     }
 

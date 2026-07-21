@@ -5,13 +5,19 @@
     <a href="{{ route('marketing.home') }}" style="display:flex;align-items:center;gap:10px;font-family:var(--font-serif);font-size:22px;letter-spacing:.06em;color:var(--ntb-text)">
         <span style="width:7px;height:7px;border-radius:50%;background:var(--ntb-accent)"></span>NOCTIS
     </a>
-    <nav style="display:flex;align-items:center;gap:30px;position:relative;flex-shrink:0" aria-label="Primary">
+
+    <button type="button" class="mk-burger" aria-label="Menu" aria-expanded="false" aria-controls="mkt-nav">
+        <svg class="mk-burger-open" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+        <svg class="mk-burger-close" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
+    </button>
+
+    <nav id="mkt-nav" class="mk-nav" style="display:flex;align-items:center;gap:30px;position:relative;flex-shrink:0" aria-label="Primary">
         @php($lnk = 'font-size:13.5px;font-weight:500;text-decoration:none;letter-spacing:.01em;')
         <a class="nav-link" style="{{ $lnk }}color:{{ request()->routeIs('marketing.home') ? 'var(--ntb-text)' : 'var(--ntb-muted)' }}" href="{{ route('marketing.home') }}">Home</a>
 
-        <span class="mk-drop" style="position:relative">
-            <a class="nav-link" style="{{ $lnk }}display:inline-flex;align-items:center;gap:4px;color:{{ $isSvc ? 'var(--ntb-text)' : 'var(--ntb-muted)' }}"
-               href="{{ route('marketing.service', ['slug' => array_key_first($navServices)]) }}">Services <span style="font-size:15px;line-height:1;transform:translateY(2px)">▾</span></a>
+        <span class="mk-drop" style="position:relative;display:inline-flex;align-items:center">
+            <a class="nav-link" style="{{ $lnk }}display:inline-flex;align-items:center;gap:5px;color:{{ $isSvc ? 'var(--ntb-text)' : 'var(--ntb-muted)' }}"
+               href="{{ route('marketing.service', ['slug' => array_key_first($navServices)]) }}">Services <span style="font-size:11px;line-height:1">▾</span></a>
             <span class="mk-drop-menu" style="position:absolute;top:100%;left:50%;transform:translateX(-50%);margin-top:14px;background:var(--ntb-surf);border:1px solid var(--ntb-line);border-radius:14px;box-shadow:0 24px 60px -24px rgba(20,30,50,.28);padding:8px;min-width:236px;flex-direction:column">
                 @foreach ($navServices as $slug => $svc)
                     <a href="{{ route('marketing.service', ['slug' => $slug]) }}" style="padding:10px 14px;font-size:13.5px;color:var(--ntb-text);border-radius:9px">{{ $svc['nav'] }}</a>
@@ -23,7 +29,7 @@
         <a class="nav-link" style="{{ $lnk }}color:{{ request()->routeIs('marketing.about') ? 'var(--ntb-text)' : 'var(--ntb-muted)' }}" href="{{ route('marketing.about') }}">About</a>
         <a class="nav-link" style="{{ $lnk }}color:{{ request()->routeIs('marketing.contact') ? 'var(--ntb-text)' : 'var(--ntb-muted)' }}" href="{{ route('marketing.contact') }}">Contact</a>
 
-        <a href="{{ route('account') }}" title="My account" aria-label="My account" style="width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--ntb-muted)">
+        <a href="{{ route('account') }}" title="My account" aria-label="My account" class="mk-account" style="width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--ntb-muted)">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>
         </a>
         <a class="cta" href="{{ route('booking.form', ['new' => 1]) }}" style="background:var(--ntb-accent);color:#fff;font-weight:600;font-size:13.5px;padding:9px 20px;border-radius:999px;white-space:nowrap;flex:0 0 auto">Get a Quote</a>

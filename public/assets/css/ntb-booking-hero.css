@@ -45,5 +45,6 @@
 }
 .ntb-hero-v2 .ntb-hf-go svg { flex: 0 0 auto; }
 
-/* Le header vitrine (60px) est au-dessus : évite un léger débordement vertical. */
-.ntb-hero-v2.ntb-home { min-height: calc(100dvh - 60px); }
+/* Le header vitrine est en overlay (position:fixed sur la home), il ne prend
+   pas de place dans le flux : le hero occupe donc tout le viewport. */
+.ntb-hero-v2.ntb-home { min-height: 100dvh; }

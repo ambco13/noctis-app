@@ -145,14 +145,70 @@ html { scroll-behavior: smooth; }
 /* Sur la home, le header se pose PAR-DESSUS le hero (photo plein écran) au lieu
    d'être dans le flux (qui laissait une bande claire de 60px en haut). */
 #mkt-header[data-hero-nav] { position: fixed !important; left: 0; right: 0; top: 0; }
-#mkt-header[data-hero-nav]:not(.is-scrolled) {
-    background: transparent !important;
+/* .is-open (menu mobile déroulé) exclu : le panneau devient opaque, liens sombres. */
+#mkt-header[data-hero-nav]:not(.is-scrolled):not(.is-open) {
+    /* Voile dégradé (pas de barre pleine) : garde le look flottant tout en
+       assurant la lisibilité des liens/burger blancs sur les zones claires
+       de la photo (ex. plafond de l'habitacle en haut à droite). */
+    background: linear-gradient(to bottom, rgba(8,12,20,.34), transparent) !important;
     -webkit-backdrop-filter: none !important;
     backdrop-filter: none !important;
     border-bottom-color: transparent !important;
 }
-#mkt-header[data-hero-nav]:not(.is-scrolled) a,
-#mkt-header[data-hero-nav]:not(.is-scrolled) .nav-link,
-#mkt-header[data-hero-nav]:not(.is-scrolled) svg { color: #fff !important; }
+#mkt-header[data-hero-nav]:not(.is-scrolled):not(.is-open) a,
+#mkt-header[data-hero-nav]:not(.is-scrolled):not(.is-open) .nav-link,
+#mkt-header[data-hero-nav]:not(.is-scrolled):not(.is-open) svg { color: #fff !important; }
 /* Le CTA « Get a Quote » garde son fond accent (déjà lisible sur le sombre). */
-#mkt-header[data-hero-nav]:not(.is-scrolled) .cta { color: #fff !important; }
+#mkt-header[data-hero-nav]:not(.is-scrolled):not(.is-open) .cta { color: #fff !important; }
+
+/* ── Menu mobile (burger) ──
+   Bouton burger caché sur desktop ; sous 860px la barre de liens devient un
+   panneau déroulant sous le header, ouvert/fermé par .is-open (JS). */
+.mk-burger {
+    display: none;
+    /* Dimensions explicites : sans elles, le bouton inline-flex peut se réduire
+       à 0×0 sur mobile (line-height:0 + taille croisée du SVG). */
+    width: 40px; height: 40px; align-items: center; justify-content: center;
+    background: none; border: 0; padding: 0; margin: -6px -8px -6px 0;
+    cursor: pointer; color: var(--ntb-text); line-height: 0;
+}
+/* Menu ouvert : barre du header opaque, raccord avec le panneau. */
+#mkt-header.is-open {
+    background: var(--ntb-bg) !important;
+    -webkit-backdrop-filter: none !important; backdrop-filter: none !important;
+    border-bottom-color: transparent !important;
+}
+.mk-burger .mk-burger-close { display: none; }
+#mkt-header.is-open .mk-burger .mk-burger-open { display: none; }
+#mkt-header.is-open .mk-burger .mk-burger-close { display: block; }
+
+@media (max-width: 860px) {
+    .mk-burger { display: inline-flex; }
+    #mkt-header .mk-nav {
+        /* !important : bat le position:relative inline du <nav>, sinon le
+           panneau reste collé à droite au lieu d'être pleine largeur. */
+        position: absolute !important; top: 100% !important; left: 0 !important; right: 0 !important;
+        flex-direction: column !important; align-items: stretch !important;
+        gap: 2px !important; padding: 12px 22px 20px;
+        background: var(--ntb-bg);
+        border-bottom: 1px solid var(--ntb-line);
+        box-shadow: 0 24px 50px -24px rgba(20,30,50,.28);
+        display: none !important;
+    }
+    #mkt-header.is-open .mk-nav { display: flex !important; }
+    /* Liens en pleine largeur, confortables au doigt. */
+    #mkt-header .mk-nav .nav-link { padding: 12px 4px; font-size: 15px !important; }
+    #mkt-header .mk-drop { display: block !important; }
+    /* Sur mobile le sous-menu Services est toujours déplié (pas de survol). */
+    #mkt-header .mk-drop-menu {
+        display: flex !important; position: static !important; transform: none !important;
+        margin: 4px 0 8px 12px !important; border: 0 !important; box-shadow: none !important;
+        background: none !important; padding: 0 !important; min-width: 0 !important;
+    }
+    #mkt-header .mk-nav .mk-account { width: auto; justify-content: flex-start; padding: 12px 4px; gap: 10px; }
+    #mkt-header .mk-nav .cta { text-align: center; margin-top: 10px; padding: 13px 20px; }
+    /* Le panneau ouvert est toujours opaque : liens sombres même sur la home. */
+    #mkt-header.is-open .mk-nav a,
+    #mkt-header.is-open .mk-nav .nav-link { color: var(--ntb-text) !important; }
+    #mkt-header.is-open .mk-nav .cta { color: #fff !important; }
+}

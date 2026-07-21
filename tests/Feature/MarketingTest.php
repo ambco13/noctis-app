@@ -22,7 +22,7 @@ class MarketingTest extends TestCase
     {
         $this->get(route('marketing.home'))
             ->assertOk()
-            ->assertSee('Votre chauffeur')            // hero = étape 1 du tunnel
+            ->assertSee('Your chauffeur')             // hero = étape 1 du tunnel
             ->assertSee('ntb-home-form', false)       // vrai formulaire de réservation
             ->assertSee('Effortless travel')          // section « promise »
             ->assertSee('Borders, handled.')          // panneau Europe

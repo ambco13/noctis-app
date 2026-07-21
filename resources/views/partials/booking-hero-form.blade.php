@@ -5,13 +5,13 @@
 <div class="ntb-scope ntb-home ntb-hero-v2">
   <div class="ntb-hero-inner">
     <div class="ntb-hero-text">
-        <p class="ntb-hero-eyebrow">{{ __('Paris & régions') }}</p>
-        {{-- Deux <br> exclusifs (CSS) : coupure après « vous » sur grand écran,
-             avant « vous » sur téléphone (≤640px), où la 1re ligne longue ne
-             tient pas. Les espaces autour des <br> assurent le mot joint quand
-             l'un des deux est masqué (l'espace en début de ligne est ignoré). --}}
-        <h1 class="ntb-hero-title">{!! __('Votre chauffeur<br class="ntb-br-m"> vous <br class="ntb-br-d">attend.') !!}</h1>
-        <p class="ntb-hero-tagline">{!! __("Prix tout compris connu d'avance.<br>Réservation en moins d'une minute, paiement sécurisé.") !!}</p>
+        <p class="ntb-hero-eyebrow">{{ __('Paris & Europe') }}</p>
+        {{-- Deux <br> exclusifs (CSS) : coupure après « chauffeur » sur grand
+             écran, avant sur téléphone (≤640px), où la 1re ligne ne tient pas.
+             Les espaces autour des <br> assurent le mot joint quand l'un des
+             deux est masqué (l'espace en début de ligne est ignoré). --}}
+        <h1 class="ntb-hero-title">{!! __('Your chauffeur<br class="ntb-br-m"> is <br class="ntb-br-d">waiting.') !!}</h1>
+        <p class="ntb-hero-tagline">{!! __('Fixed price known in advance.<br>Book in under a minute, secure payment.') !!}</p>
     </div>
     <form class="ntb-home-form" method="post" action="{{ route('booking.step1') }}" data-ntb-step1>
         @csrf
@@ -21,13 +21,13 @@
 
         <div class="ntb-hf-grid">
             <div class="ntb-field" data-ntb-autocomplete data-place-id-target="ntb-pickup-place-id">
-                <label for="ntb-pickup">{{ __('Départ') }}</label>
+                <label for="ntb-pickup">{{ __('Departure') }}</label>
                 <div class="ntb-field-input">
                     <span class="ntb-field-icon" aria-hidden="true">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/></svg>
                     </span>
                     <input type="text" id="ntb-pickup" name="NTB2_pickup" autocomplete="off"
-                        placeholder="{{ __('Adresse de départ') }}"
+                        placeholder="{{ __('Pickup address') }}"
                         value="{{ $prefill['pickup_address'] }}" required />
                 </div>
                 <div class="ntb-ac-list" hidden></div>
@@ -35,13 +35,13 @@
             </div>
 
             <div class="ntb-field" data-ntb-autocomplete data-place-id-target="ntb-dropoff-place-id">
-                <label for="ntb-dropoff">{{ __('Arrivée') }}</label>
+                <label for="ntb-dropoff">{{ __('Arrival') }}</label>
                 <div class="ntb-field-input">
                     <span class="ntb-field-icon" aria-hidden="true">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-6.5-7-11a7 7 0 0 1 14 0c0 4.5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
                     </span>
                     <input type="text" id="ntb-dropoff" name="NTB2_dropoff" autocomplete="off"
-                        placeholder="{{ __("Adresse d'arrivée") }}"
+                        placeholder="{{ __('Drop-off address') }}"
                         value="{{ $prefill['dropoff_address'] }}" required />
                 </div>
                 <div class="ntb-ac-list" hidden></div>
@@ -63,7 +63,7 @@
                     </span>
                     <input type="text" class="ntb-date-pre"
                         value="{{ $dateDisplay }}"
-                        placeholder="jj/mm/aaaa" autocomplete="off" />
+                        placeholder="dd/mm/yyyy" autocomplete="off" />
                     <input type="date" id="ntb-date" name="NTB2_date"
                         value="{{ $prefill['ride_date'] }}"
                         min="{{ now()->format('Y-m-d') }}" required />
@@ -72,7 +72,7 @@
             </div>
 
             <div class="ntb-field">
-                <label for="ntb-time">{{ __('Heure') }}</label>
+                <label for="ntb-time">{{ __('Time') }}</label>
                 <div class="ntb-field-input">
                     <span class="ntb-field-icon" aria-hidden="true">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
@@ -90,7 +90,7 @@
 
             <div role="button" tabindex="0" class="ntb-btn ntb-btn-primary ntb-hf-go" data-ntb-step1-submit>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.6-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9L2.1 10.9A3 3 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></svg>
-                {{ __('Estimer ma course') }}
+                {{ __('Estimate my ride') }}
             </div>
         </div>
     </form>

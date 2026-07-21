@@ -207,9 +207,12 @@
 				var heroRect = hero.getBoundingClientRect();
 				var innerRect = inner.getBoundingClientRect();
 				var formRect = form.getBoundingClientRect();
-				var heroCenter = heroRect.top + heroRect.height / 2;
+				/* Cible : centre du formulaire à 40% du BAS du hero (identique à
+				   ntb-public.js — sans ça le calendrier remontait le form au
+				   milieu, 50%, trop haut). */
+				var target = heroRect.bottom - heroRect.height * 0.40;
 				var formCenter = formRect.top + formRect.height / 2;
-				var lift = Math.max( 0, formCenter - heroCenter );
+				var lift = Math.max( 0, formCenter - target );
 				/* Garde-fou : garder au moins 8px du bloc visibles en haut. Le
 				   haut du bloc (eyebrow, titre) peut glisser au niveau de la
 				   nav (transparente sur le hero), c'est assumé. */

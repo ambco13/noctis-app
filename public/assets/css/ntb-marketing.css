@@ -104,10 +104,24 @@ html { scroll-behavior: smooth; }
 .nav-link { transition: color .2s; }
 .nav-link:hover { color: var(--ntb-text); }
 
-/* Menu déroulant Services (hover, sans JS). */
-.mk-drop-menu { display: none; }
-.mk-drop:hover .mk-drop-menu, .mk-drop:focus-within .mk-drop-menu { display: flex; }
-.mk-drop-menu a:hover { background: var(--ntb-surf2); }
+/* Menu déroulant Services : verre translucide flou (comme la carte du form).
+   Ouverture au survol (desktop) ou via .is-open (clic sur mobile). Le clic sur
+   « Services » n'ouvre PAS le menu sur desktop (voir JS : preventDefault). */
+.mk-drop-menu {
+    display: none;
+    background: color-mix(in oklch, var(--ntb-bg) 68%, transparent);
+    -webkit-backdrop-filter: blur(20px) saturate(1.5);
+    backdrop-filter: blur(20px) saturate(1.5);
+    border: 1px solid color-mix(in oklch, var(--ntb-line) 55%, transparent);
+}
+/* Pont invisible sur le vide (margin-top:14px) entre « Services » et le menu :
+   sans lui, traverser le vide fermait le menu → items « non cliquables ». */
+.mk-drop-menu::before {
+    content: ""; position: absolute; left: 0; right: 0; top: -16px; height: 16px;
+}
+.mk-drop:hover .mk-drop-menu, .mk-drop.is-open .mk-drop-menu { display: flex; }
+.mk-drop-menu a { transition: background .18s var(--ease); }
+.mk-drop-menu a:hover { background: color-mix(in oklch, var(--ntb-text) 8%, transparent); }
 
 /* ── Grilles ── */
 .svc-bento { display: grid; grid-template-columns: 1.3fr 1fr; gap: 18px; align-items: stretch; }
@@ -214,12 +228,21 @@ html { scroll-behavior: smooth; }
     /* Liens en pleine largeur, confortables au doigt. */
     #mkt-header .mk-nav .nav-link { padding: 12px 4px; font-size: 15px !important; }
     #mkt-header .mk-drop { display: block !important; }
-    /* Sur mobile le sous-menu Services est toujours déplié (pas de survol). */
+    /* Sous-menu Services : replié par défaut, l'utilisateur l'ouvre (accordéon
+       via .is-open, posé au tap par le JS). Le !important sur display bat la
+       règle de survol desktop, sans effet sur mobile. */
     #mkt-header .mk-drop-menu {
-        display: flex !important; position: static !important; transform: none !important;
-        margin: 4px 0 8px 12px !important; border: 0 !important; box-shadow: none !important;
-        background: none !important; padding: 0 !important; min-width: 0 !important;
+        position: static !important; transform: none !important;
+        margin: 0 0 4px 12px !important; border: 0 !important; box-shadow: none !important;
+        background: none !important; -webkit-backdrop-filter: none !important;
+        backdrop-filter: none !important; padding: 0 !important; min-width: 0 !important;
+        display: none !important;
     }
+    #mkt-header .mk-drop.is-open .mk-drop-menu { display: flex !important; }
+    /* Flèche ▾ pivote quand ouvert. */
+    #mkt-header .mk-drop.is-open .nav-link > span { transform: rotate(180deg); }
+    #mkt-header .mk-drop .nav-link > span { display: inline-block; transition: transform .2s var(--ease); }
+    #mkt-header .mk-nav .mk-drop-menu a { padding: 10px 4px; font-size: 14px !important; }
     #mkt-header .mk-nav .mk-account { width: auto; justify-content: flex-start; padding: 12px 4px; gap: 10px; }
     #mkt-header .mk-nav .cta { text-align: center; margin-top: 10px; padding: 13px 20px; }
     /* Le panneau ouvert est toujours opaque : liens sombres même sur la home. */

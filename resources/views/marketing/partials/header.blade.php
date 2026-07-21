@@ -18,7 +18,7 @@
         <span class="mk-drop" style="position:relative;display:inline-flex;align-items:center">
             <a class="nav-link" style="{{ $lnk }}display:inline-flex;align-items:center;gap:5px;color:{{ $isSvc ? 'var(--ntb-text)' : 'var(--ntb-muted)' }}"
                href="{{ route('marketing.service', ['slug' => array_key_first($navServices)]) }}">Services <span style="font-size:11px;line-height:1">▾</span></a>
-            <span class="mk-drop-menu" style="position:absolute;top:100%;left:50%;transform:translateX(-50%);margin-top:14px;background:var(--ntb-surf);border:1px solid var(--ntb-line);border-radius:14px;box-shadow:0 24px 60px -24px rgba(20,30,50,.28);padding:8px;min-width:236px;flex-direction:column">
+            <span class="mk-drop-menu" style="position:absolute;top:100%;left:50%;transform:translateX(-50%);margin-top:14px;border-radius:14px;box-shadow:0 24px 60px -24px rgba(20,30,50,.28);padding:8px;min-width:236px;flex-direction:column">
                 @foreach ($navServices as $slug => $svc)
                     <a href="{{ route('marketing.service', ['slug' => $slug]) }}" style="padding:10px 14px;font-size:13.5px;color:var(--ntb-text);border-radius:9px">{{ $svc['nav'] }}</a>
                 @endforeach

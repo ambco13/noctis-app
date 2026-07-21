@@ -53,14 +53,34 @@
         b.addEventListener('click', function () {
             var open = h.classList.toggle('is-open');
             b.setAttribute('aria-expanded', open ? 'true' : 'false');
+            if (!open) closeDrops();     // referme le sous-menu Services
         });
-        /* Fermer après un clic sur un lien du menu. */
+        /* « Services » : ne navigue jamais. Sur mobile (burger), un tap
+           ouvre/ferme le sous-menu (accordéon) ; sur desktop il ne fait rien
+           (le menu s'ouvre au survol) — le 1er clic ne doit pas l'ouvrir. */
+        var drop = h.querySelector('.mk-drop');
+        var trigger = drop && drop.querySelector('a');
+        if (trigger) {
+            trigger.addEventListener('click', function (e) {
+                e.preventDefault();
+                if (window.matchMedia('(max-width: 860px)').matches) {
+                    drop.classList.toggle('is-open');
+                }
+            });
+        }
+        /* Fermer le menu mobile après un clic sur un vrai lien (pas le
+           déclencheur Services, géré ci-dessus). */
         h.querySelectorAll('.mk-nav a').forEach(function (a) {
+            if (drop && a === trigger) return;
             a.addEventListener('click', function () {
                 h.classList.remove('is-open');
                 b.setAttribute('aria-expanded', 'false');
+                closeDrops();
             });
         });
+        function closeDrops() {
+            h.querySelectorAll('.mk-drop.is-open').forEach(function (d) { d.classList.remove('is-open'); });
+        }
     }
     if (document.readyState !== 'loading') burger();
     else document.addEventListener('DOMContentLoaded', burger);

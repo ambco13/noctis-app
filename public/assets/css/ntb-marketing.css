@@ -109,10 +109,12 @@ html { scroll-behavior: smooth; }
    « Services » n'ouvre PAS le menu sur desktop (voir JS : preventDefault). */
 .mk-drop-menu {
     display: none;
-    background: color-mix(in oklch, var(--ntb-bg) 68%, transparent);
-    -webkit-backdrop-filter: blur(20px) saturate(1.5);
-    backdrop-filter: blur(20px) saturate(1.5);
-    border: 1px solid color-mix(in oklch, var(--ntb-line) 55%, transparent);
+    /* Verre franchement translucide (on voit la photo/derrière au travers),
+       lisibilité assurée par le flou renforcé. */
+    background: color-mix(in oklch, var(--ntb-bg) 45%, transparent);
+    -webkit-backdrop-filter: blur(26px) saturate(1.6);
+    backdrop-filter: blur(26px) saturate(1.6);
+    border: 1px solid color-mix(in oklch, var(--ntb-line) 45%, transparent);
 }
 /* Pont invisible sur le vide (margin-top:14px) entre « Services » et le menu :
    sans lui, traverser le vide fermait le menu → items « non cliquables ». */

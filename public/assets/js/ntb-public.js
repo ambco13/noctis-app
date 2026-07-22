@@ -295,15 +295,19 @@
 		   cours) et basculerait le popup vers le haut, par-dessus le titre. */
 		var hero = anchor.closest( '.ntb-home' );
 		if ( hero ) {
-			/* .ntb-home a overflow:hidden : un popup qui dépasse le bas du hero
-			   est coupé net à la frontière de la section suivante (le marquee
-			   "passe par-dessus"). On plafonne donc sa hauteur à la place
-			   réellement disponible jusqu'au bas du hero -- il scrolle en
-			   interne (fondu bas) au lieu d'être tronqué par la section d'après.
-			   Sans descendre sous le défaut voulu (≈2 items mobile). */
-			var maxDefault = window.innerWidth <= 640 ? 150 : 280;
-			var avail = hero.getBoundingClientRect().bottom - anchor.getBoundingClientRect().bottom - 16;
-			popup.style.maxHeight = Math.max( 120, Math.min( maxDefault, avail ) ) + 'px';
+			/* .ntb-home a overflow:hidden : un popup plus haut que la place sous
+			   le champ serait coupé à la frontière de la section suivante. On
+			   dimensionne donc dynamiquement sa hauteur à la place disponible.
+			   Plancher : ~42% de la hauteur du hero -- au focus le formulaire se
+			   recentre (centre du form à 40% du bas), donc cette place existera,
+			   même si la mesure a lieu AVANT la montée (positionPopupVertically
+			   est appelé avant updateHeroFocus). Résultat : autant de résultats
+			   que l'écran le permet (≈6), sinon la liste rétrécit et scrolle en
+			   interne (fondu bas) au lieu d'un plafond fixe trop bas. */
+			var heroRect = hero.getBoundingClientRect();
+			var below = heroRect.bottom - anchor.getBoundingClientRect().bottom - 16;
+			var avail = Math.max( below, heroRect.height * 0.42 );
+			popup.style.maxHeight = Math.max( 120, avail ) + 'px';
 			return;
 		}
 		var rect = anchor.getBoundingClientRect();

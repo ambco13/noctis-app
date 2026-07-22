@@ -85,6 +85,19 @@ span.flatpickr-weekday {
 	span.flatpickr-weekday   { font-size: 9px !important; }
 	.flatpickr-day           { height: 30px !important; line-height: 30px !important; font-size: 12px !important; border-radius: var(--ntb-r-sm) !important; }
 }
+/* Écran court (peu de hauteur dispo) : on resserre dynamiquement les paddings
+   internes du calendrier et la hauteur des cases pour qu'il tienne sans être
+   rogné, plutôt que de garder l'espacement confortable des grands écrans. */
+@media (max-height: 720px) {
+	.flatpickr-calendar { padding: 6px; }
+	.flatpickr-months   { padding-bottom: 2px; }
+	.flatpickr-day      { height: 30px !important; line-height: 30px !important; }
+}
+@media (max-height: 620px) {
+	.flatpickr-calendar { padding: 4px; }
+	.flatpickr-day      { height: 26px !important; line-height: 26px !important; font-size: 12px !important; }
+	span.flatpickr-weekday { font-size: 9px !important; }
+}
 
 /* Calendrier */
 .flatpickr-calendar {

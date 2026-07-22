@@ -162,16 +162,10 @@
 		   cours) et basculerait le popup vers le haut, par-dessus le titre. */
 		var hero = anchor.closest( '.ntb-home' );
 		if ( hero ) {
-			/* .ntb-home a overflow:hidden : un popup plus haut que la place sous
-			   le champ serait coupé à la frontière de la section suivante. On
-			   dimensionne dynamiquement à la place disponible. Plancher : ~42% de
-			   la hauteur du hero -- au focus le form se recentre (centre à 40% du
-			   bas), donc cette place existera même quand la mesure a lieu AVANT
-			   la montée (cas du picker Heure, ouvert avant updateHeroFocus).
-			   Résultat : 6 lignes si l'écran le permet, sinon ça rétrécit. */
-			var heroRect = hero.getBoundingClientRect();
-			var below = heroRect.bottom - anchor.getBoundingClientRect().bottom - 16;
-			var avail = Math.max( below, heroRect.height * 0.42 );
+			/* .ntb-home a overflow:hidden : un popup plus haut que la place
+			   restante sous le champ est coupé à la frontière de la section
+			   suivante. On plafonne à l'espace dispo jusqu'au bas du hero. */
+			var avail = hero.getBoundingClientRect().bottom - anchor.getBoundingClientRect().bottom - 16;
 			popup.style.maxHeight = Math.max( 120, avail ) + 'px';
 			return;
 		}

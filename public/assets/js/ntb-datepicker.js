@@ -162,10 +162,10 @@
 		   cours) et basculerait le popup vers le haut, par-dessus le titre. */
 		var hero = anchor.closest( '.ntb-home' );
 		if ( hero ) {
-			/* .ntb-home a overflow:hidden : un popup plus haut que la place
-			   restante sous le champ est coupé à la frontière de la section
-			   suivante. On plafonne à l'espace dispo jusqu'au bas du hero. */
-			var avail = hero.getBoundingClientRect().bottom - anchor.getBoundingClientRect().bottom - 16;
+			/* .ntb-home est en overflow:visible : le popup se peint par-dessus la
+			   section suivante au lieu d'être coupé. On plafonne au bas du VIEWPORT
+			   (pas du hero) pour qu'il puisse déborder sans sortir de l'écran. */
+			var avail = window.innerHeight - anchor.getBoundingClientRect().bottom - 16;
 			popup.style.maxHeight = Math.max( 120, avail ) + 'px';
 			return;
 		}

@@ -302,7 +302,14 @@ html[data-ntb-theme="light"] body:has([data-ntb-steps]) {
 	   lui-même -- justify-content n'est pas animable, bottom l'est. */
 	display: flex; align-items: center; justify-content: flex-end;
 	position: relative;
-	overflow: hidden;
+	/* visible (et non hidden) : les popups du formulaire (suggestions
+	   d'adresse, heure) sont positionnés (z-index élevé) et doivent pouvoir se
+	   peindre PAR-DESSUS la section suivante quand ils dépassent le bas du hero,
+	   au lieu d'être coupés net à la frontière. Rien d'autre ne déborde : le
+	   fond (background cover + ::before inset) reste borné à la boîte, et le
+	   contenu ancré en bas ne grandit que vers le haut. `body` a overflow-x:clip
+	   comme garde-fou horizontal. */
+	overflow: visible;
 	/* Image temporaire (hotlink Blacklane) -- à remplacer par une photo hébergée
 	   par nous dès qu'on en a une. */
 	background-image: url('https://static.blacklane.com/web-funnel/assets/bg-_pAuXnDn.jpg');

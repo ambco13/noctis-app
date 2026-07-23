@@ -273,7 +273,7 @@ html[data-ntb-theme="light"] body:has([data-ntb-steps]) {
 .ntb-ac-list::-webkit-scrollbar-track { background: transparent; }
 .ntb-ac-list::-webkit-scrollbar-thumb { background: var(--ntb-line); border-radius: 2px; }
 .ntb-ac-list::-webkit-scrollbar-thumb:hover { background: var(--ntb-accent); }
-.ntb-ac-item { display: flex; align-items: center; gap: 11px; width: 100%; text-align: left; background: transparent !important; border: none; padding: 11px 13px; cursor: pointer; transition: background var(--ntb-dur); }
+.ntb-ac-item { display: flex; align-items: center; gap: 11px; width: 100%; text-align: left; background: transparent !important; border: none; padding: 7px 13px; cursor: pointer; transition: background var(--ntb-dur); }
 .ntb-ac-item:hover { background: transparent !important; }
 .ntb-ac-pin { width: 7px; height: 7px; border-radius: 50%; background: var(--ntb-accent-hi); flex: 0 0 auto; }
 .ntb-ac-txt { display: flex; flex-direction: column; min-width: 0; }
@@ -462,14 +462,11 @@ html[data-ntb-theme="light"] body:has([data-ntb-steps]) {
 	backdrop-filter: var(--ntb-glass-blur, blur(8px));
 }
 /* Liste d'adresses du hero : barre de défilement masquée (on scrolle sans
-   barre visible, façon Blacklane), pour un rendu épuré sur le verre. Un fondu
-   en bas (mask, solidaire de l'élément — le contenu défile dessous) évite la
-   coupure nette du dernier résultat quand la liste dépasse : ça devient un
-   dégradé qui signale « défiler pour voir la suite ». */
+   barre visible, façon Blacklane), pour un rendu épuré sur le verre.
+   Pas de fondu bas (mask-image) : il rendait transparents les derniers ~26px,
+   donc aussi la bordure basse de la liste. On préfère la bordure nette. */
 .ntb-home .ntb-ac-list {
 	scrollbar-width: none;
-	-webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 26px), transparent);
-	        mask-image: linear-gradient(to bottom, #000 calc(100% - 26px), transparent);
 }
 .ntb-home .ntb-ac-list::-webkit-scrollbar { display: none; }
 /* Mobile : ~2 suggestions visibles, on scrolle pour les suivantes (façon

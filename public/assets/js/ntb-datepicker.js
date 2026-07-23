@@ -54,7 +54,8 @@
 
 					var cal       = inst.calendarContainer;
 					var dateField = dateEl.closest( '.ntb-field' ) || dateEl.parentElement;
-					var onHero    = !! dateEl.closest( '.ntb-home' );
+					var heroEl    = dateEl.closest( '.ntb-home' );
+					var onHero    = !! heroEl;
 					var gap       = 8;
 
 					/* Aligne le calendrier sous le champ (largeur = largeur du champ,
@@ -91,6 +92,23 @@
 							cal.classList.remove( 'arrowBottom' );
 							cal.classList.add( 'arrowTop' );
 							cal.style.top = Math.round( dateRect.bottom + window.scrollY + gap ) + 'px';
+
+							/* Taille adaptative (comme les popups adresses/heure) : on
+							   plafonne la grille des jours à la place restante sous le
+							   champ jusqu'au bas du HERO (frontière de la section
+							   suivante), scroll interne au-delà. Grand écran : avail >
+							   hauteur naturelle -> aucun effet ; écran court : la grille
+							   rétrécit au lieu de déborder sur la section d'après. */
+							var avail  = heroEl.getBoundingClientRect().bottom - dateRect.bottom - gap - 20;
+							var dc     = cal.querySelector( '.dayContainer' );
+							if ( dc ) {
+								var months = cal.querySelector( '.flatpickr-months' );
+								var wdays  = cal.querySelector( '.flatpickr-weekdays' );
+								var chrome = ( months ? months.offsetHeight : 0 )
+								           + ( wdays ? wdays.offsetHeight : 0 ) + 18;
+								dc.style.maxHeight = Math.max( 96, avail - chrome ) + 'px';
+								dc.style.overflowY = 'auto';
+							}
 						}
 					}
 
@@ -162,10 +180,10 @@
 		   cours) et basculerait le popup vers le haut, par-dessus le titre. */
 		var hero = anchor.closest( '.ntb-home' );
 		if ( hero ) {
-			/* .ntb-home est en overflow:visible : le popup se peint par-dessus la
-			   section suivante au lieu d'être coupé. On plafonne au bas du VIEWPORT
-			   (pas du hero) pour qu'il puisse déborder sans sortir de l'écran. */
-			var avail = window.innerHeight - anchor.getBoundingClientRect().bottom - 16;
+			/* Taille dynamique = place dispo sous le champ jusqu'au bas du HERO
+			   (frontière de la section suivante), marge fixe 25px. Scroll interne
+			   au-delà, sans déborder sur la section d'après. */
+			var avail = hero.getBoundingClientRect().bottom - anchor.getBoundingClientRect().bottom - 25;
 			popup.style.maxHeight = Math.max( 120, avail ) + 'px';
 			return;
 		}
@@ -554,10 +572,25 @@
 			if ( picker.classList.contains( 'nc-open' ) ) return;
 			closeAll();
 			picker.classList.add( 'nc-open' );
+			/* updateHeroFocus AVANT le dimensionnement : il déclenche la montée du
+			   form. positionPopupVertically mesure la place SOUS le champ ; tant
+			   que le form n'a pas remonté, cette place est petite (champ en bas)
+			   -> picker rétréci. On recalcule donc pendant toute la montée
+			   (~550ms), comme le calendrier : à mesure que le champ remonte, la
+			   place augmente et le picker reprend sa taille. */
+			updateHeroFocus();
 			positionPopupVertically( field, picker );
 			scrollInstant( colH, curH >= 0 ? curH : 0 );
 			scrollInstant( colM, ( curM >= 0 ? curM : 0 ) / 5 );
-			updateHeroFocus();
+			if ( field.closest( '.ntb-home' ) ) {
+				var t0 = performance.now();
+				( function settle( now ) {
+					positionPopupVertically( field, picker );
+					if ( now - t0 < 550 && picker.classList.contains( 'nc-open' ) ) {
+						requestAnimationFrame( settle );
+					}
+				} )( t0 );
+			}
 		}
 		display.addEventListener( 'focus', openPicker );
 		display.addEventListener( 'click', openPicker );

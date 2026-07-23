@@ -63,9 +63,14 @@ html[data-ntb-theme="light"] .flatpickr-day.nextMonthDay  { color: oklch(0.70 0.
 	width:     100% !important;
 	min-width: 100% !important;
 	max-width: 100% !important;
-	padding: 2px 0 0;
-	max-height: 188px;
+	padding: 0;
+	max-height: 170px;
 	overflow: hidden;
+	/* Quand JS plafonne la grille (taille adaptative sur écran court) elle
+	   scrolle : barre masquée, façon liste d'adresses. */
+	scrollbar-width: none;
+}
+.dayContainer::-webkit-scrollbar { display: none;
 }
 span.flatpickr-weekday {
 	font-size:      11px !important;
@@ -74,8 +79,8 @@ span.flatpickr-weekday {
 .flatpickr-day {
 	flex-basis:    calc(100% / 7) !important;
 	max-width:     calc(100% / 7) !important;
-	height:        30px !important;
-	line-height:   30px !important;
+	height:        25px !important;
+	line-height:   25px !important;
 	font-size:     13px !important;
 	border-radius: var(--ntb-r-sm)  !important;
 }
@@ -97,15 +102,15 @@ span.flatpickr-weekday {
 		inset 0 1px 0 oklch(1 0 0 / .05);
 	font-family: var(--ntb-sans);
 	color: var(--ntb-text);
-	padding: 8px;
+	padding: 5px 8px;
 }
 .flatpickr-calendar::before,
 .flatpickr-calendar::after { display: none; }
 
 /* Barre mois */
 .flatpickr-months {
-	padding-bottom: 5px;
-	margin-bottom: 3px;
+	padding-bottom: 2px;
+	margin-bottom: 2px;
 	border-bottom: 1px solid var(--ntb-line);
 	align-items: center;
 }

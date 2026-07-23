@@ -222,8 +222,22 @@
 			list.appendChild( b );
 		} );
 		list.hidden = false;
-		positionPopupVertically( input, list );
+		/* updateHeroFocus AVANT le dimensionnement : il déclenche la montée du
+		   form. Comme le champ remonte ensuite (place dispo croissante), on
+		   recalcule la hauteur pendant la montée (~550ms) pour que la liste ne
+		   reste pas rétrécie si elle s'ouvre alors que le form n'est pas encore
+		   remonté. Jeton pour ne pas empiler les boucles à chaque frappe. */
 		updateHeroFocus();
+		positionPopupVertically( input, list );
+		if ( input.closest( '.ntb-home' ) ) {
+			var token = ( list._settle = ( list._settle || 0 ) + 1 );
+			var t0 = performance.now();
+			( function settle( now ) {
+				if ( list._settle !== token || list.hidden ) return;
+				positionPopupVertically( input, list );
+				if ( now - t0 < 550 ) requestAnimationFrame( settle );
+			} )( t0 );
+		}
 	}
 
 	/* Hero (page 1) : le bloc texte+formulaire est ancré en bas de l'écran.
@@ -295,12 +309,14 @@
 		   cours) et basculerait le popup vers le haut, par-dessus le titre. */
 		var hero = anchor.closest( '.ntb-home' );
 		if ( hero ) {
-			/* .ntb-home est en overflow:visible : le popup (positionné, z-index
-			   élevé) se peint PAR-DESSUS la section suivante au lieu d'être coupé
-			   à la frontière du hero. On plafonne sa hauteur au bas du VIEWPORT
-			   (pas au bas du hero) pour qu'il puisse déborder sur la section
-			   d'après sans sortir de l'écran ; au-delà, scroll interne (fondu bas). */
-			var avail = window.innerHeight - anchor.getBoundingClientRect().bottom - 16;
+			/* Taille dynamique = place dispo sous le champ jusqu'au bas du HERO
+			   (frontière de la section suivante), moins 5px. La liste remplit cet
+			   espace et scrolle en interne au-delà, sans jamais déborder sur la
+			   section d'après. (.ntb-home est en overflow:visible, donc rien n'est
+			   coupé net : c'est le plafond qui borne proprement la hauteur.)
+			   La liste remplit l'espace dispo jusqu'au marquee, en gardant une
+			   MARGE FIXE de 25px au-dessus de lui ; au-delà, scroll interne. */
+			var avail = hero.getBoundingClientRect().bottom - anchor.getBoundingClientRect().bottom - 25;
 			popup.style.maxHeight = Math.max( 120, avail ) + 'px';
 			return;
 		}

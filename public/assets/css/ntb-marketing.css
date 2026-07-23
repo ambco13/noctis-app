@@ -109,8 +109,14 @@ html { scroll-behavior: smooth; }
    « Services » n'ouvre PAS le menu sur desktop (voir JS : preventDefault). */
 .mk-drop-menu {
     display: none;
-    /* Verre franchement translucide (on voit la photo/derrière au travers),
-       lisibilité assurée par le flou renforcé. */
+    /* Fond opaque par défaut (partout : pages vitrine, étapes 2-4, compte) --
+       il se pose sur du contenu clair, un verre translucide y serait illisible. */
+    background: var(--ntb-surf);
+    border: 1px solid var(--ntb-line);
+}
+/* Exception : uniquement sur le hero du Home (nav transparente sur la photo,
+   pas encore scrollée), le menu reprend l'effet verre translucide assorti. */
+#mkt-header[data-hero-nav]:not(.is-scrolled):not(.is-open) .mk-drop-menu {
     background: color-mix(in oklch, var(--ntb-bg) 45%, transparent);
     -webkit-backdrop-filter: blur(26px) saturate(1.6);
     backdrop-filter: blur(26px) saturate(1.6);
@@ -124,6 +130,36 @@ html { scroll-behavior: smooth; }
 .mk-drop:hover .mk-drop-menu, .mk-drop.is-open .mk-drop-menu { display: flex; }
 .mk-drop-menu a { transition: background .18s var(--ease); }
 .mk-drop-menu a:hover { background: color-mix(in oklch, var(--ntb-text) 8%, transparent); }
+
+/* ── Filtres Fleet (dropdown custom, remplace les <select> natifs pour que la
+   liste ouverte suive le design au lieu du rendu OS) ── */
+.mk-filter { position: relative; }
+.mk-filter-btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: var(--ntb-surf); color: var(--ntb-text);
+    border: 1px solid var(--ntb-line); border-radius: 12px;
+    padding: 12px 16px 12px 18px; font-size: 14px; font-family: var(--font-sans);
+    cursor: pointer; transition: border-color .18s var(--ease), background .18s var(--ease);
+}
+.mk-filter-btn:hover { border-color: color-mix(in oklch, var(--ntb-accent) 45%, var(--ntb-line)); }
+.mk-filter.is-open .mk-filter-btn { border-color: var(--ntb-accent); }
+.mk-filter-val { min-width: 74px; text-align: left; }
+.mk-filter-chev { color: var(--ntb-muted); transition: transform .2s var(--ease); flex-shrink: 0; }
+.mk-filter.is-open .mk-filter-chev { transform: rotate(180deg); }
+.mk-filter-menu {
+    display: none; position: absolute; top: calc(100% + 6px); left: 0; z-index: 30;
+    min-width: 100%; flex-direction: column; padding: 6px;
+    background: var(--ntb-surf); border: 1px solid var(--ntb-line); border-radius: 12px;
+    box-shadow: 0 18px 44px -20px rgba(20,30,50,.28);
+}
+.mk-filter.is-open .mk-filter-menu { display: flex; }
+.mk-filter-opt {
+    text-align: left; white-space: nowrap; background: transparent; border: none;
+    color: var(--ntb-text); font-family: var(--font-sans); font-size: 14px;
+    padding: 9px 12px; border-radius: 8px; cursor: pointer; transition: background .16s var(--ease);
+}
+.mk-filter-opt:hover { background: color-mix(in oklch, var(--ntb-text) 8%, transparent); }
+.mk-filter-opt.is-active { background: var(--ntb-accent-soft); color: var(--ntb-accent-hi); font-weight: 600; }
 
 /* ── Grilles ── */
 .svc-bento { display: grid; grid-template-columns: 1.3fr 1fr; gap: 18px; align-items: stretch; }
@@ -160,6 +196,10 @@ html { scroll-behavior: smooth; }
     .routes-grid { grid-template-columns: 1fr; }
     .mkt section { padding-left: 22px !important; padding-right: 22px !important; }
     .mkt header { padding-left: 20px !important; padding-right: 20px !important; }
+    /* Footer : texte d'intro sur toute la largeur en haut, puis Services +
+       Contact côte à côte en dessous (grille inline -> !important). */
+    .mk-footer-grid { grid-template-columns: 1fr 1fr !important; gap: 32px 24px !important; }
+    .mk-footer-grid > p { grid-column: 1 / -1; max-width: none !important; }
 }
 
 /* ── Nav transparent sur la home (hero plein écran sombre) ──

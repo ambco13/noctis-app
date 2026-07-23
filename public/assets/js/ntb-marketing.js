@@ -84,4 +84,58 @@
     }
     if (document.readyState !== 'loading') burger();
     else document.addEventListener('DOMContentLoaded', burger);
+
+    /* Filtres Fleet : dropdowns custom (Type / Marque) qui masquent/affichent
+       les cartes véhicules. « Any » (valeur vide) = pas de filtre. */
+    function fleetFilter() {
+        var filters = document.querySelectorAll('.mk-filter');
+        var grid = document.querySelector('[data-fleet-grid]');
+        if (!filters.length || !grid) return;
+        var empty = document.querySelector('[data-fleet-empty]');
+        var state = { type: '', make: '' };
+
+        function apply() {
+            var shown = 0;
+            grid.querySelectorAll('[data-type]').forEach(function (card) {
+                var ok = (!state.type || card.getAttribute('data-type') === state.type)
+                      && (!state.make || card.getAttribute('data-make') === state.make);
+                card.hidden = !ok;
+                if (ok) shown++;
+            });
+            if (empty) empty.hidden = shown !== 0;
+        }
+
+        function closeAll(except) {
+            filters.forEach(function (f) { if (f !== except) f.classList.remove('is-open'); });
+        }
+
+        filters.forEach(function (filter) {
+            var key = filter.getAttribute('data-filter');       // 'type' | 'make'
+            var btn = filter.querySelector('.mk-filter-btn');
+            var val = filter.querySelector('.mk-filter-val');
+            var def = val.getAttribute('data-default');
+            btn.addEventListener('click', function (e) {
+                e.stopPropagation();
+                var open = filter.classList.toggle('is-open');
+                closeAll(filter);
+                btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+            });
+            filter.querySelectorAll('.mk-filter-opt').forEach(function (opt) {
+                opt.addEventListener('click', function () {
+                    var v = opt.getAttribute('data-value');
+                    state[key] = v;
+                    val.textContent = v || def;
+                    filter.querySelectorAll('.mk-filter-opt').forEach(function (o) { o.classList.remove('is-active'); });
+                    opt.classList.add('is-active');
+                    filter.classList.remove('is-open');
+                    btn.setAttribute('aria-expanded', 'false');
+                    apply();
+                });
+            });
+        });
+        /* Clic hors d'un filtre : referme tout. */
+        document.addEventListener('click', function () { closeAll(null); });
+    }
+    if (document.readyState !== 'loading') fleetFilter();
+    else document.addEventListener('DOMContentLoaded', fleetFilter);
 })();

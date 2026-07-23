@@ -6,7 +6,10 @@
     $img = config('marketing.images');
     $book = route('booking.form', ['new' => 1]);
     $photo = fn ($url, $pos = 'center') => "background-image:url('{$url}'),linear-gradient(160deg,var(--ntb-surf2),var(--ntb-bg2));background-size:cover;background-position:{$pos}";
-    $sel = 'background:var(--ntb-surf);color:var(--ntb-text);border:1px solid var(--ntb-line);border-radius:12px;padding:12px 18px;font-size:14px;font-family:var(--font-sans);cursor:pointer';
+    $fleet = config('marketing.fleet');
+    // Options de filtre générées depuis les vraies données (pas de valeur fantôme).
+    $types = collect($fleet)->pluck('type')->unique()->values();
+    $makes = collect($fleet)->pluck('make')->unique()->values();
 @endphp
 
 @section('content')
@@ -15,19 +18,41 @@
             <div data-reveal style="max-width:1180px;margin:0 auto">
                 <p class="eyb" style="margin-bottom:20px">The Fleet</p>
                 <h1 style="font-family:var(--font-serif);font-weight:400;font-size:clamp(38px,6vw,84px);line-height:1;letter-spacing:-.02em;color:var(--ntb-text);margin:0 0 22px">Chosen for comfort.</h1>
-                <p style="font-size:18px;line-height:1.7;color:var(--ntb-muted);max-width:600px;margin:0">Modern, well-maintained vehicles selected for comfort, reliability and airport-travel efficiency — each presented to an impeccable standard.</p>
+                <p style="font-size:18px;line-height:1.7;color:var(--ntb-muted);margin:0">Modern, well-maintained vehicles selected for comfort, reliability and airport-travel efficiency — each presented to an impeccable standard.</p>
             </div>
         </section>
 
         <section style="padding:0 44px 110px">
             <div style="max-width:1180px;margin:0 auto">
-                <div style="display:flex;gap:12px;margin-bottom:36px;flex-wrap:wrap">
-                    <select style="{{ $sel }}"><option>Any Type</option><option>Sedan</option><option>Berline</option><option>Van</option></select>
-                    <select style="{{ $sel }}"><option>Any Make</option><option>BMW</option><option>Mercedes-Benz</option></select>
+                <div class="mk-filters" style="display:flex;gap:12px;margin-bottom:36px;flex-wrap:wrap">
+                    <div class="mk-filter" data-filter="type">
+                        <button type="button" class="mk-filter-btn" aria-haspopup="listbox" aria-expanded="false">
+                            <span class="mk-filter-val" data-default="Any Type">Any Type</span>
+                            <svg class="mk-filter-chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                        </button>
+                        <div class="mk-filter-menu" role="listbox">
+                            <button type="button" class="mk-filter-opt is-active" data-value="">Any Type</button>
+                            @foreach ($types as $t)
+                                <button type="button" class="mk-filter-opt" data-value="{{ $t }}">{{ $t }}</button>
+                            @endforeach
+                        </div>
+                    </div>
+                    <div class="mk-filter" data-filter="make">
+                        <button type="button" class="mk-filter-btn" aria-haspopup="listbox" aria-expanded="false">
+                            <span class="mk-filter-val" data-default="Any Make">Any Make</span>
+                            <svg class="mk-filter-chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                        </button>
+                        <div class="mk-filter-menu" role="listbox">
+                            <button type="button" class="mk-filter-opt is-active" data-value="">Any Make</button>
+                            @foreach ($makes as $mk)
+                                <button type="button" class="mk-filter-opt" data-value="{{ $mk }}">{{ $mk }}</button>
+                            @endforeach
+                        </div>
+                    </div>
                 </div>
-                <div data-reveal class="g-3" style="gap:22px">
-                    @foreach (config('marketing.fleet') as $v)
-                        <div class="lift" style="background:var(--ntb-surf);border:1px solid var(--ntb-line-soft);border-radius:20px;overflow:hidden;box-shadow:0 1px 2px rgba(20,30,50,.04)">
+                <div data-reveal data-fleet-grid class="g-3" style="gap:22px">
+                    @foreach ($fleet as $v)
+                        <div class="lift" data-type="{{ $v['type'] }}" data-make="{{ $v['make'] }}" style="background:var(--ntb-surf);border:1px solid var(--ntb-line-soft);border-radius:20px;overflow:hidden;box-shadow:0 1px 2px rgba(20,30,50,.04)">
                             <div style="height:210px;position:relative;{{ $photo($img[$v['img']], $v['pos']) }}">
                                 <span style="position:absolute;top:14px;left:14px;font-family:var(--font-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;padding:5px 11px;border-radius:999px;background:rgba(255,255,255,.9);color:oklch(0.5 0.115 236)">{{ $v['tier'] }}</span>
                             </div>
@@ -41,6 +66,7 @@
                         </div>
                     @endforeach
                 </div>
+                <p data-fleet-empty hidden style="color:var(--ntb-muted);font-size:15px;margin:8px 2px 0">No vehicle matches these filters.</p>
             </div>
         </section>
 

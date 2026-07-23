@@ -36,8 +36,8 @@
                     <span class="ntb-route-to" title="<?php echo e($b['dropoff_address'] ?? ''); ?>"><?php echo e($b['dropoff_address'] ?? ''); ?></span>
                 </div>
                 <div class="ntb-booking-details">
-                    <span class="ntb-booking-date">📅 <?php echo e($when); ?></span>
-                    <span class="ntb-booking-vehicle">🚗 <?php echo e($b['vehicle_name'] ?? ''); ?></span>
+                    <span class="ntb-booking-date"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--ntb-accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg> <?php echo e($when); ?></span>
+                    <span class="ntb-booking-vehicle"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--ntb-accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.6-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9L2.1 10.9A3 3 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></svg> <?php echo e($b['vehicle_name'] ?? ''); ?></span>
                 </div>
             </div>
         </div>

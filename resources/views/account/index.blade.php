@@ -71,4 +71,9 @@
         @include('account.auth')
     @endauth
 </div>
+
+{{-- Bas de page commun du site (comme les pages vitrine). --}}
+<div class="mkt ntb-theme-light">
+    @include('marketing.partials.footer')
+</div>
 @endsection

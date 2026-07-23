@@ -730,6 +730,240 @@
   border-color: var(--ntb-line-soft);
 }
 
+/* ── /mon-compte (invité) : rendu épuré fidèle au design du projet
+   (ui_kits/booking-app/AccountAuth.jsx) — colonne centrée SANS carte, champs
+   soulignés (trait bas), boutons pill. Scopé à .ntb-auth-section : ne touche
+   ni le profil (.ntb-profile-form) ni le tunnel (mêmes classes partagées). ── */
+/* Vue invité : le conteneur remplit toute la page (fond --ntb-bg uniforme),
+   au lieu de la bande centrée 860px réservée au tableau de bord connecté. */
+.ntb-dashboard:has(.ntb-auth-section) {
+  max-width: none;
+  min-height: calc(100dvh - 60px);
+  /* flow-root : contient la marge haute de .ntb-auth-section, qui sinon
+     s'échappe par collapse à travers main et laisse une bande blanche entre
+     le header et le fond beige. */
+  display: flow-root;
+}
+.ntb-dashboard .ntb-auth-section {
+  background: none;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  max-width: 400px;
+  margin: 64px auto;
+}
+
+/* Dashboard connecté — refonte sur le design à jour du projet
+   (ui_kits/marketing-site/AccountPage.jsx) : pleine largeur du site (1180px),
+   sous-barre translucide, cartes généreuses, titres serif. Scopé au dashboard ;
+   tout le fonctionnel (modale, mot de passe, export, suppression) est conservé. */
+.ntb-dashboard:has(.ntb-topbar) {
+  max-width: none;
+  min-height: calc(100dvh - 60px);
+  display: flow-root;
+  padding-bottom: 0;
+}
+/* Sous-barre : pleine largeur (fond translucide flou + bordure basse), contenu
+   centré à 1180px via padding latéral = max(44px, moitié de l'espace en trop).
+   top:60px : se cale sous le header vitrine (sticky) au lieu de le chevaucher. */
+.ntb-dashboard:has(.ntb-topbar) .ntb-topbar {
+  max-width: none;
+  height: auto;
+  top: 60px;
+  padding: 16px 44px;
+  background: color-mix(in oklch, var(--ntb-surf) 55%, transparent);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--ntb-line-soft);
+}
+/* Aligné à gauche comme le reste du site (logo NOCTIS à 44px) : pas de centrage
+   (margin), juste le padding latéral. */
+.ntb-dashboard:has(.ntb-topbar) .ntb-content {
+  max-width: none;
+  margin: 0;
+  width: 100%;
+  padding: 56px 44px 80px;
+}
+/* Onglets Mes réservations / Mon profil : pilules (comme le design). */
+.ntb-dashboard .ntb-tab-link { border-radius: 999px; padding: 9px 15px; }
+/* Icônes date/véhicule des cartes (SVG x-mk-icon) alignées avec le texte. */
+.ntb-dashboard .ntb-booking-date,
+.ntb-dashboard .ntb-booking-vehicle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.ntb-dashboard .ntb-avatar {
+  width: 34px;
+  height: 34px;
+  font-size: 13px;
+  font-family: var(--ntb-mono);
+}
+
+/* Titres de page en serif 36 (comme le design). */
+.ntb-dashboard .ntb-bookings-tab h2,
+.ntb-dashboard .ntb-section-title {
+  font-family: var(--ntb-serif);
+  font-weight: 400;
+  font-size: 36px;
+  margin: 0 0 32px;
+}
+/* Sous-titre de section (En cours / Terminées / Annulées) en mono espacé. */
+.ntb-dashboard .ntb-bookings-section h3 {
+  font-family: var(--ntb-mono);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ntb-faint);
+  margin: 0 0 16px;
+}
+.ntb-dashboard .ntb-bookings-list { gap: 14px; }
+
+/* Cartes de réservation : plus généreuses ; prix serif, réf accent, badge pill. */
+.ntb-dashboard .ntb-booking-card {
+  border-color: var(--ntb-line-soft);
+  border-radius: 16px;
+  padding: 22px 26px;
+  gap: 12px;
+  overflow: hidden;
+}
+/* min-width:0 + max-width:100% sur toute la chaîne flex : sans le min-width:0,
+   le min-width:auto par défaut empêche le rétrécissement ; le max-width:100%
+   force chaque conteneur à ne pas dépasser son parent → l'adresse longue se
+   tronque (ellipsis) au lieu de déborder de la carte sur écran étroit. */
+.ntb-dashboard .ntb-booking-row1,
+.ntb-dashboard .ntb-booking-row2,
+.ntb-dashboard .ntb-booking-meta,
+.ntb-dashboard .ntb-booking-route { min-width: 0; max-width: 100%; }
+.ntb-dashboard .ntb-booking-row1 { align-items: flex-start; }
+.ntb-dashboard .ntb-booking-ref {
+  font-family: var(--ntb-mono);
+  color: var(--ntb-accent-hi);
+  letter-spacing: .04em;
+}
+.ntb-dashboard .ntb-booking-price {
+  font-family: var(--ntb-serif);
+  font-weight: 400;
+  font-size: 24px;
+}
+.ntb-dashboard .ntb-booking-route { font-size: 15px; min-width: 0; overflow: hidden; }
+/* Les deux bouts du trajet rétrécissent pour tenir dans la carte (ellipsis) au
+   lieu d'un plafond fixe dont la SOMME débordait sur écran étroit. Le plus long
+   (l'adresse de départ) rétrécit le plus ; l'arrivée courte reste lisible. */
+.ntb-dashboard .ntb-route-from,
+.ntb-dashboard .ntb-route-to { max-width: none; min-width: 0; flex: 0 1 auto; }
+.ntb-dashboard .ntb-booking-details { gap: 16px; font-size: 12.5px; }
+.ntb-dashboard .ntb-status {
+  padding: 2px 11px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.ntb-dashboard .ntb-status-confirmed,
+.ntb-dashboard .ntb-status-paid { border: 1px solid var(--ntb-accent-line); }
+
+/* Profil : labels majuscules, champs soulignés, bouton Enregistrer pill.
+   (Le champ Téléphone est un composant à part — indicatif pays — laissé tel
+   quel pour ne pas casser son sélecteur.) */
+.ntb-profile-tab .ntb-form-group label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ntb-faint);
+  margin-bottom: 6px;
+}
+.ntb-profile-tab .ntb-form-group input[type="email"],
+.ntb-profile-tab .ntb-form-group input[type="text"],
+.ntb-profile-tab .ntb-form-group input[type="password"] {
+  background: none;
+  border: none;
+  border-bottom: 1.5px solid var(--ntb-line);
+  border-radius: 0;
+  padding: 9px 0;
+  font-size: 16px;
+}
+.ntb-profile-tab .ntb-form-group input:focus {
+  border-bottom-color: var(--ntb-accent);
+  box-shadow: none;
+}
+.ntb-profile-tab .ntb-form-group input:disabled {
+  background: none;
+  color: var(--ntb-muted);
+}
+.ntb-profile-tab .ntb-pw-wrap .ntb-pw-toggle { right: 0; }
+.ntb-profile-tab .ntb-btn-primary { border-radius: 999px; }
+/* Champ téléphone (composant indicatif-pays, absent du design) : on reprend le
+   traitement « souligné » déjà utilisé à l'étape 3 (.ntb-field .ntb-tel) pour
+   qu'il s'aligne sur les autres champs du profil au lieu de l'encadré. */
+.ntb-profile-tab .ntb-tel {
+  background: transparent;
+  border: 0;
+  border-bottom: 1.5px solid var(--ntb-line);
+  border-radius: 0;
+  padding: 0;
+  min-height: 0;
+}
+.ntb-profile-tab .ntb-tel:focus-within { border-bottom-color: var(--ntb-accent); }
+/* Le numéro (type=tel) est encadré par `.ntb-profile-form input[type="tel"]`
+   (0,2,1) : on le remet à plat avec une spécificité supérieure (0,3,1) pour
+   qu'il épouse le souligné du .ntb-tel. */
+.ntb-profile-tab .ntb-form-group input.ntb-tel-num {
+  background: none;
+  border: 0;
+  border-radius: 0;
+  padding: 9px 4px;
+  font-size: 16px;
+}
+.ntb-profile-tab .ntb-form-group input.ntb-tel-num:focus { box-shadow: none; }
+.ntb-auth-section h2 { font-size: 26px; margin-bottom: 28px; }
+.ntb-auth-section .ntb-form-group label { font-weight: 600; margin-bottom: 4px; }
+
+/* Champ souligné (trait bas), pas d'encadré ni halo. */
+.ntb-auth-section .ntb-form-group input {
+  padding: 8px 0;
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--ntb-line);
+  border-radius: 0;
+  font-size: 15px;
+}
+.ntb-auth-section .ntb-form-group input:focus {
+  border-bottom-color: var(--ntb-accent);
+  box-shadow: none;
+}
+/* Œil du mot de passe recalé sur le champ souligné. */
+.ntb-auth-section .ntb-pw-wrap input { padding-right: 30px; }
+.ntb-auth-section .ntb-pw-toggle { right: 0; }
+
+/* Récap email : ligne simple (pas d'encadré). */
+.ntb-auth-section .ntb-auth-email-recap {
+  background: none;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  font-weight: 400;
+  font-size: 13px;
+  color: var(--ntb-muted);
+}
+.ntb-auth-section .ntb-auth-change { color: var(--ntb-accent-hi); }
+
+/* Boutons pill, pleine largeur (comme le design). */
+.ntb-dashboard .ntb-auth-section .ntb-btn {
+  width: 100%;
+  border-radius: 999px;
+  padding: 14px 22px;
+  font-size: 15px;
+  font-weight: 700;
+}
+.ntb-dashboard .ntb-auth-section .ntb-btn-secondary {
+  padding: 12px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ntb-text);
+}
+
 .ntb-dashboard .ntb-btn-danger {
   background: oklch(0.68 0.16 25 / .12);
   border-color: oklch(0.68 0.16 25 / .30);
@@ -887,8 +1121,8 @@
 
 .ntb-bmodal-close {
   position: absolute;
-  top: 14px;
-  right: 16px;
+  top: 6px;
+  right: 12px;
   background: none;
   border: none;
   cursor: pointer;
@@ -976,6 +1210,16 @@
   color: var(--ntb-accent);
 }
 
+/* Écran très étroit : réf + badge + prix ne tiennent plus sur une ligne (le
+   prix chevauchait le badge) -> on empile le prix sous la référence. */
+@media (max-width: 520px) {
+  .ntb-dashboard .ntb-booking-row1 {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+}
+
 /* ── Responsive ──────────────────────────────────────────────── */
 @media (max-width: 768px) {
   .ntb-topbar {
@@ -995,8 +1239,9 @@
     padding: 1.5rem 16px 0;
   }
 
-  .ntb-booking-row2 { flex-direction: column; align-items: flex-start; gap: 6px; }
-  .ntb-route-from, .ntb-route-to { max-width: 140px; }
+  /* Colonne + stretch : le trajet occupe la largeur de la CARTE (pas celle de
+     son contenu), donc ses bouts peuvent rétrécir/tronquer au lieu de déborder. */
+  .ntb-booking-row2 { flex-direction: column; align-items: stretch; gap: 6px; }
 
   .ntb-bmodal { padding: 0; align-items: flex-end; }
   .ntb-bmodal-panel {

@@ -61,6 +61,13 @@
                Au-delà, l'espace en trop devient du padding automatique (centré). */
             body > main { max-width: 1454px; margin-left: auto; margin-right: auto; padding-left: 48px; padding-right: 48px; }
         }
+        /* Étapes 2-4 (tunnel, racine .ntb-scope) : pas de padding en haut, le
+           contenu démarre directement sous le header. Ne touche pas le compte
+           (racine .ntb-dashboard), qui garde son espacement. */
+        body > main:has(.ntb-scope) { padding-top: 0; }
+        /* Espace compte (invité ET connecté, racine .ntb-dashboard) : fond de
+           page uniforme plein cadre (le contenu est recentré en interne). */
+        body > main:has(.ntb-dashboard) { padding: 0; max-width: none; margin: 0; }
         /* Page 1 (hero) : l'image de fond doit aller jusqu'aux bords du
            navigateur, donc pas de padding/max-width sur main ici -- l'espace
            autour du formulaire vient du margin de .ntb-hero-inner à la place. */
@@ -68,8 +75,12 @@
     </style>
 </head>
 <body>
-    {{-- Header commun du site (nav vitrine) — même sur les étapes 2-4 et le compte. --}}
-    <div class="mkt ntb-theme-light">
+    {{-- Header commun du site (nav vitrine) — même sur les étapes 2-4 et le compte.
+         display:contents : le wrapper ne génère pas de boîte (il ne fait donc pas
+         60px de haut qui briderait le position:sticky du header — sinon le header
+         partirait au scroll), mais transmet quand même les variables du thème
+         clair (.ntb-theme-light) au header, sans les imposer au contenu (main). --}}
+    <div class="mkt ntb-theme-light" style="display:contents">
         @include('marketing.partials.header')
     </div>
     <main>

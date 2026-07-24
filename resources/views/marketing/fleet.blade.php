@@ -24,7 +24,7 @@
 
         <section style="padding:0 44px 110px">
             <div style="max-width:1180px;margin:0 auto">
-                <div class="mk-filters" style="display:flex;gap:12px;margin-bottom:36px;flex-wrap:wrap">
+                <div data-reveal class="mk-filters" style="display:flex;gap:12px;margin-bottom:36px;flex-wrap:wrap">
                     <div class="mk-filter" data-filter="type">
                         <button type="button" class="mk-filter-btn" aria-haspopup="listbox" aria-expanded="false">
                             <span class="mk-filter-val" data-default="Any Type">Any Type</span>

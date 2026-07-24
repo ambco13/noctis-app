@@ -85,6 +85,25 @@
     if (document.readyState !== 'loading') burger();
     else document.addEventListener('DOMContentLoaded', burger);
 
+    /* Mise à l'échelle « grand écran » : agrandit uniformément les sections
+       marketing pour qu'un grand moniteur À 100 % s'affiche comme l'écran de
+       référence en plus grand (effet du scaling Windows, appliqué par le site).
+
+       On se base sur window.screen.width = largeur du MONITEUR en pixels CSS.
+       Cette valeur : (1) ne change PAS avec le zoom navigateur (propriété de
+       l'écran, pas de la fenêtre) → l'utilisateur peut zoomer/dézoomer
+       librement, le navigateur fait son travail par-dessus sans être contrarié ;
+       (2) reflète la vraie taille de l'écran → un grand moniteur est agrandi, le
+       petit non. Robuste, sans capture au chargement. MK_SCALE_REF = largeur CSS
+       de l'écran de calibrage (window.screen.width à 100 %). */
+    var MK_SCALE_REF = 1536;
+    function desktopScale() {
+        var w = window.screen.width || document.documentElement.clientWidth;
+        document.documentElement.style.setProperty('--mk-zoom', String(Math.max(1, w / MK_SCALE_REF)));
+    }
+    desktopScale();
+    window.addEventListener('resize', desktopScale, { passive: true });
+
     /* Filtres Fleet : dropdowns custom (Type / Marque) qui masquent/affichent
        les cartes véhicules. « Any » (valeur vide) = pas de filtre. */
     function fleetFilter() {

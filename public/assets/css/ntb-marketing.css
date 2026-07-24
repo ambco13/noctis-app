@@ -73,6 +73,19 @@ html { scroll-behavior: smooth; }
 .grain::before { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .5; mix-blend-mode: overlay; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
 @media (prefers-reduced-motion: reduce) { .rise, .marquee-track { animation: none; } [data-reveal] { opacity: 1; transform: none; } }
 
+/* ── Mise à l'échelle « grand écran » ──
+   Reproduit automatiquement l'effet de la mise à l'échelle Windows : au-delà de
+   la largeur de référence (1536 = l'écran de calibrage), le contenu marketing
+   est agrandi uniformément (zoom = largeur / 1536) pour qu'un grand moniteur À
+   100 % s'affiche comme l'écran de référence, en plus grand — mêmes proportions,
+   rempli, sans que l'utilisateur ait à toucher au scaling Windows. --mk-zoom est
+   calculé en JS (voir desktopScale). Le HERO (.ntb-home, plein écran) et le nav
+   (hors <main>) sont exclus. */
+.mkt main > *:not(.ntb-home) { zoom: var(--mk-zoom, 1); }
+/* Le nav suit la même échelle que les sections (sinon il paraît minuscule sur
+   un grand écran). Le hero (.ntb-home) reste, lui, à taille native. */
+#mkt-header { zoom: var(--mk-zoom, 1); }
+
 /* ── Composants ── */
 .cta { transition: background .2s var(--ease), transform .12s var(--ease), box-shadow .2s; }
 .cta:active { transform: translateY(1px) scale(.985); }

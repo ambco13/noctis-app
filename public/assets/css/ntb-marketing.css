@@ -141,6 +141,12 @@ html { scroll-behavior: smooth; }
     content: ""; position: absolute; left: 0; right: 0; top: -16px; height: 16px;
 }
 .mk-drop:hover .mk-drop-menu, .mk-drop.is-open .mk-drop-menu { display: flex; }
+/* Quand le menu Services est ouvert, on élève le header au-dessus du stepper des
+   étapes (.ntb-prog, position:fixed z-index:90) : sinon le menu, piégé dans le
+   contexte d'empilement du header (z-index:40 inline), passe SOUS le « 2·3·4 ».
+   On n'élève que pendant l'ouverture pour ne pas masquer le stepper le reste du
+   temps. !important car le z-index du header est inline. */
+#mkt-header:has(.mk-drop:hover), #mkt-header:has(.mk-drop.is-open) { z-index: 100 !important; }
 .mk-drop-menu a { transition: background .18s var(--ease); }
 .mk-drop-menu a:hover { background: color-mix(in oklch, var(--ntb-text) 8%, transparent); }
 

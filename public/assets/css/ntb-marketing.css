@@ -12,9 +12,16 @@
     --font-mono: 'Spline Sans Mono', ui-monospace, monospace;
     --r: 9px; --r-sm: 9px; --r-lg: 9px; --r-pill: 999px;
     --ease: cubic-bezier(.22,.61,.36,1);
+    --ease-spring: cubic-bezier(.34,1.26,.64,1);
     --dur: 220ms;
     --shadow-lg: 0 30px 70px -30px rgba(0,0,0,.6);
     --shadow-pop: 0 24px 50px -20px rgba(0,0,0,.7);
+    /* Échelle d'élévation : ombres douces multi-couches, teintées vers le
+       bleu-nuit de la marque (oklch ~ rgba 18,30,58) plutôt que noir pur —
+       rendu plus premium, cohérent d'un composant à l'autre. */
+    --elev-1: 0 1px 2px rgba(18,30,58,.05), 0 1px 1px rgba(18,30,58,.03);
+    --elev-2: 0 8px 20px -8px rgba(18,30,58,.12), 0 3px 8px -3px rgba(18,30,58,.07);
+    --elev-3: 0 30px 60px -28px rgba(18,30,58,.24), 0 12px 30px -16px rgba(18,30,58,.14);
 
     --ntb-bg: oklch(0.185 0.010 240);
     --ntb-bg2: oklch(0.165 0.010 240);
@@ -54,6 +61,9 @@
 .mkt *, .mkt *::before, .mkt *::after { box-sizing: border-box; }
 .mkt img { max-width: 100%; display: block; }
 * { text-wrap: pretty; }
+/* Titres serif : lignes équilibrées (évite la « veuve » d'un mot seul sur la
+   dernière ligne) — détail typographique premium sur les grands titres. */
+.mkt h1, .mkt h2 { text-wrap: balance; }
 html { scroll-behavior: smooth; }
 .mkt a { color: var(--ntb-accent); text-decoration: none; }
 .mkt a:hover { color: var(--ntb-accent-hi); }
@@ -87,14 +97,19 @@ html { scroll-behavior: smooth; }
 #mkt-header { zoom: var(--mk-zoom, 1); }
 
 /* ── Composants ── */
-.cta { transition: background .2s var(--ease), transform .12s var(--ease), box-shadow .2s; }
-.cta:active { transform: translateY(1px) scale(.985); }
-.lift { transition: transform .3s var(--ease), box-shadow .3s, border-color .3s; }
-.lift:hover { transform: translateY(-4px); box-shadow: 0 30px 60px -30px rgba(20,30,50,.28); border-color: var(--ntb-accent-line); }
+.cta { transition: background .2s var(--ease), transform .28s var(--ease-spring), box-shadow .28s var(--ease); }
+.cta:hover { transform: translateY(-2px); box-shadow: var(--elev-3); }
+.cta:active { transform: translateY(0) scale(.985); }
+.lift { transition: transform .42s var(--ease-spring), box-shadow .42s var(--ease), border-color .42s; }
+.lift:hover { transform: translateY(-6px); box-shadow: var(--elev-3); border-color: var(--ntb-accent-line); }
 .field-line { border-bottom: 1.5px solid var(--ntb-line); transition: border-color .2s var(--ease); }
 .field-line:focus-within { border-color: var(--ntb-accent); }
 .eyb { display: inline-flex; align-items: center; gap: 12px; font-family: var(--font-mono); font-size: 12px; text-transform: uppercase; letter-spacing: .16em; color: var(--ntb-accent); }
-.eyb::before { content: ""; width: 26px; height: 1.5px; background: currentColor; flex: 0 0 auto; }
+/* Signature « ligne de trajet » : la hairline de l'eyebrow se dessine (0 → 26px)
+   quand la section se révèle au scroll — écho des lignes de routes du site, et
+   du métier (précision, itinéraire). Hors conteneur révélé, elle est déjà là. */
+.eyb::before { content: ""; width: 26px; height: 1.5px; background: currentColor; flex: 0 0 auto; transform-origin: left; transition: width .7s var(--ease) .15s; }
+[data-reveal]:not(.revealed) .eyb::before { width: 0; }
 .alink { display: inline-flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 600; color: var(--ntb-accent); cursor: pointer; background: none; border: none; padding: 0; font-family: var(--font-sans); }
 .alink i { font-style: normal; transition: transform .28s var(--ease); }
 .alink:hover i { transform: translateX(6px); }

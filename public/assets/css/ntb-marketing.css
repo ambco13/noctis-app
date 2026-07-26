@@ -127,8 +127,18 @@ html { scroll-behavior: smooth; }
 .stat-tick { width: 26px; height: 2px; background: var(--ntb-accent); margin: 0 auto 16px; border-radius: 2px; }
 .route { transition: background .25s var(--ease); }
 .route:hover { background: color-mix(in oklch, var(--ntb-bg) 8%, transparent); }
-.route-line { transition: flex-grow .4s var(--ease); }
+/* Signature phase 2 — les lignes de routes SE TRACENT au scroll : chaque trait
+   part de 0 (scaleX) et se dessine de gauche à droite, en cascade (délai par
+   route via --rd), quand le panneau Europe se révèle. Le délai ne s'applique
+   qu'au tracé, pas au flex-grow du hover (qui reste instantané). */
+.route-line { transform: scaleX(0); transform-origin: left; transition: flex-grow .4s var(--ease), transform .9s var(--ease) var(--rd, 0s); }
+[data-reveal].revealed .route-line { transform: scaleX(1); }
+.routes-grid .route:nth-child(1) .route-line { --rd: .10s; }
+.routes-grid .route:nth-child(2) .route-line { --rd: .28s; }
+.routes-grid .route:nth-child(3) .route-line { --rd: .46s; }
+.routes-grid .route:nth-child(4) .route-line { --rd: .64s; }
 .route:hover .route-line { flex-grow: 2; background: var(--ntb-accent-hi); }
+@media (prefers-reduced-motion: reduce) { .route-line { transform: none; transition: flex-grow .4s var(--ease); } }
 .nav-link { transition: color .2s; }
 .nav-link:hover { color: var(--ntb-text); }
 

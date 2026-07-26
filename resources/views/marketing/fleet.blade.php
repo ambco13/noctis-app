@@ -50,9 +50,9 @@
                         </div>
                     </div>
                 </div>
-                <div data-reveal data-fleet-grid class="g-3" style="gap:22px">
+                <div data-fleet-grid class="g-3" style="gap:22px">
                     @foreach ($fleet as $v)
-                        <div class="lift" data-type="{{ $v['type'] }}" data-make="{{ $v['make'] }}" style="background:var(--ntb-surf);border:1px solid var(--ntb-line-soft);border-radius:20px;overflow:hidden;box-shadow:0 1px 2px rgba(20,30,50,.04)">
+                        <div data-reveal class="lift" data-type="{{ $v['type'] }}" data-make="{{ $v['make'] }}" style="transition-delay:{{ $loop->index * 0.09 }}s;background:var(--ntb-surf);border:1px solid var(--ntb-line-soft);border-radius:20px;overflow:hidden;box-shadow:0 1px 2px rgba(20,30,50,.04)">
                             <div style="height:210px;position:relative;{{ $photo($img[$v['img']], $v['pos']) }}">
                                 <span style="position:absolute;top:14px;left:14px;font-family:var(--font-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;padding:5px 11px;border-radius:999px;background:rgba(255,255,255,.9);color:oklch(0.5 0.115 236)">{{ $v['tier'] }}</span>
                             </div>

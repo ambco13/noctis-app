@@ -182,7 +182,7 @@
     {{-- ── WHY CHOOSE US ── --}}
     <section style="padding:120px 44px;background:var(--ntb-bg2)">
         <div style="max-width:1180px;margin:0 auto">
-            <div data-reveal style="margin-bottom:52px;max-width:640px">
+            <div data-reveal style="margin-bottom:52px">
                 <p class="eyb" style="margin-bottom:20px">Why choose us</p>
                 <h2 style="font-family:var(--font-serif);font-weight:400;font-size:clamp(30px,4vw,54px);letter-spacing:-.01em;color:var(--ntb-text);margin:0;line-height:1.03">Our Paris airport transfer service.</h2>
             </div>
@@ -201,7 +201,7 @@
     {{-- ── TESTIMONIALS ── --}}
     <section style="padding:120px 44px;background:var(--ntb-bg)">
         <div style="max-width:1180px;margin:0 auto">
-            <div data-reveal style="margin-bottom:52px;max-width:640px">
+            <div data-reveal style="margin-bottom:52px">
                 <p class="eyb" style="margin-bottom:20px">What travelers say</p>
                 <h2 style="font-family:var(--font-serif);font-weight:400;font-size:clamp(30px,4vw,54px);letter-spacing:-.01em;color:var(--ntb-text);margin:0;line-height:1.03">Trusted by travelers worldwide.</h2>
             </div>

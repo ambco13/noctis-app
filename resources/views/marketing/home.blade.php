@@ -101,7 +101,7 @@
                     </div>
                 @endforeach
             </div>
-            <p style="font-size:16.5px;line-height:1.7;color:var(--ntb-muted);max-width:520px;margin:44px 0 28px">Direct long-distance departures with chauffeurs experienced in cross-border routing and logistics — a smooth, flexible alternative to conventional travel.</p>
+            <p style="font-size:16.5px;line-height:1.7;color:var(--ntb-muted);margin:44px 0 28px">Direct long-distance departures with chauffeurs experienced in cross-border routing and logistics — a smooth, flexible alternative to conventional travel.</p>
             <a class="alink" href="{{ route('marketing.service', ['slug' => 'worldwide-transportation']) }}">Explore Europe-wide <i>→</i></a>
         </div>
     </section>

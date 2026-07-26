@@ -1,32 +1,31 @@
 /**
  * Site vitrine — révélation au défilement des éléments [data-reveal].
- * Repli dur : au bout de 1.6 s tout est révélé, le contenu ne peut jamais
- * rester caché (même sans IntersectionObserver).
+ * Mode « replay » : l'animation rejoue à CHAQUE passage — révélée quand la
+ * section entre dans le viewport, réinitialisée quand elle en sort complètement.
+ * Sans IntersectionObserver : tout est révélé d'emblée (contenu jamais caché).
  */
 (function () {
     'use strict';
-    function revealAll() {
-        document.querySelectorAll('[data-reveal]:not(.revealed)').forEach(function (el) {
-            el.classList.add('revealed');
-        });
-    }
     var io = 'IntersectionObserver' in window
         ? new IntersectionObserver(function (entries) {
             entries.forEach(function (e) {
-                if (e.isIntersecting) { e.target.classList.add('revealed'); io.unobserve(e.target); }
+                // Révèle à ≥12 % visible ; ne réinitialise qu'une fois SORTIE
+                // complètement (ratio 0) — évite de re-cacher une section encore
+                // partiellement à l'écran (pas de clignotement au scroll).
+                if (e.isIntersecting && e.intersectionRatio >= 0.12) e.target.classList.add('revealed');
+                else if (e.intersectionRatio === 0) e.target.classList.remove('revealed');
             });
-        }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' })
+        }, { threshold: [0, 0.12], rootMargin: '0px 0px -8% 0px' })
         : null;
 
     function scan() {
-        document.querySelectorAll('[data-reveal]:not(.revealed)').forEach(function (el) {
+        document.querySelectorAll('[data-reveal]').forEach(function (el) {
             io ? io.observe(el) : el.classList.add('revealed');
         });
     }
 
     if (document.readyState !== 'loading') scan();
     else document.addEventListener('DOMContentLoaded', scan);
-    setTimeout(revealAll, 1600);
 
     /* Header transparent sur la home : devient solide (.is-scrolled) une fois
        le hero dépassé. Sans hero transparent (autres pages), no-op. */

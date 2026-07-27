@@ -6,10 +6,9 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Noctis — Private Chauffeur · Paris & Europe')</title>
 
-    {{-- Polices de la marque. --}}
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus&family=Albert+Sans:wght@300;400;500;600;700&family=Spline+Sans+Mono:wght@500;600&display=swap">
+    {{-- Polices de la marque — hébergées en local (pas de hotlink Google :
+         CSP stricte respectée + aucune fuite d'IP vers Google / RGPD). --}}
+    <link rel="stylesheet" href="{{ asset('assets/css/fonts.css') }}?v={{ filemtime(public_path('assets/css/fonts.css')) }}">
 
     <link rel="stylesheet" href="{{ asset('assets/css/ntb-marketing.css') }}?v={{ filemtime(public_path('assets/css/ntb-marketing.css')) }}">
     @stack('styles')

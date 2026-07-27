@@ -29,14 +29,14 @@ body:has(.ntb-scope) .entry-content > *,
 body:has(.ntb-scope) main { overflow: visible !important; }
 body:has(.ntb-scope) .ast-container { padding: 0 48px !important; }
 
-/* Page hero (page 1) : quand le calendrier (injecté dans <body> par flatpickr)
-   dépasse sous l'écran, il crée une barre de scroll page disgracieuse. On la
-   masque UNIQUEMENT sur le hero -- le défilement (molette/tactile/clavier)
-   reste fonctionnel, seule la barre visible disparaît, donc rien n'est perdu.
-   Les autres pages gardent leur barre normale. */
-html:has(.ntb-home), body:has(.ntb-home) { scrollbar-width: none; }
-html:has(.ntb-home)::-webkit-scrollbar,
-body:has(.ntb-home)::-webkit-scrollbar { display: none; }
+/* Gouttière de scrollbar réservée en permanence. La barre occupe toujours la
+   même largeur (présente ou non), ce qui règle deux choses d'un coup :
+   (1) le calendrier flatpickr (injecté dans <body>) qui débordait faisait
+       apparaître une barre → plus de saut, elle vit dans la gouttière réservée ;
+   (2) la nav (pleine largeur) qui se décalait de ~15px entre la home (barre
+       autrefois masquée) et les autres pages.
+   Remplace l'ancien masquage scrollbar-width:none (qui créait le décalage). */
+html { scrollbar-gutter: stable; }
 
 /* Page 2 (/ma-reservation) : fond de page suivant le thème. Sans lui le body
    reste blanc par défaut — illisible en thème sombre (titres clairs sur blanc)

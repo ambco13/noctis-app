@@ -83,6 +83,12 @@ html { scroll-behavior: smooth; }
 .grain::before { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .5; mix-blend-mode: overlay; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
 @media (prefers-reduced-motion: reduce) { .rise, .marquee-track { animation: none; } [data-reveal] { opacity: 1; transform: none; } }
 
+/* Gouttière de scrollbar réservée en permanence sur toutes les pages vitrine :
+   largeur de contenu constante (barre présente ou non) → la nav pleine largeur
+   ne se décale plus entre une page qui déborde et une page courte. Même règle
+   que dans ntb-public.css (home + tunnel de réservation). */
+html { scrollbar-gutter: stable; }
+
 /* ── Mise à l'échelle « grand écran » ──
    Reproduit automatiquement l'effet de la mise à l'échelle Windows : au-delà de
    la largeur de référence (1536 = l'écran de calibrage), le contenu marketing

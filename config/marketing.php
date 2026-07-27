@@ -65,12 +65,14 @@ return [
         ['Friendly driver, comfortable ride and excellent communication on WhatsApp. I will definitely book again.', 'Markus', 'Germany'],
     ],
 
-    // Flotte (page /flotte). [name, type, make, tier, sub, pax, bags, image-key, position]
+    // Flotte (page /flotte). [name, type, make, tier, sub, pax, bags]
     // type/make servent aux filtres de la page (options générées depuis ces données).
+    // Pas de photo : aucune image disponible ne représente fidèlement ces véhicules
+    // (cf. cartes épurées avec glyphe). À enrichir de vraies photos quand on en aura.
     'fleet' => [
-        ['name' => 'Sedan', 'type' => 'Sedan', 'make' => 'Toyota', 'tier' => 'Essential', 'sub' => 'CHR or similar', 'pax' => 4, 'bags' => 3, 'img' => 'carNight', 'pos' => 'center 60%'],
-        ['name' => 'Berline', 'type' => 'Berline', 'make' => 'Mercedes-Benz', 'tier' => 'Signature', 'sub' => 'Classe E — Mercedes-Benz', 'pax' => 4, 'bags' => 4, 'img' => 'interior', 'pos' => 'center 45%'],
-        ['name' => 'Van', 'type' => 'Van', 'make' => 'Mercedes-Benz', 'tier' => 'Group', 'sub' => 'Classe V or similar', 'pax' => 6, 'bags' => 6, 'img' => 'road', 'pos' => 'center 55%'],
+        ['name' => 'Sedan', 'type' => 'Sedan', 'make' => 'Toyota', 'tier' => 'Essential', 'sub' => 'CHR or similar', 'pax' => 4, 'bags' => 3],
+        ['name' => 'Berline', 'type' => 'Berline', 'make' => 'Mercedes-Benz', 'tier' => 'Signature', 'sub' => 'Classe E — Mercedes-Benz', 'pax' => 4, 'bags' => 4],
+        ['name' => 'Van', 'type' => 'Van', 'make' => 'Mercedes-Benz', 'tier' => 'Group', 'sub' => 'Classe V or similar', 'pax' => 6, 'bags' => 6],
     ],
 
     // Icône par service (bento + ailleurs).

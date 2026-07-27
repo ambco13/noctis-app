@@ -3,9 +3,7 @@
 @section('title', 'Our Fleet — Noctis')
 
 @php
-    $img = config('marketing.images');
     $book = route('booking.form', ['new' => 1]);
-    $photo = fn ($url, $pos = 'center') => "background-image:url('{$url}'),linear-gradient(160deg,var(--ntb-surf2),var(--ntb-bg2));background-size:cover;background-position:{$pos}";
     $fleet = config('marketing.fleet');
     // Options de filtre générées depuis les vraies données (pas de valeur fantôme).
     $types = collect($fleet)->pluck('type')->unique()->values();
@@ -53,8 +51,9 @@
                 <div data-fleet-grid class="g-3" style="gap:22px">
                     @foreach ($fleet as $v)
                         <div data-reveal class="lift" data-type="{{ $v['type'] }}" data-make="{{ $v['make'] }}" style="transition-delay:{{ $loop->index * 0.09 }}s;background:var(--ntb-surf);border:1px solid var(--ntb-line-soft);border-radius:20px;overflow:hidden;box-shadow:0 1px 2px rgba(20,30,50,.04)">
-                            <div style="height:210px;position:relative;{{ $photo($img[$v['img']], $v['pos']) }}">
-                                <span style="position:absolute;top:14px;left:14px;font-family:var(--font-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;padding:5px 11px;border-radius:999px;background:rgba(255,255,255,.9);color:oklch(0.5 0.115 236)">{{ $v['tier'] }}</span>
+                            <div style="height:190px;position:relative;display:flex;align-items:center;justify-content:center;background:linear-gradient(160deg,var(--ntb-surf2),var(--ntb-bg2));border-bottom:1px solid var(--ntb-line-soft)">
+                                <span style="position:absolute;top:14px;left:14px;font-family:var(--font-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;padding:5px 11px;border-radius:999px;background:var(--ntb-surf);border:1px solid var(--ntb-line-soft);color:var(--ntb-accent)">{{ $v['tier'] }}</span>
+                                <x-mk-icon name="car" :size="64" :stroke="1.1" color="var(--ntb-accent)" style="opacity:.42" />
                             </div>
                             <div style="padding:22px 24px 24px">
                                 <div style="font-family:var(--font-serif);font-size:24px;color:var(--ntb-text);line-height:1.1">{{ $v['name'] }}</div>

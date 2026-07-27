@@ -61,7 +61,7 @@
 
     {{-- ── CINEMATIC FEATURE: AIRPORT ── --}}
     <section style="position:relative;min-height:88vh;display:flex;align-items:center;overflow:hidden">
-        <div style="position:absolute;inset:0;background-attachment:fixed;{{ $photo($img['carNight'], 'center 60%') }}"></div>
+        <div style="position:absolute;inset:0;background-attachment:fixed;{{ $photo($img['city'], 'center 45%') }}"></div>
         <div style="position:absolute;inset:0;background:linear-gradient(90deg, rgba(8,12,20,.78) 0%, rgba(8,12,20,.45) 46%, rgba(8,12,20,.06) 100%)"></div>
         <div data-reveal style="position:relative;max-width:1180px;margin:0 auto;padding:0 44px;width:100%;box-sizing:border-box">
             <div class="g-2" style="gap:56px;align-items:start">
@@ -117,10 +117,9 @@
                 <a class="alink" href="{{ route('marketing.fleet') }}">See the full fleet <i>→</i></a>
             </div>
             <div class="g-3" style="gap:20px">
-                @php($fleetImgs = ['carNight', 'interior', 'road'])
                 @foreach ([['Sedan', 'CHR or similar', 4, 3], ['Berline', 'Classe E — Mercedes-Benz', 4, 4], ['Van', 'Classe V or similar', 6, 6]] as $i => [$n, $s, $p, $b])
                     <div data-reveal class="lift" style="transition-delay:{{ $i * 0.08 }}s;background:var(--ntb-surf);border:1px solid var(--ntb-line-soft);border-radius:18px;overflow:hidden;box-shadow:0 1px 2px rgba(20,30,50,.04)">
-                        <div class="zoomwrap" style="height:180px"><div class="zoom" style="height:100%;{{ $photo($img[$fleetImgs[$i]], 'center') }}"></div></div>
+                        <div style="height:160px;display:flex;align-items:center;justify-content:center;background:linear-gradient(160deg,var(--ntb-surf2),var(--ntb-bg2));border-bottom:1px solid var(--ntb-line-soft)"><x-mk-icon name="car" :size="54" :stroke="1.1" color="var(--ntb-accent)" style="opacity:.42" /></div>
                         <div style="padding:20px 22px 22px">
                             <div style="font-family:var(--font-serif);font-size:22px;color:var(--ntb-text)">{{ $n }}</div>
                             <div style="font-size:13px;color:var(--ntb-muted);margin-bottom:14px">{{ $s }}</div>

@@ -61,7 +61,7 @@
 
     {{-- ── CINEMATIC FEATURE: AIRPORT ── --}}
     <section style="position:relative;min-height:88vh;display:flex;align-items:center;overflow:hidden">
-        <div style="position:absolute;inset:0;background-attachment:fixed;{{ $photo($img['city'], 'center 45%') }}"></div>
+        <div style="position:absolute;inset:0;background-attachment:fixed;{{ $photo($img['city'], 'center 22%') }}"></div>
         <div style="position:absolute;inset:0;background:linear-gradient(90deg, rgba(8,12,20,.78) 0%, rgba(8,12,20,.45) 46%, rgba(8,12,20,.06) 100%)"></div>
         <div data-reveal style="position:relative;max-width:1180px;margin:0 auto;padding:0 44px;width:100%;box-sizing:border-box">
             <div class="g-2" style="gap:56px;align-items:start">

@@ -277,7 +277,7 @@
         '.ntb-sum-price', '.ntb-sum-route', '.ntb-sum-cta', '.ntb-sum-bar',
         '.ntb-veh-carousel', '.ntb-veh-arrow', '.ntb-vcard', '.ntb-vc-photo', '.ntb-vc-body',
         '.ntb-vc-name', '.ntb-vc-price', '.ntb-vc-specs', '.ntb-vc-ico',
-        '.ntb-included', '.ntb-sec-title', '.ntb-perk', '.ntb-perk-ico', '.ntb-hiw',
+        '.ntb-included', '.ntb-sec-title', '.ntb-inc', '.ntb-inc-badge', '.ntb-after', '.ntb-seq', '.ntb-seq-step',
         '.ntb-step3-form', '.ntb-pay-choice', '.ntb-pay-tab',
         '.ntb-pay-panel', '.ntb-pay-btn', '.ntb-pay-bar', '.ntb-pay-back',
         '.ntb-recap', '.ntb-recap-title', '.ntb-recap-route', '.ntb-recap-total', '.ntb-recap-amount',

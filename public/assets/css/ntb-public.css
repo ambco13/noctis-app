@@ -603,32 +603,56 @@ html[data-ntb-theme="light"] body:has([data-ntb-steps]) {
 .ntb-prog-line.done { background: var(--ntb-accent-line); }
 @media (max-width: 700px) { .ntb-prog-lab { display: none; } .ntb-prog { width: 100%; justify-content: space-between; margin-bottom: 12px; } .ntb-prog-line { flex: 1; width: auto; } }
 
-/* ── Réassurance sous le carrousel (étape 2) ── */
-.ntb-included { margin-top: 40px; padding-top: 34px; border-top: 1px solid var(--ntb-line-soft); }
-.ntb-sec-title { font-family: var(--ntb-serif); font-weight: 400; font-size: 22px; letter-spacing: -.01em; margin: 0 0 4px; }
-.ntb-sec-sub { margin: 0 0 18px; color: var(--ntb-muted); font-size: 14px; }
-.ntb-perks-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
-@media (max-width: 900px) { .ntb-perks-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 560px) { .ntb-perks-grid { grid-template-columns: minmax(0, 1fr); } }
-.ntb-perk {
-	display: flex; flex-direction: column; gap: 9px; padding: 18px;
-	background: var(--ntb-surf); border: 1px solid var(--ntb-line-soft);
-	border-radius: var(--ntb-r); box-shadow: var(--ntb-shadow-sm);
-}
-.ntb-perk-ico {
-	width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
-	border-radius: 10px; background: var(--ntb-accent-soft); color: var(--ntb-accent-hi);
-}
-.ntb-perk h4 { margin: 0; font-size: 15px; font-weight: 650; }
-.ntb-perk p { margin: 0; font-size: 13.5px; line-height: 1.55; color: var(--ntb-muted); }
+/* ── Réassurance sous le carrousel (étape 2) ──
+   Reprend les motifs de la vitrine pour une continuité visuelle :
+   « Inclus » = cartes « why choose us » (badge icône sur la bordure) ;
+   « Et après » = séquence « routes Europe » (filet + séparateurs + n° mono).
+   Tout en tokens sémantiques : suit automatiquement le thème clair/sombre. */
+.ntb-sec-title { font-family: var(--ntb-serif); font-weight: 400; font-size: clamp(26px, 3vw, 40px); letter-spacing: -.01em; line-height: 1.05; margin: 0; }
+.ntb-sec-sub { margin: 14px 0 0; color: var(--ntb-muted); font-size: 15px; line-height: 1.6; max-width: 54ch; }
 
-.ntb-hiw { margin: 40px 0 8px; }
-.ntb-hiw-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
-@media (max-width: 900px) { .ntb-hiw-grid { grid-template-columns: minmax(0, 1fr); } }
-.ntb-hiw-grid li { padding: 18px; border: 1px solid var(--ntb-line-soft); border-radius: var(--ntb-r); }
-.ntb-hiw-n { font-family: var(--ntb-serif); font-size: 26px; line-height: 1; color: var(--ntb-accent-hi); display: block; margin-bottom: 8px; }
-.ntb-hiw-grid h4 { margin: 0 0 4px; font-size: 15px; font-weight: 650; }
-.ntb-hiw-grid p { margin: 0; font-size: 13.5px; color: var(--ntb-muted); line-height: 1.55; }
+/* « Inclus dans chaque course » — motif « why choose us » */
+.ntb-included { margin-top: 56px; padding-top: 40px; border-top: 1px solid var(--ntb-line-soft); }
+.ntb-inc-head { margin-bottom: 56px; }
+.ntb-inc-head .eyb { margin-bottom: 20px; }
+.ntb-inc-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px 18px; }
+@media (max-width: 900px) { .ntb-inc-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px) { .ntb-inc-grid { grid-template-columns: minmax(0, 1fr); gap: 44px; } }
+.ntb-inc {
+	position: relative; text-align: center; padding: 40px 24px 26px;
+	background: var(--ntb-surf); border: 1px solid var(--ntb-line-soft);
+	border-radius: 16px; box-shadow: var(--ntb-shadow-sm);
+}
+.ntb-inc-badge {
+	position: absolute; top: 0; left: 50%; transform: translate(-50%, -50%);
+	width: 48px; height: 48px; border-radius: 12px;
+	background: var(--ntb-surf); border: 1px solid var(--ntb-line-soft); color: var(--ntb-accent);
+	display: flex; align-items: center; justify-content: center; box-shadow: var(--ntb-shadow-sm);
+}
+.ntb-inc h4 { font-family: var(--ntb-serif); font-weight: 400; font-size: 19px; margin: 0 0 9px; line-height: 1.15; }
+.ntb-inc p { margin: 0; font-size: 13.5px; line-height: 1.6; color: var(--ntb-muted); }
+
+/* « Et après votre réservation ? » — motif « routes » (séquence numérotée) */
+.ntb-after { margin: 64px 0 8px; }
+.ntb-after-head { margin-bottom: 40px; }
+.ntb-after-head .eyb { margin-bottom: 20px; }
+.ntb-seq { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid var(--ntb-line); }
+.ntb-seq-step { padding: 28px 22px 6px; }
+.ntb-seq-step:first-child { padding-left: 0; }
+.ntb-seq-step:not(:last-child) { border-right: 1px solid var(--ntb-line); }
+.ntb-seq-k { display: block; font-family: var(--ntb-mono); font-size: 11px; letter-spacing: .12em; color: var(--ntb-faint); margin-bottom: 16px; }
+.ntb-seq-step h4 { font-family: var(--ntb-serif); font-weight: 400; font-size: 21px; margin: 0 0 10px; line-height: 1.12; color: var(--ntb-text); }
+.ntb-seq-step p { margin: 0; font-size: 13.5px; line-height: 1.6; color: var(--ntb-muted); }
+@media (max-width: 900px) {
+	.ntb-seq { grid-template-columns: 1fr 1fr; }
+	.ntb-seq-step:nth-child(2) { border-right: none; }
+	.ntb-seq-step:nth-child(odd) { padding-left: 0; }
+}
+@media (max-width: 560px) {
+	.ntb-seq { grid-template-columns: minmax(0, 1fr); }
+	.ntb-seq-step { border-right: none !important; padding: 24px 0 6px; }
+	.ntb-seq-step:not(:last-child) { border-bottom: 1px solid var(--ntb-line); }
+}
 
 .ntb-dist-banner {
 	display: flex; align-items: center; gap: 12px; background: var(--ntb-surf-glass);

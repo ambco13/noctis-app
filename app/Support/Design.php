@@ -78,8 +78,10 @@ class Design
         'ntb_glass_opacity' => '92',
         '--ntb-glass-blur' => 'blur(8px)',
         /* Mode d'affichage : dark, light ou auto (préférence système).
-           'auto' par défaut = comportement historique du site (suit l'OS). */
-        'ntb_theme_mode' => 'auto',
+           'light' par défaut : le tunnel et l'espace compte s'alignent sur la
+           vitrine (toujours claire). Le hero page 1 reste sombre (verrouillé
+           dans le CSS). Un admin peut forcer 'dark' ou 'auto' au besoin. */
+        'ntb_theme_mode' => 'light',
         /* Transparence & flou par couleur */
         'ntb_trans_bg' => '0',
         'ntb_trans_surf' => '0',

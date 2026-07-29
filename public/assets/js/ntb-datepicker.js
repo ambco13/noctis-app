@@ -8,8 +8,21 @@
 	var chevPrev = '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>';
 	var chevNext = '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>';
 
-	var MONTHS_FULL  = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
-	var MONTHS_SHORT = ['Jan','Fév','Mar','Avr','Mai','Jun','Jul','Aoû','Sep','Oct','Nov','Déc'];
+	/* Libellés de mois (overlay custom, cf. enhanceFlatpickrPickers) et
+	   réglages par langue -- pilotés par data-date-locale sur #ntb-date, pas
+	   codés en dur : le hero (page d'accueil, anglais) et l'ancien formulaire
+	   FR (booking/form.blade.php) partagent ce même composant. */
+	var MONTHS_FULL_FR  = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+	var MONTHS_SHORT_FR = ['Jan','Fév','Mar','Avr','Mai','Jun','Jul','Aoû','Sep','Oct','Nov','Déc'];
+	var MONTHS_FULL_EN  = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+	var MONTHS_SHORT_EN = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+	var LOCALES = {
+		fr: { flatpickr: fr, months: MONTHS_FULL_FR, monthsShort: MONTHS_SHORT_FR, placeholder: 'jj/mm/aaaa' },
+		en: { flatpickr: undefined, months: MONTHS_FULL_EN, monthsShort: MONTHS_SHORT_EN, placeholder: 'dd/mm/yyyy' }
+	};
+	// Actives pour la session en cours (mises à jour par langue au moment du init du champ date).
+	var MONTHS_FULL  = MONTHS_FULL_EN;
+	var MONTHS_SHORT = MONTHS_SHORT_EN;
 
 	/* Appareil tactile (téléphone/tablette) : on désactive la saisie clavier
 	   des champs date/heure pour que le clavier ne monte pas -- seul le picker
@@ -25,20 +38,23 @@
 		/* ── Date — flatpickr (saisie clavier desktop uniquement) ──────── */
 		var dateEl = document.getElementById( 'ntb-date' );
 		if ( dateEl ) {
+			var loc = LOCALES[ dateEl.dataset.dateLocale ] || LOCALES.en;
+			MONTHS_FULL  = loc.months;
+			MONTHS_SHORT = loc.monthsShort;
 			flatpickr( dateEl, {
 				dateFormat:    'Y-m-d',
 				altInput:      true,
 				altFormat:     'd/m/Y',
 				allowInput:    ! isCoarse,
 				minDate:       'today',
-				locale:        fr,
+				locale:        loc.flatpickr,
 				disableMobile: true,
 				prevArrow:     chevPrev,
 				nextArrow:     chevNext,
 				onReady: function ( _d, _s, inst ) {
 					inst.altInput.id = inst.element.id;
 					inst.element.removeAttribute( 'id' );
-					inst.altInput.placeholder = 'jj/mm/aaaa';
+					inst.altInput.placeholder = loc.placeholder;
 					inst.altInput.setAttribute( 'autocomplete', 'off' );
 					/* Supprimer le pré-rendu PHP — altInput flatpickr prend le relais */
 					var pre = inst.altInput.parentNode && inst.altInput.parentNode.querySelector( '.ntb-date-pre' );

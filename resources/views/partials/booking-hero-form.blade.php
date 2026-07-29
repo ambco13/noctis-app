@@ -65,6 +65,7 @@
                         value="{{ $dateDisplay }}"
                         placeholder="dd/mm/yyyy" autocomplete="off" />
                     <input type="date" id="ntb-date" name="NTB2_date"
+                        data-date-locale="{{ $dateLocale ?? 'en' }}"
                         value="{{ $prefill['ride_date'] }}"
                         min="{{ now()->format('Y-m-d') }}" required />
                 </div>

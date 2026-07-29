@@ -101,6 +101,12 @@ html { scrollbar-gutter: stable; }
 /* Le nav suit la même échelle que les sections (sinon il paraît minuscule sur
    un grand écran). Le hero (.ntb-home) reste, lui, à taille native. */
 #mkt-header { zoom: var(--mk-zoom, 1); }
+/* Hauteur RENDUE du header (60px de base × le zoom ci-dessus) : le zoom CSS
+   agrandit la boîte en layout, donc sur un grand moniteur le header occupe
+   bien plus que 60px à l'écran (ex. 75px à --mk-zoom:1.25, 100px à 1.67).
+   Exposée en variable pour que tout élément qui doit se caler SOUS le
+   header (ex. .ntb-topbar du dashboard) n'ait pas ce 60px codé en dur. */
+:root { --mkt-header-h: calc(60px * var(--mk-zoom, 1)); }
 
 /* ── Composants ── */
 .cta { transition: background .2s var(--ease), transform .28s var(--ease-spring), box-shadow .28s var(--ease); }
@@ -131,7 +137,13 @@ html { scrollbar-gutter: stable; }
 .zoomwrap:hover .zoom { transform: scale(1.05); }
 .lift:hover .zoom { transform: scale(1.06); }
 .stat-tick { width: 26px; height: 2px; background: var(--ntb-accent); margin: 0 auto 16px; border-radius: 2px; }
-.route { transition: background .25s var(--ease); }
+/* Padding/bordure sortis du style inline (home.blade.php) : figés pour une
+   grille 4 colonnes, ils cassaient dès que .routes-grid passe à 2 puis 1
+   colonne (bordure orpheline en bord de rangée, décalage horizontal entre
+   rangées). Gérés ici avec des règles qui suivent chaque breakpoint. */
+.route { padding: 30px 20px; transition: background .25s var(--ease); }
+.route:first-child { padding-left: 0; }
+.route:not(:last-child) { border-right: 1px solid var(--ntb-line); }
 .route:hover { background: color-mix(in oklch, var(--ntb-bg) 8%, transparent); }
 /* Signature phase 2 — les lignes de routes SE TRACENT au scroll : chaque trait
    part de 0 (scaleX) et se dessine de gauche à droite, en cascade (délai par
@@ -171,13 +183,17 @@ html { scrollbar-gutter: stable; }
 .mk-drop-menu::before {
     content: ""; position: absolute; left: 0; right: 0; top: -16px; height: 16px;
 }
-.mk-drop:hover .mk-drop-menu, .mk-drop.is-open .mk-drop-menu { display: flex; }
+/* :focus-within en plus de :hover/.is-open : le déclencheur "Services" ne
+   navigue jamais au clic (voir ntb-marketing.js) — sans ce focus-within, un
+   utilisateur clavier qui tabule dessus n'avait aucun moyen d'ouvrir le
+   sous-menu ni d'atteindre les 5 pages /services/{slug} (échec WCAG 2.1.1). */
+.mk-drop:hover .mk-drop-menu, .mk-drop.is-open .mk-drop-menu, .mk-drop:focus-within .mk-drop-menu { display: flex; }
 /* Quand le menu Services est ouvert, on élève le header au-dessus du stepper des
    étapes (.ntb-prog, position:fixed z-index:90) : sinon le menu, piégé dans le
    contexte d'empilement du header (z-index:40 inline), passe SOUS le « 2·3·4 ».
    On n'élève que pendant l'ouverture pour ne pas masquer le stepper le reste du
    temps. !important car le z-index du header est inline. */
-#mkt-header:has(.mk-drop:hover), #mkt-header:has(.mk-drop.is-open) { z-index: 100 !important; }
+#mkt-header:has(.mk-drop:hover), #mkt-header:has(.mk-drop.is-open), #mkt-header:has(.mk-drop:focus-within) { z-index: 100 !important; }
 .mk-drop-menu a { transition: background .18s var(--ease); }
 .mk-drop-menu a:hover { background: color-mix(in oklch, var(--ntb-text) 8%, transparent); }
 
@@ -230,6 +246,14 @@ html { scrollbar-gutter: stable; }
     .feat-grid > * { order: 0 !important; }
     .hero-form { grid-template-columns: 1fr 1fr; }
     .routes-grid { grid-template-columns: 1fr 1fr; }
+    /* 2 colonnes : la bordure doit séparer les 2 colonnes de CHAQUE rangée
+       (pas dépendre de la position dans la liste à plat) -- sinon la 2e route
+       garde une bordure orpheline en bord d'écran (fin de la 1re rangée) et
+       la 3e route hérite d'un padding-left qui ne correspond plus à sa
+       colonne (décalage vs la 1re route juste au-dessus). */
+    .route:not(:last-child) { border-right: none; }
+    .route:nth-child(odd) { padding-left: 0; border-right: 1px solid var(--ntb-line); }
+    .route:nth-child(even) { padding-left: 20px; }
     .mkt section { padding-top: 80px; padding-bottom: 80px; }
 }
 /* Sous 540px : on empile tout en une seule colonne (les paragraphes du
@@ -244,6 +268,9 @@ html { scrollbar-gutter: stable; }
     .svc-grid { grid-template-columns: 1fr; }
     .hero-form { grid-template-columns: 1fr; }
     .routes-grid { grid-template-columns: 1fr; }
+    /* 1 colonne : tout empilé -- ni bordure verticale (sans effet, sur toute
+       la hauteur de la carte au lieu de séparer 2 colonnes), ni décalage. */
+    .route:nth-child(odd), .route:nth-child(even) { padding-left: 0; border-right: none; }
     .mkt section { padding-left: 22px !important; padding-right: 22px !important; }
     .mkt header { padding-left: 20px !important; padding-right: 20px !important; }
     /* Footer : texte d'intro sur toute la largeur en haut, puis Services +

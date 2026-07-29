@@ -759,7 +759,7 @@
    tout le fonctionnel (modale, mot de passe, export, suppression) est conservé. */
 .ntb-dashboard:has(.ntb-topbar) {
   max-width: none;
-  min-height: calc(100dvh - 60px);
+  min-height: calc(100dvh - var(--mkt-header-h, 60px));
   display: flow-root;
   padding-bottom: 0;
 }
@@ -769,7 +769,10 @@
 .ntb-dashboard:has(.ntb-topbar) .ntb-topbar {
   max-width: none;
   height: auto;
-  top: 60px;
+  /* var(--mkt-header-h) (ntb-marketing.css) au lieu de 60px fixe : sur un
+     grand moniteur le header vitrine est zoomé (--mk-zoom) et occupe plus
+     que 60px de haut -- un top fixe faisait chevaucher les deux barres. */
+  top: var(--mkt-header-h, 60px);
   padding: 16px 44px;
   background: color-mix(in oklch, var(--ntb-surf) 55%, transparent);
   -webkit-backdrop-filter: blur(10px);

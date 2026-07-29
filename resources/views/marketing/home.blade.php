@@ -95,7 +95,7 @@
             <h2 style="font-family:var(--font-serif);font-weight:400;font-size:clamp(34px,6vw,78px);line-height:1.02;letter-spacing:-.02em;margin:0 0 56px;color:var(--ntb-text)">Borders, handled.</h2>
             <div class="routes-grid" style="gap:0;border-top:1px solid var(--ntb-line)">
                 @foreach (config('marketing.routes') as $i => [$a, $b])
-                    <div class="route" style="padding:30px 20px;padding-left:{{ $i === 0 ? '0' : '20px' }};border-right:{{ $i < 3 ? '1px solid var(--ntb-line)' : 'none' }}">
+                    <div class="route">
                         <div style="font-family:var(--font-mono);font-size:11px;letter-spacing:.12em;color:var(--ntb-faint);margin-bottom:14px">ROUTE {{ str_pad($i + 1, 2, '0', STR_PAD_LEFT) }}</div>
                         <div style="display:flex;align-items:center;gap:12px;font-family:var(--font-serif);font-size:22px;color:var(--ntb-text)">{{ $a }}<span class="route-line" style="flex-grow:1;flex-basis:0;height:1px;background:var(--ntb-accent);min-width:16px"></span>{{ $b }}</div>
                     </div>

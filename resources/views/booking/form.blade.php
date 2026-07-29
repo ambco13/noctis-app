@@ -3,5 +3,5 @@
 @section('title', __('Réservation'))
 
 @section('content')
-    @include('partials.booking-hero-form')
+    @include('partials.booking-hero-form', ['dateLocale' => 'fr'])
 @endsection
